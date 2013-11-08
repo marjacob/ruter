@@ -26,12 +26,27 @@ CFLAGS=-c -Wall -std=gnu99 -I./$(INCDIR)
 LINK=gcc
 LFLAGS=-lm -lcurl
 
+# Tools
+MKDIR=mkdir -p
+
+# Ensure that "directories" is not associated with a file.
+.PHONY: directories
+
 # Default release build
-all: $(BINARY)
+all: directories $(BINARY)
 
 # Debug build
 debug: CFLAGS += -g
 debug: all
+
+# Create required directories.
+directories: $(BINDIR) $(OBJDIR)
+
+$(BINDIR):
+	$(MKDIR) $(BINDIR)
+
+$(OBJDIR):
+	$(MKDIR) $(OBJDIR)
 
 # Build binary
 $(BINARY) : $(OBJECTS)
