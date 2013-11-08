@@ -28,35 +28,32 @@ LFLAGS=-lm -lcurl
 
 # Tools
 MKDIR=mkdir -p
-
-# Ensure that "directories" is not associated with a file.
-.PHONY: directories
+RM=rm -rf
 
 # Default release build
-all: directories $(BINARY)
+all: $(BINARY)
 
 # Debug build
 debug: CFLAGS += -g
 debug: all
 
-# Create required directories.
-directories: $(BINDIR) $(OBJDIR)
-
+# Create directory for binary files.
 $(BINDIR):
 	$(MKDIR) $(BINDIR)
 
+# Create directory for object files.
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)
 
 # Build binary
-$(BINARY) : $(OBJECTS)
+$(BINARY) : $(OBJECTS) $(BINDIR)
 	$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
 
 # Compile source to object code
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(OBJDIR) $(HEADERS)
 	$(CC) $(CFLAGS) $< -o $@
 
 # Remove generated files
 clean : 
-	rm -rf $(OBJECTS) $(BINARY)
+	$(RM) $(OBJECTS) $(BINARY)
 
