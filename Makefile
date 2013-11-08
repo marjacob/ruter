@@ -1,4 +1,4 @@
-# KMS Server Emulator
+# Ruter REST Client
 
 # Target
 BIN=ruter
