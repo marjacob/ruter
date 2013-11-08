@@ -27,7 +27,7 @@ LINK=gcc
 LFLAGS=-lm -lcurl
 
 # Tools
-MKDIR=mkdir -p
+DIRGUARD=@mkdir -p $(@D)
 RM=rm -rf
 
 # Default release build
@@ -37,23 +37,17 @@ all: $(BINARY)
 debug: CFLAGS += -g
 debug: all
 
-# Create directory for binary files.
-$(BINDIR):
-	$(MKDIR) $(BINDIR)
-
-# Create directory for object files.
-$(OBJDIR):
-	$(MKDIR) $(OBJDIR)
-
 # Build binary
-$(BINARY) : $(OBJECTS) $(BINDIR)
+$(BINARY) : $(OBJECTS)
+	$(DIRGUARD)
 	$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
 
 # Compile source to object code
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(OBJDIR) $(HEADERS)
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
+	$(DIRGUARD)
 	$(CC) $(CFLAGS) $< -o $@
 
 # Remove generated files
-clean : 
+clean: 
 	$(RM) $(OBJECTS) $(BINARY)
 
