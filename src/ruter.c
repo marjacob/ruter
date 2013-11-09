@@ -84,18 +84,32 @@ int ruter_is_realtime(struct ruter_session *session, char *stop_id)
 
 int ruter_find(struct ruter_session *session, char *place)
 {
-	return ruter_rest(session, "Place/FindPlaces", place);
+	int success = 0;
+	char *name = NULL;
+	
+	if (NULL == (name = curl_easy_escape(session->curl, place, 0))) {
+		return 0;
+	} else {
+		success = ruter_rest(session, "Place/FindPlaces", name);
+		curl_free(name);
+	}
+	
+	return success;
 }
 
 int ruter_rest(struct ruter_session *session, char *method, char *args)
 {
-	snprintf(
+	session->bufsize = snprintf(
 		session->buf, 
 		session->bufcap, 
 		"%s/%s/%s", 
 		session->uri, 
 		method,
 		args);
+	
+	if (0 > session->bufsize) {
+		return 0;
+	}
 	
 	session->code = curl_easy_setopt(
 		session->curl, 

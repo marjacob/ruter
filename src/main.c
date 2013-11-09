@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,42 +68,30 @@ int main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-static int find_rec(json_value *data, int indent)
+static int fill_stop(json_value *data, struct ruter_stop *stop)
 {
-	switch (data->type) {
-		case json_object:
-			for (int i = 0; i < data->u.object.length; i++) {
-				// data->u.object.values[i].name
-				find_rec(data->u.object.values[i].value, indent + 2);
-			}
-			break;
-		case json_array:
-			for (int i = 0; i < data->u.array.length; i++) {
-				find_rec(data->u.array.values[i], indent + 2);
-			}
-			break;
-		case json_integer:
-			// data->u.integer
-			break;
-		case json_double:
-			// data->u.dbl
-			break;
-		case json_string:
-			for (int i = 0; i < indent; i++) {
-				printf(" ");
-			}
-			printf("%s\n", data->u.string.ptr);
-			//data->u.string.ptr
-			//data->u.string.length
-			break;
-		case json_boolean:
-			// data->u.boolean
-			break;
-		default:
-			// covers json_null, json_none
-			break;
+	char *name = NULL;
+	json_value *value = NULL;
+	enum place_type type = PT_STOP;
+	
+	for (int i = 0, j = data->u.object.length; i < j; i++) {
+		name = data->u.object.values[i].name;
+		value = data->u.object.values[i].value;
+		
+		if (0 == strcmp("ID", name)) {
+			stop->id = value->u.integer;
+		} else if (0 == strcmp("District", name)) {
+			stop->district = value->u.string.ptr;
+		} else if (0 == strcmp("Name", name)) {
+			stop->name = value->u.string.ptr;
+		} else if (0 == strcmp("Zone", name)) {
+			stop->zone = value->u.string.ptr;
+		} else if (0 == strcmp("Type", name)) {
+			type = (enum place_type)value->u.integer;
+		}
 	}
-	return 0;
+	
+	return (PT_STOP == type);
 }
 
 static int find(struct ruter_session *session, char *place)
@@ -110,8 +99,43 @@ static int find(struct ruter_session *session, char *place)
 	ruter_find(session, place);
 	
 	json_value *districts = json_parse(session->buf, session->bufsize);
+	struct ruter_stop *stops = NULL, *stop = NULL, *last = NULL;
 	
-	find_rec(districts, 0);
+	if (NULL == districts || json_array != districts->type) {
+		printf("no results\n");
+		return 0;
+	}
+	
+	for (int i = 0, j = districts->u.array.length; i < j; i++) {
+		stop = malloc(sizeof(*stop));
+		if (fill_stop(districts->u.array.values[i], stop)) {
+			if (NULL == stops) {
+				stops = stop;
+			}
+			
+			if (NULL != last) {
+				last->next = stop;
+			}
+			
+			last = stop;
+		} else {
+			free(stop);
+		}
+	}
+	
+	for (stop = stops; NULL != stop;) {
+		printf(
+			"%" PRIi64 ": %s/%s (Zone: %s)\n",
+			stop->id,
+			stop->district,
+			stop->name,
+			stop->zone
+		);
+		
+		last = stop;
+		stop = stop->next;
+		free(last);
+	}
 	
 	json_value_free(districts);
 	
