@@ -68,76 +68,53 @@ int main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-static int fill_stop(json_value *data, struct ruter_stop *stop)
+static void print_stops(struct ruter_stop *stops, int level)
 {
-	char *name = NULL;
-	json_value *value = NULL;
-	enum place_type type = PT_STOP;
-	
-	for (int i = 0, j = data->u.object.length; i < j; i++) {
-		name = data->u.object.values[i].name;
-		value = data->u.object.values[i].value;
-		
-		if (0 == strcmp("ID", name)) {
-			stop->id = value->u.integer;
-		} else if (0 == strcmp("District", name)) {
-			stop->district = value->u.string.ptr;
-		} else if (0 == strcmp("Name", name)) {
-			stop->name = value->u.string.ptr;
-		} else if (0 == strcmp("Zone", name)) {
-			stop->zone = value->u.string.ptr;
-		} else if (0 == strcmp("Type", name)) {
-			type = (enum place_type)value->u.integer;
-		}
+	if (NULL == stops) {
+		return;
 	}
 	
-	return (PT_STOP == type);
+	for (int i = 0; i < level; i++) {
+		printf("\t");
+	}
+	
+	switch (stops->type) {
+	case PT_STOP:
+		printf("[STOP  ] ");
+		break;
+	case PT_AREA:
+		printf("[AREA  ] ");
+		break;
+	case PT_POI:
+		printf("[POI   ] ");
+		break;
+	case PT_STREET:
+		printf("[STREET] ");
+		break;
+	}
+	
+	printf(
+		"%" PRIi64 ": %s (%s, sone %s)\n", 
+		stops->id,
+		stops->name,
+		stops->district,
+		stops->zone);
+	
+	print_stops(stops->stops, level + 1);
+	print_stops(stops->next, level);
 }
 
 static int find(struct ruter_session *session, char *place)
 {
-	ruter_find(session, place);
+	struct ruter_stop *stops = ruter_find(session, place);
 	
-	json_value *districts = json_parse(session->buf, session->bufsize);
-	struct ruter_stop *stops = NULL, *stop = NULL, *last = NULL;
-	
-	if (NULL == districts || json_array != districts->type) {
-		printf("no results\n");
+	if (NULL == stops) {
+		printf("no stops found\n");
 		return 0;
 	}
 	
-	for (int i = 0, j = districts->u.array.length; i < j; i++) {
-		stop = malloc(sizeof(*stop));
-		if (fill_stop(districts->u.array.values[i], stop)) {
-			if (NULL == stops) {
-				stops = stop;
-			}
-			
-			if (NULL != last) {
-				last->next = stop;
-			}
-			
-			last = stop;
-		} else {
-			free(stop);
-		}
-	}
-	
-	for (stop = stops; NULL != stop;) {
-		printf(
-			"%" PRIi64 ": %s/%s (Zone: %s)\n",
-			stop->id,
-			stop->district,
-			stop->name,
-			stop->zone
-		);
-		
-		last = stop;
-		stop = stop->next;
-		free(last);
-	}
-	
-	json_value_free(districts);
+	print_stops(stops, 0);
+	//ruter_stop_free(stops);
 	
 	return 0;
 }

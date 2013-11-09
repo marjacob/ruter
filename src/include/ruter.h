@@ -65,9 +65,11 @@ struct ruter_session {
 
 struct ruter_stop {
 	int64_t id;
+	enum place_type type;
 	char *name;
 	char *district;
 	char *zone;
+	struct ruter_stop *stops;
 	struct ruter_stop *next;
 };
 
@@ -83,7 +85,9 @@ const char* ruter_strerror(CURLcode code);
 
 int ruter_rest(struct ruter_session *session, char *method, char *args);
 
-int ruter_find(struct ruter_session *session, char *place);
+struct ruter_stop *ruter_find(struct ruter_session *session, char *place);
+
+void ruter_stop_free(struct ruter_stop *stop);
 
 int ruter_is_realtime(struct ruter_session *session, char *stop_id);
 

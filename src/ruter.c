@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "json.h"
 #include "ruter.h"
 
 static size_t ruter_write(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -82,19 +83,136 @@ int ruter_is_realtime(struct ruter_session *session, char *stop_id)
 	return (0 == strncmp(session->buf, "true", 4));
 }
 
-int ruter_find(struct ruter_session *session, char *place)
+static int parse_stop(json_value *data, struct ruter_stop *stop)
+{
+	if (NULL == data || NULL == stop || json_object != data->type) {
+		return 0;
+	}
+	
+	char *name = NULL;
+	json_value *value = NULL;
+	
+	for (int i = 0, j = data->u.object.length; i < j; i++) {
+		name = data->u.object.values[i].name;
+		value = data->u.object.values[i].value;
+		
+		if (0 == strcmp("ID", name)) {
+			stop->id = value->u.integer;
+		} else if (0 == strcmp("District", name)) {
+			stop->district = strndup(
+				value->u.string.ptr, 
+				value->u.string.length);
+		} else if (0 == strcmp("Name", name)) {
+			stop->name = strndup(
+				value->u.string.ptr, 
+				value->u.string.length);
+		} else if (0 == strcmp("Zone", name)) {
+			stop->zone = strndup(
+				value->u.string.ptr, 
+				value->u.string.length);
+		} else if (0 == strcmp("Type", name)) {
+			stop->type = (enum place_type)value->u.integer;
+		} else if (0 == strcmp("Stops", name)) {
+			struct ruter_stop *curr_stop = NULL;
+			struct ruter_stop *last_stop = NULL;
+			json_value *object = NULL;
+			
+			for (int m = 0, n = value->u.array.length; m < n; m++) {
+				object = value->u.array.values[m];
+				curr_stop = calloc(1, sizeof(*curr_stop));
+				curr_stop->next = NULL;
+				
+				if (!parse_stop(object, curr_stop)) {
+					free(curr_stop);
+				} else if (NULL == stop->stops) {
+					stop->stops = curr_stop;
+					last_stop = curr_stop;
+				} else {
+					last_stop->next = curr_stop;
+					last_stop = curr_stop;
+				}
+			}
+		}
+	}
+	
+	return 1;
+}
+
+struct ruter_stop *ruter_find(struct ruter_session *session, char *place)
 {
 	int success = 0;
 	char *name = NULL;
 	
 	if (NULL == (name = curl_easy_escape(session->curl, place, 0))) {
-		return 0;
+		return NULL;
 	} else {
 		success = ruter_rest(session, "Place/FindPlaces", name);
 		curl_free(name);
 	}
 	
-	return success;
+	if (!success) {
+		return NULL;
+	}
+	
+	json_value *data = json_parse(session->buf, session->bufsize);
+	
+	if (NULL == data) {
+		return NULL;
+	} else if (json_array != data->type) {
+		json_value_free(data);
+		return NULL;
+	}
+	
+	struct ruter_stop *stop = NULL;
+	struct ruter_stop *stops = NULL;
+	struct ruter_stop *last_stop = NULL;
+	json_value *object = NULL;
+	
+	for (int i = 0, j = data->u.array.length; i < j; i++) {
+		object = data->u.array.values[i];
+		stop = calloc(1, sizeof(*stop));
+		stop->next = NULL;
+		
+		if (!parse_stop(object, stop)) {
+			free(stop);
+		} else if (NULL == stops) {
+			stops = stop;
+			last_stop = stop;
+		} else {
+			last_stop->next = stop;
+			last_stop = stop;
+		}
+	}
+	
+	json_value_free(data);
+	
+	return stops;
+}
+
+void ruter_stop_free(struct ruter_stop *stop)
+{
+	if (NULL == stop) {
+		return;
+	}
+	
+	ruter_stop_free(stop->stops);
+	ruter_stop_free(stop->next);
+	
+	if (NULL != stop->name) {
+		free(stop->name);
+	}
+	
+	if (NULL != stop->district) {
+		free(stop->district);
+	}
+	
+	if (NULL != stop->zone) {
+		free(stop->zone);
+	}
+	
+	free(stop);
+	
+	return;
 }
 
 int ruter_rest(struct ruter_session *session, char *method, char *args)
