@@ -114,7 +114,7 @@ static int find(struct ruter_session *session, char *place)
 	}
 	
 	print_stops(stops, 0);
-	//ruter_stop_free(stops);
+	ruter_stop_free(stops);
 	
 	return 0;
 }
