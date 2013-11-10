@@ -34,7 +34,7 @@ enum place_type {
 	PT_STREET = 3
 };
 
-enum transportation_type {
+enum transport_type {
 	TT_WALKING = 0,
 	TT_AIRPORT_BUS = 1,
 	TT_BUS = 2,
@@ -63,12 +63,20 @@ struct ruter_session {
 	char uri[RUTER_MAX_API_URI];
 };
 
+struct ruter_line {
+	int64_t id;
+	char *name;
+	enum transport_type type;
+	struct ruter_line *next;
+};
+
 struct ruter_stop {
 	int64_t id;
 	enum place_type type;
 	char *name;
 	char *district;
 	char *zone;
+	struct ruter_line *lines;
 	struct ruter_stop *stops;
 	struct ruter_stop *next;
 };
@@ -88,6 +96,8 @@ int ruter_rest(struct ruter_session *session, char *method, char *args);
 struct ruter_stop *ruter_find(struct ruter_session *session, char *place);
 
 void ruter_stop_free(struct ruter_stop *stop);
+
+void ruter_line_free(struct ruter_line *line);
 
 int ruter_is_realtime(struct ruter_session *session, char *stop_id);
 

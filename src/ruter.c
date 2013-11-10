@@ -7,6 +7,8 @@
 
 static struct ruter_stop *stop_array_parse(json_value *data);
 static struct ruter_stop *stop_parse(json_value *data);
+static struct ruter_line *line_array_parse(json_value *data);
+static struct ruter_line *line_parse(json_value *data);
 static size_t write_data(char *ptr, size_t size, size_t nmemb, void *userdata);
 
 int ruter_init(struct ruter_session *session, size_t bufcap)
@@ -92,28 +94,38 @@ struct ruter_stop *ruter_find(struct ruter_session *session, char *place)
 
 void ruter_stop_free(struct ruter_stop *stop)
 {
-	if (NULL == stop) {
-		return;
+	if (NULL != stop) {
+		ruter_line_free(stop->lines);
+		ruter_stop_free(stop->stops);
+		ruter_stop_free(stop->next);
+		
+		if (NULL != stop->name) {
+			free(stop->name);
+		}
+		
+		if (NULL != stop->district) {
+			free(stop->district);
+		}
+		
+		if (NULL != stop->zone) {
+			free(stop->zone);
+		}
+		
+		free(stop);
 	}
-	
-	ruter_stop_free(stop->stops);
-	ruter_stop_free(stop->next);
-	
-	if (NULL != stop->name) {
-		free(stop->name);
+}
+
+void ruter_line_free(struct ruter_line *line)
+{
+	if (NULL != line) {
+		ruter_line_free(line->next);
+		
+		if (NULL != line->name) {
+			free(line->name);
+		}
+		
+		free(line);
 	}
-	
-	if (NULL != stop->district) {
-		free(stop->district);
-	}
-	
-	if (NULL != stop->zone) {
-		free(stop->zone);
-	}
-	
-	free(stop);
-	
-	return;
 }
 
 int ruter_rest(struct ruter_session *session, char *method, char *args)
@@ -173,15 +185,23 @@ static struct ruter_stop *stop_parse(json_value *data)
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("Zone", name)) {
-			stop->zone = strndup(
-				value->u.string.ptr, 
-				value->u.string.length);
+			if (0 < value->u.string.length) {
+				stop->zone = strndup(
+					value->u.string.ptr, 
+					value->u.string.length);
+			} else {
+				stop->zone = NULL;
+			}
 		} else if (0 == strcmp("Type", name)) {
 			stop->type = (enum place_type)value->u.integer;
 		} else if (0 == strcmp("Stops", name)) {
 			stop->stops = stop_array_parse(value);
+		} else if (0 == strcmp("Lines", name)) {
+			stop->lines = line_array_parse(value);
 		}
 	}
+	
+	stop->next = NULL;
 	
 	return stop;
 } 
@@ -211,6 +231,66 @@ static struct ruter_stop *stop_array_parse(json_value *data)
 	}
 	
 	return stops;
+}
+
+static struct ruter_line *line_array_parse(json_value *data)
+{
+	if (NULL == data || json_array != data->type) {
+		return NULL;
+	}
+	
+	struct ruter_line *line = NULL;
+	struct ruter_line *lines = NULL;
+	struct ruter_line *last_line = NULL;
+	
+	for (int i = 0, j = data->u.array.length; i < j; i++) {
+		line = line_parse(data->u.array.values[i]);
+		
+		if (NULL == line) {
+			continue;
+		} else if (NULL == lines) {
+			lines = line;
+		} else {
+			last_line->next = line;
+		}
+		
+		last_line = line;
+	}
+	
+	return lines;
+}
+
+static struct ruter_line *line_parse(json_value *data)
+{
+	if (NULL == data || json_object != data->type) {
+		return NULL;
+	}
+	
+	char *name = NULL;
+	json_value *value = NULL;
+	struct ruter_line *line = calloc(1, sizeof(*line));
+	
+	for (int i = 0, j = data->u.object.length; i < j; i++) {
+		name = data->u.object.values[i].name;
+		value = data->u.object.values[i].value;
+		
+		if (0 == strcmp("LineID", name)) {
+			if (0 == (line->id = value->u.integer)) {
+				ruter_line_free(line);
+				return NULL;
+			}
+		} else if (0 == strcmp("LineName", name)) {
+			line->name = strndup(
+				value->u.string.ptr, 
+				value->u.string.length);
+		} else if (0 == strcmp("Transportation", name)) {
+			line->type = (enum transport_type)value->u.integer;
+		}
+	}
+	
+	line->next = NULL;
+	
+	return line;
 }
 
 static size_t write_data(char *ptr, size_t size, size_t nmemb, void *userdata)

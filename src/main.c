@@ -80,25 +80,30 @@ static void print_stops(struct ruter_stop *stops, int level)
 	
 	switch (stops->type) {
 	case PT_STOP:
-		printf("[STOP  ] ");
+		printf("Stop: ");
 		break;
 	case PT_AREA:
-		printf("[AREA  ] ");
+		printf("Area: ");
 		break;
 	case PT_POI:
-		printf("[POI   ] ");
+		printf("POI: ");
 		break;
 	case PT_STREET:
-		printf("[STREET] ");
+		printf("Street: ");
 		break;
 	}
 	
-	printf(
-		"%" PRIi64 ": %s (%s, sone %s)\n", 
-		stops->id,
-		stops->name,
-		stops->district,
-		stops->zone);
+	printf("%s", stops->name);
+	
+	if (NULL != stops->district) {
+		printf(" (%s)", stops->district);
+	}
+	
+	if (NULL != stops->zone) {
+		printf(" (sone %s)", stops->zone);
+	}
+	
+	printf("\n");
 	
 	print_stops(stops->stops, level + 1);
 	print_stops(stops->next, level);
