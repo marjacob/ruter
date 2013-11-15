@@ -1,34 +1,38 @@
 # Ruter REST Client
 
 # Target
-BIN=ruter
-LIB=
+BIN = ruter
+LIB = 
 
 # Directories
-BINDIR=bin
-OBJDIR=obj
-SRCDIR=src
-INCDIR=$(SRCDIR)/include
+BINDIR = bin
+OBJDIR = obj
+SRCDIR = src
+INCDIR = $(SRCDIR)/include
 
-# Generate objects list
-OBJ=$(subst $(SRCDIR),$(OBJDIR),$(subst .c,.o,$(wildcard $(SRCDIR)/*.c)))
+# Recursive wildcard function
+rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+
+# Find all C files recursively and generate objects list
+CFILES := $(call rwildcard,$(SRCDIR),*.c)
+OBJ = $(subst $(SRCDIR),$(OBJDIR),$(subst .c,.o,$(CFILES)))
 
 # Generate headers list and qualify paths
-HEADERS=$(wildcard $(INCDIR)/*.h)
-BINARY=$(addprefix $(BINDIR)/, $(BIN))
-OBJECTS=$(OBJ)
+HEADERS = $(wildcard $(INCDIR)/*.h)
+BINARY = $(addprefix $(BINDIR)/, $(BIN))
+OBJECTS = $(OBJ)
 
 # Compiler
-CC=gcc
-CFLAGS=-c -Wall -std=gnu99 -I./$(INCDIR)
+CC = gcc
+CFLAGS = -c -Wall -std=gnu99 -I./$(INCDIR)
 
 # Linker
-LINK=gcc
-LFLAGS=-lm -lcurl
+LINK = gcc
+LFLAGS = -lm -lcurl
 
 # Tools
-DIRGUARD=@mkdir -p $(@D)
-RM=rm -rf
+DIRGUARD = @mkdir -p $(@D)
+RM = rm -rf
 
 # Default release build
 all: $(BINARY)

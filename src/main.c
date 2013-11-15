@@ -103,10 +103,26 @@ static void print_stops(struct ruter_stop *stops, int level)
 		printf(" (sone %s)", stops->zone);
 	}
 	
+	if (stops->realtime) {
+		printf(" (realtime)");
+	}
+	
 	printf("\n");
 	
 	print_stops(stops->stops, level + 1);
 	print_stops(stops->next, level);
+}
+
+static void print_events(struct ruter_event *events)
+{
+	if (NULL == events) {
+		return;
+	}
+	
+	printf("%s", events->destination);	
+	printf("\n");
+	
+	print_events(events->next);
 }
 
 static int find(struct ruter_session *session, char *place)
@@ -126,9 +142,20 @@ static int find(struct ruter_session *session, char *place)
 
 static int show(struct ruter_session *session, char *place)
 {
-	if (ruter_is_realtime(session, place)) {
-		printf("YES, %s IS REALTIME\n", place);
+	if (!ruter_is_realtime(session, place)) {
+		printf("error: %s does not support realtime\n", place);
+		return 0;
 	}
+	
+	struct ruter_event *events = ruter_realtime(session, "3010030");
+	
+	if (NULL == events) {
+		printf("no realtime events found\n");
+		return 0;
+	}
+	
+	print_events(events);
+	ruter_event_free(events);
 	
 	return 0;
 }
