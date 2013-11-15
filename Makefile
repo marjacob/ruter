@@ -17,8 +17,8 @@ rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2
 CFILES := $(call rwildcard,$(SRCDIR),*.c)
 OBJ = $(subst $(SRCDIR),$(OBJDIR),$(subst .c,.o,$(CFILES)))
 
-# Generate headers list and qualify paths
-HEADERS = $(wildcard $(INCDIR)/*.h)
+# Generate headers list recursively and qualify paths
+HEADERS := $(call rwildcard,$(INCDIR),*.h)
 BINARY = $(addprefix $(BINDIR)/, $(BIN))
 OBJECTS = $(OBJ)
 
@@ -53,5 +53,5 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
 
 # Remove generated files
 clean: 
-	$(RM) $(OBJECTS) $(BINARY)
+	$(RM) $(OBJDIR) $(BINDIR)
 

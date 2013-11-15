@@ -11,6 +11,7 @@ struct ruter_session {
 	size_t bufsize;
 	char *buf;
 	char uri[RUTER_MAX_API_URI];
+	const char *(*strerror)(CURLcode);
 };
 
 int ruter_init(struct ruter_session *session, size_t bufsize);

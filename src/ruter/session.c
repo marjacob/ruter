@@ -24,6 +24,7 @@ static size_t write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 	memcpy(session->buf + session->bufsize, ptr, data_size);
 	session->bufsize += data_size;
 	session->buf[session->bufsize] = '\0';
+	session->strerror = curl_easy_strerror;
 	
 	return data_size;
 }

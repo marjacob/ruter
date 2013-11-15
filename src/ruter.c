@@ -5,11 +5,6 @@
 #include "json.h"
 #include "ruter.h"
 
-const char* ruter_strerror(CURLcode code)
-{
-	return curl_easy_strerror(code);
-}
-
 int ruter_is_realtime(struct ruter_session *session, char *stop_id)
 {
 	ruter_rest(session, "Place/IsRealTimeStop", stop_id);
