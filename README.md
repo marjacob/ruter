@@ -1,6 +1,8 @@
 ruter
 =====
 
-Ruter client in C.
+REST based client for the Ruter JSON API written in C.
 
-* JSON: udp/json-parser
+Libraries
+---------
+*   The excellent [JSON parser](https://github.com/udp/json-parser/) by James McLaughlin et al.
