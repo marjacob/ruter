@@ -2,6 +2,7 @@
 #include <string.h>
 #include "json.h"
 #include "ruter/line.h"
+#include "ruter/util.h"
 
 static struct ruter_line line_zero = { 0 };
 
@@ -16,11 +17,7 @@ void ruter_line_free(struct ruter_line *line)
 {
 	if (NULL != line) {
 		ruter_line_free(line->next);
-		
-		if (NULL != line->name) {
-			free(line->name);
-		}
-		
+		ruter_safe_free(line->name);
 		free(line);
 	}
 }

@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "json.h"
+#include "ruter/constants.h"
 #include "ruter/event.h"
+#include "ruter/util.h"
 
 static struct ruter_event event_zero = { 0 };
 
@@ -16,11 +18,9 @@ void ruter_event_free(struct ruter_event *event)
 {
 	if (NULL != event) {
 		ruter_event_free(event->next);
-		
-		if (NULL != event->destination) {
-			free(event->destination);
-		}
-		
+		ruter_safe_free(event->destination);
+		ruter_safe_free(event->line_name);
+		ruter_safe_free(event->platform);
 		free(event);
 	}
 }
@@ -70,6 +70,19 @@ struct ruter_event *ruter_event_parse(json_value *data)
 			event->destination = strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
+		} else if (0 == strcmp("PublishedLineName", name)) {
+			event->line_name = strndup(
+				value->u.string.ptr, 
+				value->u.string.length);
+		} else if (0 == strcmp("DeparturePlatformName", name)) {
+			event->platform = strndup(
+				value->u.string.ptr, 
+				value->u.string.length);
+		} else if (0 == strcmp("VehicleMode", name)) {
+			event->vehicle_mode = 
+				(enum vehicle_mode)value->u.integer;
+		} else if (0 == strcmp("InCongestion", name)) {
+			event->in_congestion = value->u.boolean;
 		}
 	}
 	

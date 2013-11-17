@@ -2,9 +2,14 @@
 #define __H_RUTER_EVENT__
 
 #include "json.h"
+#include "ruter/constants.h"
 
 struct ruter_event {
 	char *destination;
+	char *line_name;
+	char *platform;
+	int in_congestion;
+	enum vehicle_mode vehicle_mode;
 	struct ruter_event *next;
 };
 

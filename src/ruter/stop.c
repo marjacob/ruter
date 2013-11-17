@@ -3,6 +3,7 @@
 #include "json.h"
 #include "ruter/line.h"
 #include "ruter/stop.h"
+#include "ruter/util.h"
 
 static struct ruter_stop stop_zero = { 0 };
 
@@ -19,19 +20,9 @@ void ruter_stop_free(struct ruter_stop *stop)
 		ruter_line_free(stop->lines);
 		ruter_stop_free(stop->stops);
 		ruter_stop_free(stop->next);
-		
-		if (NULL != stop->name) {
-			free(stop->name);
-		}
-		
-		if (NULL != stop->district) {
-			free(stop->district);
-		}
-		
-		if (NULL != stop->zone) {
-			free(stop->zone);
-		}
-		
+		ruter_safe_free(stop->name);
+		ruter_safe_free(stop->district);
+		ruter_safe_free(stop->zone);
 		free(stop);
 	}
 }

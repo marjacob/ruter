@@ -119,8 +119,21 @@ static void print_events(struct ruter_event *events)
 		return;
 	}
 	
-	printf("%s", events->destination);	
-	printf("\n");
+	printf(
+		" %5s | %2s | %6s | %s\n",
+		VM_BUS == events->vehicle_mode
+			? "Bus" :
+		VM_FERRY == events->vehicle_mode
+			? "Ferry" :
+		VM_RAIL == events->vehicle_mode
+			? "Rail" :
+		VM_TRAM == events->vehicle_mode
+			? "Tram" :
+		VM_METRO == events->vehicle_mode
+			? "Metro" : "N/A",			
+		events->platform, 
+		events->line_name, 
+		events->destination);
 	
 	print_events(events->next);
 }
@@ -142,12 +155,28 @@ static int find(struct ruter_session *session, char *place)
 
 static int show(struct ruter_session *session, char *place)
 {
-	if (!ruter_is_realtime(session, place)) {
-		printf("error: %s does not support realtime\n", place);
+	struct ruter_stop *stops = ruter_find(session, place);
+	struct ruter_stop *stop = stops;
+	char buf[8];
+	
+	while (NULL != stop) {
+		if (stop->realtime && NULL != stop->zone) {
+			printf("%s [y/n]: ", stop->name);
+			if (NULL == fgets(buf, sizeof(buf), stdin)) {
+				continue;
+			} else if ('y' == buf[0]) {
+				break;
+			}
+		}
+		stop = stop->next;
+	}
+	
+	if (NULL == stop) {
 		return 0;
 	}
 	
-	struct ruter_event *events = ruter_realtime(session, "3010030");
+	struct ruter_event *events = ruter_realtime(session, stop->id);
+	ruter_stop_free(stops);
 	
 	if (NULL == events) {
 		printf("no realtime events found\n");

@@ -5,8 +5,11 @@
 #include "json.h"
 #include "ruter.h"
 
-int ruter_is_realtime(struct ruter_session *session, char *stop_id)
+int ruter_is_realtime(struct ruter_session *session, int64_t id)
 {
+	char stop_id[32];
+	snprintf(stop_id, sizeof(stop_id), "%" PRIi64, id);
+	
 	ruter_rest(session, "Place/IsRealTimeStop", stop_id);
 	
 	return (0 == strncmp(session->buf, "true", 4));
@@ -40,9 +43,12 @@ struct ruter_stop *ruter_find(struct ruter_session *session, char *place)
 	return stops;
 }
 
-struct ruter_event *ruter_realtime(struct ruter_session *session, char *id)
-{	
-	if (!ruter_rest(session, "RealTime/GetRealTimeData", id)) {
+struct ruter_event *ruter_realtime(struct ruter_session *session, int64_t id)
+{
+	char stop_id[32];
+	snprintf(stop_id, sizeof(stop_id), "%" PRIi64, id);
+	
+	if (!ruter_rest(session, "RealTime/GetRealTimeData", stop_id)) {
 		return NULL;
 	}
 	
