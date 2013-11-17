@@ -67,15 +67,15 @@ struct ruter_event *ruter_event_parse(json_value *data)
 		value = data->u.object.values[i].value;
 		
 		if (0 == strcmp("DestinationName", name)) {
-			event->destination = strndup(
+			event->destination = ruter_strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("PublishedLineName", name)) {
-			event->line_name = strndup(
+			event->line_name = ruter_strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("DeparturePlatformName", name)) {
-			event->platform = strndup(
+			event->platform = ruter_strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("VehicleMode", name)) {

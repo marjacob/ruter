@@ -69,7 +69,7 @@ struct ruter_line *ruter_line_parse(json_value *data)
 				return NULL;
 			}
 		} else if (0 == strcmp("LineName", name)) {
-			line->name = strndup(
+			line->name = ruter_strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("Transportation", name)) {

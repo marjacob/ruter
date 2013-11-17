@@ -47,16 +47,16 @@ struct ruter_stop *ruter_stop_parse(json_value *data)
 				return NULL;
 			}
 		} else if (0 == strcmp("District", name)) {
-			stop->district = strndup(
+			stop->district = ruter_strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("Name", name)) {
-			stop->name = strndup(
+			stop->name = ruter_strndup(
 				value->u.string.ptr, 
 				value->u.string.length);
 		} else if (0 == strcmp("Zone", name)) {
 			if (0 < value->u.string.length) {
-				stop->zone = strndup(
+				stop->zone = ruter_strndup(
 					value->u.string.ptr, 
 					value->u.string.length);
 			} else {
