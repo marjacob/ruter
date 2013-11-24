@@ -10,6 +10,7 @@ struct ruter_session {
 	size_t bufcap;
 	size_t bufsize;
 	char *buf;
+	struct curl_slist *header;
 	char uri[RUTER_MAX_API_URI];
 	const char *(*strerror)(CURLcode);
 };
