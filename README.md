@@ -52,6 +52,8 @@ Find all departures from a stop.
 	struct ruter_departure *departures = ruter_departures(session, stop->id);
 	
 	/* Recurse through the departures graph. */
+	
+	ruter_departure_free(departures);
 
 Libraries
 ---------
