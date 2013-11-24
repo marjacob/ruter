@@ -3,6 +3,9 @@
 #include <string.h>
 #include "ruter/constants.h"
 #include "ruter/session.h"
+#include "ruter/util.h"
+
+static struct ruter_session session_zero = { 0 };
 
 static size_t
 write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -33,6 +36,8 @@ write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 int
 ruter_init(struct ruter_session *session, size_t bufcap)
 {
+	*session = session_zero;
+	
 	if (0 != (session->code = curl_global_init(CURL_GLOBAL_ALL))) {
 		return 0;
 	}
@@ -41,7 +46,14 @@ ruter_init(struct ruter_session *session, size_t bufcap)
 		curl_global_cleanup();
 		return 0;
 	}
+	
+	session->header = NULL;
+	session->header = curl_slist_append(
+		session->header, "Accept: application/json");
+	session->header = curl_slist_append(
+		session->header, "Accept-Charset: utf-8");
 
+	curl_easy_setopt(session->curl, CURLOPT_HTTPHEADER, session->header);
 	curl_easy_setopt(session->curl, CURLOPT_USERAGENT, RUTER_USER_AGENT);
 	curl_easy_setopt(session->curl, CURLOPT_WRITEFUNCTION, write_data);
 	curl_easy_setopt(session->curl, CURLOPT_WRITEDATA, session);
@@ -59,18 +71,16 @@ ruter_init(struct ruter_session *session, size_t bufcap)
 void
 ruter_close(struct ruter_session *session)
 {
+	if (NULL == session) {
+		return;
+	}
+	
 	curl_easy_cleanup(session->curl);
 	curl_global_cleanup();
-
-	session->curl = NULL;
-	session->code = 0;
-	session->bufcap = 0;
-	session->bufsize = 0;
-
-	if (NULL != session->uri) {
-		free(session->buf);
-		session->buf = NULL;
-	}
+	curl_slist_free_all(session->header);
+	ruter_safe_free(session->buf);
+	
+	*session = session_zero;
 
 	return;
 }
