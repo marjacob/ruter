@@ -14,8 +14,10 @@ struct ruter_session {
 	const char *(*strerror)(CURLcode);
 };
 
-int ruter_init(struct ruter_session *session, size_t bufsize);
+int
+ruter_init(struct ruter_session *session, size_t bufsize);
 
-void ruter_close(struct ruter_session *session);
+void
+ruter_close(struct ruter_session *session);
 
 #endif

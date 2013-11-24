@@ -36,7 +36,7 @@ struct ruter_departure
 	if (NULL == data) {
 		return NULL;
 	} else if (json_array == data->type) {
-		ruter_departure_array_parse(data);
+		return ruter_departure_array_parse(data);
 	} else if (json_object != data->type) {
 		return NULL;
 	}

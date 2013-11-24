@@ -78,7 +78,7 @@ struct ruter_stop
 		} else if (0 == strcmp("Stops", name)) {
 			stop->stops = ruter_stop_array_parse(value);
 		} else if (0 == strcmp("Lines", name)) {
-			stop->lines = ruter_line_array_parse(value);
+			stop->lines = ruter_line_parse(value);
 		} else if (0 == strcmp("RealTimeStop", name)) {
 			stop->realtime = value->u.boolean;
 		}

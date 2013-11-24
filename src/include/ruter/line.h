@@ -12,12 +12,13 @@ struct ruter_line {
 	struct ruter_line *next;
 };
 
-struct ruter_line *ruter_line_init(void);
+struct ruter_line
+*ruter_line_init(void);
 
-void ruter_line_free(struct ruter_line *line);
+void
+ruter_line_free(struct ruter_line *line);
 
-struct ruter_line *ruter_line_array_parse(json_value *data);
-
-struct ruter_line *ruter_line_parse(json_value *data);
+struct ruter_line
+*ruter_line_parse(json_value *data);
 
 #endif
