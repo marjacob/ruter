@@ -14,7 +14,7 @@
 #endif
 
 #ifndef RUTER_USER_AGENT
-#	define RUTER_USER_AGENT "PosixRuterCLI/0.2-pre-alpha"
+#	define RUTER_USER_AGENT "PosixRuterCLI/0.3-pre-alpha"
 #endif
 
 #ifndef RUTER_URI_SPACE
