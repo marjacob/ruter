@@ -18,12 +18,13 @@ struct ruter_stop {
 	struct ruter_stop *next;
 };
 
-struct ruter_stop *ruter_stop_init(void);
+struct ruter_stop
+*ruter_stop_init(void);
 
-void ruter_stop_free(struct ruter_stop *stop);
+void
+ruter_stop_free(struct ruter_stop *stop);
 
-struct ruter_stop *ruter_stop_parse(json_value *data);
-
-struct ruter_stop *ruter_stop_array_parse(json_value *data);
+struct ruter_stop
+*ruter_stop_parse(json_value *data);
 
 #endif

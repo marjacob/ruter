@@ -113,7 +113,7 @@ static void print_stops(struct ruter_stop *stops, int level)
 	print_stops(stops->next, level);
 }
 
-static void print_events(struct ruter_event *events)
+static void print_events(struct ruter_departure *events)
 {
 	if (NULL == events) {
 		return;
@@ -160,7 +160,7 @@ static int show(struct ruter_session *session, char *place)
 	char buf[8];
 	
 	while (NULL != stop) {
-		if (stop->realtime && NULL != stop->zone) {
+		if (stop->realtime) {
 			printf("%s [y/n]: ", stop->name);
 			if (NULL == fgets(buf, sizeof(buf), stdin)) {
 				continue;
@@ -175,16 +175,16 @@ static int show(struct ruter_session *session, char *place)
 		return 0;
 	}
 	
-	struct ruter_event *events = ruter_realtime(session, stop->id);
+	struct ruter_departure *deps = ruter_departures(session, stop->id);
 	ruter_stop_free(stops);
 	
-	if (NULL == events) {
+	if (NULL == deps) {
 		printf("no realtime events found\n");
 		return 0;
 	}
 	
-	print_events(events);
-	ruter_event_free(events);
+	print_events(deps);
+	ruter_departure_free(deps);
 	
 	return 0;
 }

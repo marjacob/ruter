@@ -2,89 +2,100 @@
 #include <string.h>
 #include "json.h"
 #include "ruter/constants.h"
-#include "ruter/event.h"
+#include "ruter/departure.h"
 #include "ruter/util.h"
 
-static struct ruter_event event_zero = { 0 };
+static struct ruter_departure
+*ruter_departure_array_parse(json_value *data);
 
-struct ruter_event *ruter_event_init(void)
+static struct ruter_departure departure_zero = { 0 };
+
+struct ruter_departure
+*ruter_departure_init(void)
 {
-	struct ruter_event *event = malloc(sizeof(*event));
-	*event = event_zero;
-	return event;
+	struct ruter_departure *dep = malloc(sizeof(*dep));
+	*dep = departure_zero;
+	return dep;
 }
 
-void ruter_event_free(struct ruter_event *event)
+void
+ruter_departure_free(struct ruter_departure *dep)
 {
-	if (NULL != event) {
-		ruter_event_free(event->next);
-		ruter_safe_free(event->destination);
-		ruter_safe_free(event->line_name);
-		ruter_safe_free(event->platform);
-		free(event);
+	if (NULL != dep) {
+		ruter_departure_free(dep->next);
+		ruter_safe_free(dep->destination);
+		ruter_safe_free(dep->line_name);
+		ruter_safe_free(dep->platform);
+		free(dep);
 	}
 }
 
-struct ruter_event *ruter_event_array_parse(json_value *data)
+struct ruter_departure
+*ruter_departure_parse(json_value *data)
+{
+	if (NULL == data) {
+		return NULL;
+	} else if (json_array == data->type) {
+		ruter_departure_array_parse(data);
+	} else if (json_object != data->type) {
+		return NULL;
+	}
+
+	char *name = NULL;
+	json_value *value = NULL;
+	struct ruter_departure *dep = ruter_departure_init();
+
+	for (int i = 0, j = data->u.object.length; i < j; i++) {
+		name = data->u.object.values[i].name;
+		value = data->u.object.values[i].value;
+
+		if (0 == strcmp("DestinationName", name)) {
+			dep->destination = ruter_strndup(
+				value->u.string.ptr,
+				value->u.string.length);
+		} else if (0 == strcmp("PublishedLineName", name)) {
+			dep->line_name = ruter_strndup(
+				value->u.string.ptr,
+				value->u.string.length);
+		} else if (0 == strcmp("DeparturePlatformName", name)) {
+			dep->platform = ruter_strndup(
+				value->u.string.ptr,
+				value->u.string.length);
+		} else if (0 == strcmp("VehicleMode", name)) {
+			dep->vehicle_mode =
+				(enum vehicle_mode)value->u.integer;
+		} else if (0 == strcmp("InCongestion", name)) {
+			dep->in_congestion = value->u.boolean;
+		}
+	}
+
+	return dep;
+}
+
+static struct ruter_departure
+*ruter_departure_array_parse(json_value *data)
 {
 	if (NULL == data || json_array != data->type) {
 		return NULL;
 	}
-	
-	struct ruter_event *event = NULL;
-	struct ruter_event *events = NULL;
-	struct ruter_event *last_event = NULL;
-	
-	for (int i = 0, j = data->u.array.length; i < j; i++) {
-		event = ruter_event_parse(data->u.array.values[i]);
-		
-		if (NULL == event) {
-			continue;
-		} else if (NULL == events) {
-			events = event;
-		} else {
-			last_event->next = event;
-		}
-		
-		last_event = event;
-	}
-	
-	return events;
-}
 
-struct ruter_event *ruter_event_parse(json_value *data)
-{
-	if (NULL == data || json_object != data->type) {
-		return NULL;
-	}
-	
-	char *name = NULL;
-	json_value *value = NULL;
-	struct ruter_event *event = ruter_event_init();
-	
-	for (int i = 0, j = data->u.object.length; i < j; i++) {
-		name = data->u.object.values[i].name;
-		value = data->u.object.values[i].value;
-		
-		if (0 == strcmp("DestinationName", name)) {
-			event->destination = ruter_strndup(
-				value->u.string.ptr, 
-				value->u.string.length);
-		} else if (0 == strcmp("PublishedLineName", name)) {
-			event->line_name = ruter_strndup(
-				value->u.string.ptr, 
-				value->u.string.length);
-		} else if (0 == strcmp("DeparturePlatformName", name)) {
-			event->platform = ruter_strndup(
-				value->u.string.ptr, 
-				value->u.string.length);
-		} else if (0 == strcmp("VehicleMode", name)) {
-			event->vehicle_mode = 
-				(enum vehicle_mode)value->u.integer;
-		} else if (0 == strcmp("InCongestion", name)) {
-			event->in_congestion = value->u.boolean;
+	struct ruter_departure *dep = NULL;
+	struct ruter_departure *deps = NULL;
+	struct ruter_departure *last_dep = NULL;
+
+	for (int i = 0, j = data->u.array.length; i < j; i++) {
+		dep = ruter_departure_parse(data->u.array.values[i]);
+
+		if (NULL == dep) {
+			continue;
+		} else if (NULL == deps) {
+			deps = dep;
+		} else {
+			last_dep->next = dep;
 		}
+
+		last_dep = dep;
 	}
-	
-	return event;
+
+	return deps;
 }
