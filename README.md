@@ -6,6 +6,14 @@ REST based client for the Ruter JSON API written in C.
 API
 ---
 
+Initializing a new API session.
+
+	int ruter_init(struct ruter_session *session, size_t bufsize);
+
+Closing an existing API session.
+
+	void ruter_close(struct ruter_session *session);
+
 Searching for available stops and other kinds of geographical locations.
 
 	struct ruter_stop *ruter_find(struct ruter_session *session, char *place);
