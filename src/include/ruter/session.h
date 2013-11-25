@@ -11,7 +11,7 @@ struct ruter_session {
 	size_t bufsize;
 	char *buf;
 	struct curl_slist *header;
-	char uri[RUTER_MAX_API_URI];
+	char uri[RUTER_API_LENGTH];
 	const char *(*strerror)(CURLcode);
 };
 

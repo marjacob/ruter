@@ -5,12 +5,12 @@
 #	define RUTER_BUFFER_SIZE 8192
 #endif
 
-#ifndef RUTER_DEFAULT_API_URI
-#	define RUTER_DEFAULT_API_URI "http://api.ruter.no/ReisRest"
+#ifndef RUTER_API_URI
+#	define RUTER_API_URI "http://api.ruter.no/ReisRest"
 #endif
 
-#ifndef RUTER_MAX_API_URI
-#	define RUTER_MAX_API_URI 256
+#ifndef RUTER_API_LENGTH
+#	define RUTER_API_LENGTH (sizeof(RUTER_API_URI))
 #endif
 
 #ifndef RUTER_USER_AGENT

@@ -62,8 +62,8 @@ ruter_init(struct ruter_session *session, size_t bufcap)
 	if (NULL == (session->buf = malloc(session->bufcap))) {
 		return 0;
 	}
-
-	strncpy(session->uri, RUTER_DEFAULT_API_URI, sizeof(session->uri));
+	
+	strncpy(session->uri, RUTER_API_URI, RUTER_API_LENGTH);
 
 	return 1;
 }
