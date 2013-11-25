@@ -160,8 +160,8 @@ static int show(struct ruter_session *session, char *place)
 	char buf[8];
 	
 	while (NULL != stop) {
-		if (stop->realtime) {
-			printf("%s [y/n]: ", stop->name);
+		if (PT_STOP == stop->type) {
+			printf("%s (%s) [y/n]: ", stop->name, stop->district);
 			if (NULL == fgets(buf, sizeof(buf), stdin)) {
 				continue;
 			} else if ('y' == buf[0]) {
