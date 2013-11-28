@@ -25,6 +25,7 @@ OBJECTS = $(OBJ)
 # Compiler
 CC = gcc
 CFLAGS = -c -Wall -std=gnu99 -I./$(INCDIR)
+MODE = release
 
 # Linker
 LINK = gcc
@@ -39,19 +40,26 @@ all: $(BINARY)
 
 # Debug build
 debug: CFLAGS += -g
+debug: MODE = debug
 debug: all
 
 # Build binary
 $(BINARY) : $(OBJECTS)
-	$(DIRGUARD)
-	$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
+	@$(DIRGUARD)
+	@printf "[    ] Linking C executable %s (%s)" "$(BINARY)" "$(MODE)"
+	@$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
+	@printf "\r[ OK ]\n"
 
 # Compile source to object code
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
-	$(DIRGUARD)
-	$(CC) $(CFLAGS) $< -o $@
+	@$(DIRGUARD)
+	@printf "[ ** ] Building C object %s (%s)" "$@" "$(MODE)"
+	@$(CC) $(CFLAGS) $< -o $@
+	@printf "\r[ OK ]\n"
 
 # Remove generated files
 clean: 
-	$(RM) $(OBJDIR) $(BINDIR)
+	@printf "[ ** ] Removing previously built files"
+	@$(RM) $(OBJDIR) $(BINDIR)
+	@printf "\r[ OK ]\n"
 
