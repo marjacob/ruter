@@ -25,7 +25,6 @@ OBJECTS = $(OBJ)
 # Compiler
 CC = gcc
 CFLAGS = -c -Wall -std=gnu99 -I./$(INCDIR)
-MODE = release
 
 # Linker
 LINK = gcc
@@ -34,6 +33,11 @@ LFLAGS = -lm -lcurl
 # Tools
 DIRGUARD = @mkdir -p $(@D)
 RM = rm -rf
+
+# Text
+MODE = release
+WAIT = [ .. ]
+DONE = [ OK ]
 
 # Default release build
 all: $(BINARY)
@@ -46,20 +50,20 @@ debug: all
 # Build binary
 $(BINARY) : $(OBJECTS)
 	@$(DIRGUARD)
-	@printf "[    ] Linking C executable %s (%s)" "$(BINARY)" "$(MODE)"
+	@printf "%s Linking C executable %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
-	@printf "\r[ OK ]\n"
+	@printf "\r%s\n" "$(DONE)"
 
 # Compile source to object code
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
 	@$(DIRGUARD)
-	@printf "[ ** ] Building C object %s (%s)" "$@" "$(MODE)"
+	@printf "%s Building C object %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(CC) $(CFLAGS) $< -o $@
-	@printf "\r[ OK ]\n"
+	@printf "\r%s\n" "$(DONE)"
 
 # Remove generated files
 clean: 
-	@printf "[ ** ] Removing previously built files"
+	@printf "%s Cleaning" "$(WAIT)"
 	@$(RM) $(OBJDIR) $(BINDIR)
-	@printf "\r[ OK ]\n"
+	@printf "\r%s\n" "$(DONE)"
 
