@@ -50,14 +50,14 @@ debug: all
 # Build binary
 $(BINARY) : $(OBJECTS)
 	@$(DIRGUARD)
-	@printf "%s Linking C executable %s (%s)" "$(WAIT)" "$@" "$(MODE)"
+	@printf "%s Linking executable %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
 	@printf "\r%s\n" "$(DONE)"
 
 # Compile source to object code
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
 	@$(DIRGUARD)
-	@printf "%s Building C object %s (%s)" "$(WAIT)" "$@" "$(MODE)"
+	@printf "%s Building object %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(CC) $(CFLAGS) $< -o $@
 	@printf "\r%s\n" "$(DONE)"
 
