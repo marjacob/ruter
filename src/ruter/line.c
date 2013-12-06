@@ -22,7 +22,7 @@ ruter_line_free(struct ruter_line *line)
 {
 	if (NULL != line) {
 		ruter_line_free(line->next);
-		ruter_safe_free(line->name);
+		ruter_safe_free(line->name.ptr);
 		free(line);
 	}
 }
@@ -52,9 +52,7 @@ struct ruter_line
 				return NULL;
 			}
 		} else if (0 == strcmp("LineName", name)) {
-			line->name = ruter_strndup(
-				value->u.string.ptr,
-				value->u.string.length);
+			ruter_strfill(&line->name, value);
 		} else if (0 == strcmp("Transportation", name)) {
 			line->type = (enum transport_type)value->u.integer;
 		}

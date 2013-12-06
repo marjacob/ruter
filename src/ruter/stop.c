@@ -26,9 +26,9 @@ ruter_stop_free(struct ruter_stop *stop)
 		ruter_line_free(stop->lines);
 		ruter_stop_free(stop->stops);
 		ruter_stop_free(stop->next);
-		ruter_safe_free(stop->name);
-		ruter_safe_free(stop->district);
-		ruter_safe_free(stop->zone);
+		ruter_safe_free(stop->name.ptr);
+		ruter_safe_free(stop->district.ptr);
+		ruter_safe_free(stop->zone.ptr);
 		free(stop);
 	}
 }
@@ -58,21 +58,11 @@ struct ruter_stop
 				return NULL;
 			}
 		} else if (0 == strcmp("District", name)) {
-			stop->district = ruter_strndup(
-				value->u.string.ptr,
-				value->u.string.length);
+			ruter_strfill(&stop->district, value);
 		} else if (0 == strcmp("Name", name)) {
-			stop->name = ruter_strndup(
-				value->u.string.ptr,
-				value->u.string.length);
+			ruter_strfill(&stop->name, value);
 		} else if (0 == strcmp("Zone", name)) {
-			if (0 < value->u.string.length) {
-				stop->zone = ruter_strndup(
-					value->u.string.ptr,
-					value->u.string.length);
-			} else {
-				stop->zone = NULL;
-			}
+			ruter_strfill(&stop->zone, value);
 		} else if (0 == strcmp("Type", name)) {
 			stop->type = (enum place_type)value->u.integer;
 		} else if (0 == strcmp("Stops", name)) {

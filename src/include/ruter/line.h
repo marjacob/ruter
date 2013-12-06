@@ -4,10 +4,11 @@
 #include <inttypes.h>
 #include "json.h"
 #include "ruter/constants.h"
+#include "ruter/types.h"
 
 struct ruter_line {
 	int64_t id;
-	char *name;
+	struct ruter_string name;
 	enum transport_type type;
 	struct ruter_line *next;
 };

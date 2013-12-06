@@ -23,9 +23,9 @@ ruter_departure_free(struct ruter_departure *dep)
 {
 	if (NULL != dep) {
 		ruter_departure_free(dep->next);
-		ruter_safe_free(dep->destination);
-		ruter_safe_free(dep->line_name);
-		ruter_safe_free(dep->platform);
+		ruter_safe_free(dep->destination.ptr);
+		ruter_safe_free(dep->line_name.ptr);
+		ruter_safe_free(dep->platform.ptr);
 		free(dep);
 	}
 }
@@ -50,17 +50,11 @@ struct ruter_departure
 		value = data->u.object.values[i].value;
 
 		if (0 == strcmp("DestinationName", name)) {
-			dep->destination = ruter_strndup(
-				value->u.string.ptr,
-				value->u.string.length);
+			ruter_strfill(&dep->destination, value);
 		} else if (0 == strcmp("PublishedLineName", name)) {
-			dep->line_name = ruter_strndup(
-				value->u.string.ptr,
-				value->u.string.length);
+			ruter_strfill(&dep->line_name, value);
 		} else if (0 == strcmp("DeparturePlatformName", name)) {
-			dep->platform = ruter_strndup(
-				value->u.string.ptr,
-				value->u.string.length);
+			ruter_strfill(&dep->platform, value);
 		} else if (0 == strcmp("VehicleMode", name)) {
 			dep->vehicle_mode =
 				(enum vehicle_mode)value->u.integer;

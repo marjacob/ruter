@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include "json.h"
+#include "ruter/types.h"
 #include "ruter/util.h"
 
 void ruter_safe_free(void *ptr)
@@ -10,35 +12,28 @@ void ruter_safe_free(void *ptr)
 	}
 }
 
-char *ruter_strndup(char const *s, size_t n)
+void ruter_strfill(struct ruter_string *str, json_value *value)
 {
-	size_t len = ruter_strnlen(s, n);
-	
-	if (0 >= len) {
-		return NULL;
+	if (NULL == str) {
+		return;
+	} else if (NULL != value->u.string.ptr) {
+		str->length = value->u.string.length;
+		str->ptr = calloc(str->length + 1, sizeof(*str->ptr));
+		str->length = mbstowcs(
+			str->ptr, 
+			value->u.string.ptr, 
+			str->length);
+		
+		if (0 > str->length) {
+			free(str->ptr);
+			str->ptr = NULL;
+			str->length = 0;
+		} else {
+			str->ptr[str->length] = L'\0';
+		}
+		
+	} else {
+		str->length = 0;
+		str->ptr = NULL;
 	}
-	
-	char *dup = malloc(len + 1);
-	
-	if (NULL == dup) {
-		return NULL;
-	}
-	
-	dup[len] = '\0';
-	
-	return memcpy(dup, s, len);
-}
-
-size_t ruter_strnlen(const char *s, size_t maxlen)
-{
-	if (NULL == s) {
-		return 0;
-	}
-	
-	register const char *e;
-	size_t n;
-	
-	for (e = s, n = 0; '\0' != *e && n < maxlen; e++, n++);
-	
-	return n;
 }

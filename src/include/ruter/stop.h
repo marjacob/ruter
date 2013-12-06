@@ -5,14 +5,15 @@
 #include "json.h"
 #include "ruter/constants.h"
 #include "ruter/line.h"
+#include "ruter/types.h"
 
 struct ruter_stop {
 	int64_t id;
 	enum place_type type;
-	char *name;
-	char *district;
-	char *zone;
 	int realtime;
+	struct ruter_string name;
+	struct ruter_string district;
+	struct ruter_string zone;
 	struct ruter_line *lines;
 	struct ruter_stop *stops;
 	struct ruter_stop *next;

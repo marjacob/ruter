@@ -3,13 +3,14 @@
 
 #include "json.h"
 #include "ruter/constants.h"
+#include "ruter/types.h"
 
 struct ruter_departure {
-	char *destination;
-	char *line_name;
-	char *platform;
 	int in_congestion;
 	enum vehicle_mode vehicle_mode;
+	struct ruter_string destination;
+	struct ruter_string line_name;
+	struct ruter_string platform;
 	struct ruter_departure *next;
 };
 

@@ -1,8 +1,10 @@
 #include <inttypes.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <wchar.h>
 #include "json.h"
 #include "ruter.h"
 
@@ -21,6 +23,18 @@ int main(int argc, char *argv[])
 	char *destination = NULL;
 	char *find_place = NULL;
 	char *show_place = NULL;
+	
+	if (NULL == setlocale(LC_ALL, "")) {
+		printf("%s: setlocale() failed to honor our request\n", 
+			argv[0]);
+		return EXIT_FAILURE;
+	}
+	
+	if (fwide(stdout, 1) <= 0) {
+		printf("%s: fwide() failed to change stream orientation\n",
+			argv[0]);
+		return EXIT_FAILURE;
+	}
 	
 	while ((c = getopt(argc, argv, "d:f:o:s:")) != -1) {
 		switch (c) {
@@ -44,14 +58,14 @@ int main(int argc, char *argv[])
 	if (optind < argc) {
 		/* these are the arguments after the command-line options */ 
 		for (; optind < argc; optind++) {
-			printf("argument: \"%s\"\n", argv[optind]);
+			wprintf(L"argument: \"%s\"\n", argv[optind]);
 		}
 	}
 	
 	struct ruter_session session;
 	
 	if (!ruter_init(&session, 0)) {
-		printf("%s: failed to init curl\n", argv[0]);
+		wprintf(L"%s: failed to init curl\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 	
@@ -75,39 +89,39 @@ static void print_stops(struct ruter_stop *stops, int level)
 	}
 	
 	for (int i = 0; i < level; i++) {
-		printf("\t");
+		wprintf(L"\t");
 	}
 	
 	switch (stops->type) {
 	case PT_STOP:
-		printf("Stop: ");
+		wprintf(L"Stop: ");
 		break;
 	case PT_AREA:
-		printf("Area: ");
+		wprintf(L"Area: ");
 		break;
 	case PT_POI:
-		printf("POI: ");
+		wprintf(L"POI: ");
 		break;
 	case PT_STREET:
-		printf("Street: ");
+		wprintf(L"Street: ");
 		break;
 	}
 	
-	printf("%s", stops->name);
+	wprintf(L"%ls (%d)", stops->name.ptr, stops->name.length);
 	
-	if (NULL != stops->district) {
-		printf(" (%s)", stops->district);
+	if (NULL != stops->district.ptr) {
+		wprintf(L" (%ls)", stops->district.ptr);
 	}
 	
-	if (NULL != stops->zone) {
-		printf(" (sone %s)", stops->zone);
+	if (NULL != stops->zone.ptr) {
+		wprintf(L" (sone %ls)", stops->zone.ptr);
 	}
 	
 	if (stops->realtime) {
-		printf(" (realtime)");
+		wprintf(L" (realtime)");
 	}
 	
-	printf("\n");
+	wprintf(L"\n");
 	
 	print_stops(stops->stops, level + 1);
 	print_stops(stops->next, level);
@@ -119,21 +133,21 @@ static void print_events(struct ruter_departure *events)
 		return;
 	}
 	
-	printf(
-		" %5s | %2s | %6s | %s\n",
+	wprintf(
+		L" [%32ls] | %5ls | %2ls | %6ls\n",
+		events->destination.ptr,
 		VM_BUS == events->vehicle_mode
-			? "Bus" :
+			? L"Bus" :
 		VM_FERRY == events->vehicle_mode
-			? "Ferry" :
+			? L"Ferry" :
 		VM_RAIL == events->vehicle_mode
-			? "Rail" :
+			? L"Rail" :
 		VM_TRAM == events->vehicle_mode
-			? "Tram" :
+			? L"Tram" :
 		VM_METRO == events->vehicle_mode
-			? "Metro" : "N/A",			
-		events->platform, 
-		events->line_name, 
-		events->destination);
+			? L"Metro" : L"N/A",			
+		NULL == events->platform.ptr ? L"" : events->platform.ptr, 
+		events->line_name.ptr);
 	
 	print_events(events->next);
 }
@@ -143,7 +157,7 @@ static int find(struct ruter_session *session, char *place)
 	struct ruter_stop *stops = ruter_find(session, place);
 	
 	if (NULL == stops) {
-		printf("no stops found\n");
+		wprintf(L"no stops found\n");
 		return 0;
 	}
 	
@@ -157,14 +171,20 @@ static int show(struct ruter_session *session, char *place)
 {
 	struct ruter_stop *stops = ruter_find(session, place);
 	struct ruter_stop *stop = stops;
-	char buf[8];
+	wchar_t buf[8];
 	
 	while (NULL != stop) {
 		if (PT_STOP == stop->type) {
-			printf("%s (%s) [y/n]: ", stop->name, stop->district);
-			if (NULL == fgets(buf, sizeof(buf), stdin)) {
+			wprintf(
+				L"%ls (%ls) [y/n]: ", 
+				stop->name.ptr, 
+				stop->district.ptr);
+				
+			size_t len = sizeof(buf) / sizeof(wchar_t);
+			
+			if (NULL == fgetws(buf, len, stdin)) {
 				continue;
-			} else if ('y' == buf[0]) {
+			} else if (L'y' == buf[0]) {
 				break;
 			}
 		}
@@ -179,7 +199,7 @@ static int show(struct ruter_session *session, char *place)
 	ruter_stop_free(stops);
 	
 	if (NULL == deps) {
-		printf("no realtime events found\n");
+		wprintf(L"no realtime events found\n");
 		return 0;
 	}
 	
@@ -191,7 +211,7 @@ static int show(struct ruter_session *session, char *place)
 
 static int travel(struct ruter_session *session, char *origin, char *dest)
 {
-	printf("Travel: %s ---> %s\n", origin, dest);
+	wprintf(L"Travel: %s ---> %s\n", origin, dest);
 	
 	return 0;
 }
