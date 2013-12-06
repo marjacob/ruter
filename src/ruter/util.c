@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 #include "ruter/util.h"
 
 void ruter_safe_free(void *ptr)
