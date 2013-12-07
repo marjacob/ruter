@@ -25,13 +25,15 @@ int main(int argc, char *argv[])
 	char *show_place = NULL;
 	
 	if (NULL == setlocale(LC_ALL, "")) {
-		printf("%s: setlocale() failed to honor our request\n", 
+		fprintf(stderr, 
+			"%s: setlocale() failed to honor our request\n", 
 			argv[0]);
 		return EXIT_FAILURE;
 	}
 	
 	if (fwide(stdout, 1) <= 0) {
-		printf("%s: fwide() failed to change stream orientation\n",
+		fprintf(stderr,
+			"%s: fwide() failed to change stream orientation\n",
 			argv[0]);
 		return EXIT_FAILURE;
 	}
@@ -127,29 +129,46 @@ static void print_stops(struct ruter_stop *stops, int level)
 	print_stops(stops->next, level);
 }
 
-static void print_events(struct ruter_departure *events)
+static void print_events(struct ruter_departure *dep)
 {
-	if (NULL == events) {
-		return;
+	struct ruter_departure *cur = dep;
+	size_t max_dest = 0;
+	size_t max_line = 0;
+	
+	while (NULL != cur) {
+		max_dest = cur->destination.length > max_dest
+			? cur->destination.length
+			: max_dest;
+		max_line = cur->line_name.length > max_line
+			? cur->line_name.length
+			: max_line;
+		cur = cur->next;
 	}
 	
-	wprintf(
-		L" [%32ls] | %5ls | %2ls | %6ls\n",
-		events->destination.ptr,
-		VM_BUS == events->vehicle_mode
-			? L"Bus" :
-		VM_FERRY == events->vehicle_mode
-			? L"Ferry" :
-		VM_RAIL == events->vehicle_mode
-			? L"Rail" :
-		VM_TRAM == events->vehicle_mode
-			? L"Tram" :
-		VM_METRO == events->vehicle_mode
-			? L"Metro" : L"N/A",			
-		NULL == events->platform.ptr ? L"" : events->platform.ptr, 
-		events->line_name.ptr);
+	cur = dep;
+	wchar_t meta_format[] = L"%%%zuls | %%5ls | %%2ls | %%%zuls\n";
+	wchar_t format[512];
+	swprintf(format, 512, meta_format, max_dest, max_line);
 	
-	print_events(events->next);
+	while (NULL != cur) {
+		wprintf(
+			format,
+			cur->destination.ptr,
+			VM_BUS == cur->vehicle_mode
+				? L"Bus" :
+			VM_FERRY == cur->vehicle_mode
+				? L"Ferry" :
+			VM_RAIL == cur->vehicle_mode
+				? L"Rail" :
+			VM_TRAM == cur->vehicle_mode
+				? L"Tram" :
+			VM_METRO == cur->vehicle_mode
+				? L"Metro" : L"N/A",			
+			NULL == cur->platform.ptr 
+				? L"" : cur->platform.ptr, 
+			cur->line_name.ptr);
+		cur = cur->next;
+	}
 }
 
 static int find(struct ruter_session *session, char *place)
