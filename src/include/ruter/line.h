@@ -8,8 +8,8 @@
 
 struct ruter_line {
 	int64_t id;
-	struct ruter_string name;
 	enum transport_type type;
+	struct ruter_string name;
 	struct ruter_line *next;
 };
 
