@@ -17,12 +17,12 @@ void ruter_strfill(struct ruter_string *str, json_value *value)
 	if (NULL == str) {
 		return;
 	} else if (NULL != value->u.string.ptr) {
+		mbstate_t ps = { 0 };
+		const char *src = value->u.string.ptr;
+		
 		str->length = value->u.string.length;
 		str->ptr = calloc(str->length + 1, sizeof(*str->ptr));
-		str->length = mbstowcs(
-			str->ptr, 
-			value->u.string.ptr, 
-			str->length);
+		str->length = mbsrtowcs(str->ptr, &src, str->length, &ps);
 		
 		if (0 > str->length) {
 			free(str->ptr);
@@ -31,7 +31,6 @@ void ruter_strfill(struct ruter_string *str, json_value *value)
 		} else {
 			str->ptr[str->length] = L'\0';
 		}
-		
 	} else {
 		str->length = 0;
 		str->ptr = NULL;
