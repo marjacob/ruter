@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 #include <wchar.h>
 #include "json.h"
 #include "ruter/types.h"
