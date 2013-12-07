@@ -1,8 +1,10 @@
 #ifndef __H_RUTER_TYPES__
 #define __H_RUTER_TYPES__
 
+#include <stddef.h>
+
 struct ruter_string {
-	unsigned int length;
+	size_t length;
 	wchar_t *ptr;
 };
 
