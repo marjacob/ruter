@@ -146,7 +146,7 @@ static void print_events(struct ruter_departure *dep)
 	}
 	
 	cur = dep;
-	wchar_t meta_format[] = L"%%%zuls | %%5ls | %%2ls | %%%zuls\n";
+	wchar_t meta_format[] = L"%%%zuls | %%5ls | %%2ls | %%%zuls | ";
 	wchar_t format[512];
 	swprintf(format, 512, meta_format, max_dest, max_line);
 	
@@ -167,6 +167,16 @@ static void print_events(struct ruter_departure *dep)
 			NULL == cur->platform.ptr 
 				? L"" : cur->platform.ptr, 
 			cur->line_name.ptr);
+		wprintf(
+			L"%02d:%02d (%02d:%02d) | %02d:%02d (%02d:%02d)\n", 
+			cur->aimed_arrival.tm_hour, 
+			cur->aimed_arrival.tm_min,
+			cur->expected_arrival.tm_hour, 
+			cur->expected_arrival.tm_min,
+			cur->aimed_departure.tm_hour, 
+			cur->aimed_departure.tm_min,
+			cur->expected_departure.tm_hour, 
+			cur->expected_departure.tm_min);
 		cur = cur->next;
 	}
 }
