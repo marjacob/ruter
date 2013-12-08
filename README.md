@@ -58,4 +58,5 @@ Find all departures from a stop.
 Libraries
 ---------
 
-*   [JSON parser](https://github.com/udp/json-parser/) by James McLaughlin et al.
+*   [json-parser](https://github.com/udp/json-parser/)
+*   [libcurl](http://curl.haxx.se/libcurl/)
