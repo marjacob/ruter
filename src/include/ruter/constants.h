@@ -17,10 +17,6 @@
 #	define RUTER_USER_AGENT "PosixRuterCLI/0.4-alpha"
 #endif
 
-#ifndef RUTER_URI_SPACE
-#	define RUTER_URI_SPACE "%20"
-#endif
-
 /* See http://labs.ruter.no/how-to-use-the-api/about-the-data-model.aspx */
 
 enum place_type {
