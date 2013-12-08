@@ -64,7 +64,7 @@ struct ruter_stop
 		} else if (0 == strcmp("Zone", name)) {
 			ruter_strfill(&stop->zone, value);
 		} else if (0 == strcmp("Type", name)) {
-			stop->type = (enum place_type)value->u.integer;
+			stop->type = value->u.integer;
 		} else if (0 == strcmp("Stops", name)) {
 			stop->stops = ruter_stop_array_parse(value);
 		} else if (0 == strcmp("Lines", name)) {

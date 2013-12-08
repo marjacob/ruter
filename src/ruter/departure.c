@@ -3,6 +3,7 @@
 #include "json.h"
 #include "ruter/constants.h"
 #include "ruter/departure.h"
+#include "ruter/time.h"
 #include "ruter/util.h"
 
 static struct ruter_departure
@@ -56,10 +57,17 @@ struct ruter_departure
 		} else if (0 == strcmp("DeparturePlatformName", name)) {
 			ruter_strfill(&dep->platform, value);
 		} else if (0 == strcmp("VehicleMode", name)) {
-			dep->vehicle_mode =
-				(enum vehicle_mode)value->u.integer;
+			dep->vehicle_mode = value->u.integer;
 		} else if (0 == strcmp("InCongestion", name)) {
 			dep->in_congestion = value->u.boolean;
+		} else if (0 == strcmp("AimedArrivalTime", name)) {
+			ruter_time_parse(&dep->aimed_arrival, value);
+		} else if (0 == strcmp("AimedDepartureTime", name)) {
+			ruter_time_parse(&dep->aimed_departure, value);
+		} else if (0 == strcmp("ExpectedArrivalTime", name)) {
+			ruter_time_parse(&dep->expected_arrival, value);
+		} else if (0 == strcmp("ExpectedDepartureTime", name)) {
+			ruter_time_parse(&dep->expected_departure, value);
 		}
 	}
 
