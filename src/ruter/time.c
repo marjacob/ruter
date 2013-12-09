@@ -26,13 +26,15 @@ ruter_time_parse(struct tm *tm, json_value *data)
 	}
 	
 	char *time = data->u.string.ptr;
+	char prefix[] = "/Date(";
+	size_t prefixlen = sizeof(prefix) - 1;
 	
-	if (NULL == time || 0 != strncmp("/Date(", time, 6)) {
+	if (NULL == time || 0 != strncmp(prefix, time, prefixlen)) {
 		return 0;
 	}
 	
 	char *endptr = NULL;
-	unsigned long long int ms = strtoull(time + 6, &endptr, 10);
+	unsigned long long int ms = strtoull(time + prefixlen, &endptr, 10);
 	time_t seconds = (ms / 1000) + ruter_time_offset(endptr);
 	
 	memcpy(tm, gmtime(&seconds), sizeof(*tm));
