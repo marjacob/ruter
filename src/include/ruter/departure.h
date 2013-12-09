@@ -19,9 +19,6 @@ struct ruter_departure {
 	struct ruter_departure *next;
 };
 
-struct ruter_departure
-*ruter_departure_init(void);
-
 void
 ruter_departure_free(struct ruter_departure *event);
 
