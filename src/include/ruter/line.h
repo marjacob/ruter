@@ -13,9 +13,6 @@ struct ruter_line {
 	struct ruter_line *next;
 };
 
-struct ruter_line
-*ruter_line_init(void);
-
 void
 ruter_line_free(struct ruter_line *line);
 
