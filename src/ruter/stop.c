@@ -6,17 +6,42 @@
 #include "ruter/stop.h"
 #include "ruter/util.h"
 
-static struct ruter_stop
-*ruter_stop_array_parse(json_value *data);
-
 static struct ruter_stop stop_zero = { 0 };
 
-struct ruter_stop
+static struct ruter_stop
 *ruter_stop_init(void)
 {
 	struct ruter_stop *stop = malloc(sizeof(*stop));
 	*stop = stop_zero;
 	return stop;
+}
+
+static struct ruter_stop
+*ruter_stop_array_parse(json_value *data)
+{
+	if (NULL == data || json_array != data->type) {
+		return NULL;
+	}
+
+	struct ruter_stop *stop = NULL;
+	struct ruter_stop *stops = NULL;
+	struct ruter_stop *last_stop = NULL;
+
+	for (int i = 0, j = data->u.array.length; i < j; i++) {
+		stop = ruter_stop_parse(data->u.array.values[i]);
+
+		if (NULL == stop) {
+			continue;
+		} else if (NULL == stops) {
+			stops = stop;
+		} else {
+			last_stop->next = stop;
+		}
+
+		last_stop = stop;
+	}
+
+	return stops;
 }
 
 void
@@ -75,32 +100,4 @@ struct ruter_stop
 	}
 
 	return stop;
-}
-
-static struct ruter_stop
-*ruter_stop_array_parse(json_value *data)
-{
-	if (NULL == data || json_array != data->type) {
-		return NULL;
-	}
-
-	struct ruter_stop *stop = NULL;
-	struct ruter_stop *stops = NULL;
-	struct ruter_stop *last_stop = NULL;
-
-	for (int i = 0, j = data->u.array.length; i < j; i++) {
-		stop = ruter_stop_parse(data->u.array.values[i]);
-
-		if (NULL == stop) {
-			continue;
-		} else if (NULL == stops) {
-			stops = stop;
-		} else {
-			last_stop->next = stop;
-		}
-
-		last_stop = stop;
-	}
-
-	return stops;
 }
