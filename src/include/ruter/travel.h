@@ -6,25 +6,25 @@
 #include "stop.h"
 #include "types.h"
 
-struct ruter_travel_stage {
+struct ruter_stage {
 	struct ruter_stop *arrival_stop;
 	struct ruter_stop *departure_stop;
 	struct tm arrival_time;
 	struct tm departure_time;
-	struct ruter_travel_stage *next;
+	struct ruter_stage *next;
 };
 
-struct ruter_travel_proposal {
+struct ruter_travel {
 	struct tm arrival;
 	struct tm departure;
-	struct ruter_travel_stage *stages;
-	struct ruter_travel_proposal *next;
+	struct ruter_stage *stages;
+	struct ruter_travel *next;
 };
 
 void
-ruter_travel_free(struct ruter_travel_proposal *travel);
+ruter_travel_free(struct ruter_travel *travel);
 
-struct ruter_travel_proposal
+struct ruter_travel
 *ruter_travel_parse(json_value *data);
 
 #endif

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <wchar.h>
 #include "ruter/json.h"
@@ -82,6 +83,35 @@ int main(int argc, char *argv[])
 	ruter_close(&session);
 	
 	return EXIT_SUCCESS;
+}
+static int64_t request_stop(struct ruter_session *session, char *place)
+{
+	struct ruter_stop *stops = ruter_find(session, place);
+	struct ruter_stop *stop = stops;
+	wchar_t buf[8];
+	
+	while (NULL != stop) {
+		if (PT_STOP == stop->type) {
+			wprintf(
+				L"%ls (%ls) [y/n]: ", 
+				stop->name.ptr, 
+				stop->district.ptr);
+				
+			size_t len = sizeof(buf) / sizeof(wchar_t);
+			
+			if (NULL == fgetws(buf, len, stdin)) {
+				continue;
+			} else if (L'y' == buf[0]) {
+				break;
+			}
+		}
+		stop = stop->next;
+	}
+	
+	int64_t stop_id = NULL != stop ? stop->id : 0;
+	ruter_stop_free(stops);
+	
+	return stop_id;
 }
 
 static void print_stops(struct ruter_stop *stops, int level)
@@ -198,34 +228,13 @@ static int find(struct ruter_session *session, char *place)
 
 static int show(struct ruter_session *session, char *place)
 {
-	struct ruter_stop *stops = ruter_find(session, place);
-	struct ruter_stop *stop = stops;
-	wchar_t buf[8];
+	int64_t stop_id = request_stop(session, place);
 	
-	while (NULL != stop) {
-		if (PT_STOP == stop->type) {
-			wprintf(
-				L"%ls (%ls) [y/n]: ", 
-				stop->name.ptr, 
-				stop->district.ptr);
-				
-			size_t len = sizeof(buf) / sizeof(wchar_t);
-			
-			if (NULL == fgetws(buf, len, stdin)) {
-				continue;
-			} else if (L'y' == buf[0]) {
-				break;
-			}
-		}
-		stop = stop->next;
-	}
-	
-	if (NULL == stop) {
+	if (0 == stop_id) {
 		return 0;
 	}
-	
-	struct ruter_departure *deps = ruter_departures(session, stop->id);
-	ruter_stop_free(stops);
+		
+	struct ruter_departure *deps = ruter_departures(session, stop_id);
 	
 	if (NULL == deps) {
 		wprintf(L"no realtime events found\n");
@@ -240,7 +249,23 @@ static int show(struct ruter_session *session, char *place)
 
 static int travel(struct ruter_session *session, char *origin, char *dest)
 {
-	wprintf(L"Travel: %s ---> %s\n", origin, dest);
+	int64_t origin_id = request_stop(session, origin);
+	int64_t dest_id = request_stop(session, dest);
+	
+	if (0 == origin_id || 0 == dest_id) {
+		return 0;
+	}
+	
+	time_t rawtime;
+  	struct tm *timeinfo;
+
+  	time(&rawtime);
+  	timeinfo = localtime(&rawtime);
+	
+	struct ruter_travel *proposals = ruter_travel(
+		session, timeinfo, 1, origin_id, dest_id);
+	
+	ruter_travel_free(proposals);
 	
 	return 0;
 }

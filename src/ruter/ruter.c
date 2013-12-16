@@ -1,7 +1,9 @@
 #include <curl/curl.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "ruter/json.h"
 #include "ruter/ruter.h"
 
@@ -54,6 +56,48 @@ struct ruter_departure
 	json_value_free(data);
 
 	return deps;
+}
+
+struct ruter_travel
+*ruter_travel(
+	struct ruter_session *session, 
+	struct tm *time,
+	int after, 
+	int64_t from_id, 
+	int64_t to_id)
+{
+	char buf[512];
+	
+	snprintf(
+		buf, 
+		sizeof(buf), 
+		"?time=%02d%02d%04d%02d%02d"
+		"&isAfter=%s"
+		"&fromplace=%" PRIi64
+		"&toplace=%" PRIi64,
+		time->tm_mday, 
+		time->tm_mon, 
+		time->tm_year, 
+		time->tm_hour, 
+		time->tm_min,
+		after ? "true" : "false",
+		from_id,
+		to_id);
+		
+	if (!ruter_rest(session, "Travel/GetTravelsByPlaces", buf)) {
+		return NULL;
+	}
+	
+	json_value *data = NULL;
+	
+	if (NULL == (data = json_parse(session->buf, session->bufsize))) {
+		return NULL;
+	}
+	
+	struct ruter_travel *proposals = ruter_travel_parse(data);
+	json_value_free(data);
+
+	return proposals;
 }
 
 int
