@@ -2,7 +2,7 @@
 #define __H_RUTER_UTILITIES__
 
 #include "json.h"
-#include "ruter/types.h"
+#include "types.h"
 
 void
 ruter_safe_free(void *ptr);

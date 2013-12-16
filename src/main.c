@@ -5,8 +5,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <wchar.h>
-#include "json.h"
-#include "ruter.h"
+#include "ruter/json.h"
+#include "ruter/ruter.h"
 
 static int find(struct ruter_session *session, char *place);
 

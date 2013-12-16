@@ -2,9 +2,9 @@
 #define __H_RUTER_LINE__
 
 #include <inttypes.h>
+#include "constants.h"
 #include "json.h"
-#include "ruter/constants.h"
-#include "ruter/types.h"
+#include "types.h"
 
 struct ruter_line {
 	int64_t id;

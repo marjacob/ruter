@@ -3,8 +3,8 @@
 
 #include <time.h>
 #include "json.h"
-#include "ruter/stop.h"
-#include "ruter/types.h"
+#include "stop.h"
+#include "types.h"
 
 struct ruter_travel_stage {
 	struct ruter_stop *arrival_stop;

@@ -2,10 +2,10 @@
 #define __H_RUTER_STOP__
 
 #include <inttypes.h>
+#include "constants.h"
 #include "json.h"
-#include "ruter/constants.h"
-#include "ruter/line.h"
-#include "ruter/types.h"
+#include "line.h"
+#include "types.h"
 
 struct ruter_stop {
 	int64_t id;
