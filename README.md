@@ -1,62 +1,27 @@
-ruter
-=====
+**Development will be resumed once Ruter publishes its new API.**
+This is *alpha* code and should not be expected to function very well. A lot of code will be removed, changed or added when the new API is released. The travel planner functionality has not yet been implemented.
+
+# ruter
 
 REST based client for the Ruter JSON API written in C.
 
-API
----
+## Building
 
-Initializing a new API session.
+Build the code by issuing `make`. The executable `ruter` can be found in the `bin` directory.
 
-	int ruter_init(struct ruter_session *session, size_t bufsize);
+## Usage
 
-Closing an existing API session.
+### Searching
+Searching for a place can be done with the `-f` option.
 
-	void ruter_close(struct ruter_session *session);
+	ruter -f nationaltheatret
 
-Searching for available stops and other kinds of geographical locations.
+### Departures
+Use the `-s` option to show the departures from a place. A list of possible matches will be printed. Select the correct place by entering `y` followed by pressing return.
 
-	struct ruter_stop *ruter_find(struct ruter_session *session, char *place);
+	ruter -s nationaltheatret
 
-Finding departures at a location identified by its ID.
-
-	struct ruter_departure *ruter_departures(struct ruter_session *session, int64_t id);
-
-Example
--------
-
-Creating a new API session.
-
-	struct ruter_session session;
-	
-	if (!ruter_init(&session, 0)) {
-		/* error */
-	}
-	
-	/* Perform some API calls. */
-	
-	ruter_close(&session);
-
-Searching for a stop.
-
-	struct ruter_stop *stops = ruter_find(session, place);
-	
-	/* Recurse through the stops graph. */
-	
-	ruter_stop_free(stops);
-
-Find all departures from a stop.
-
-	/* Find the ID of a stop. */
-	
-	struct ruter_departure *departures = ruter_departures(session, stop->id);
-	
-	/* Recurse through the departures graph. */
-	
-	ruter_departure_free(departures);
-
-Libraries
----------
+## Libraries
 
 *   [json-parser](https://github.com/udp/json-parser/)
 *   [libcurl](http://curl.haxx.se/libcurl/)
