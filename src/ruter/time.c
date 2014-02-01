@@ -4,6 +4,17 @@
 #include "json.h"
 #include "ruter/time.h"
 
+/**
+ * ruter_time_offset() - Computes time offset in seconds.
+ * @offset:	A character string with a UTC offset formatted as 
+ *		+hhmm or -hhmm.
+ *
+ * The ruter_time_offset() function takes a UTC offset and calculates its
+ * representation in seconds. This is useful for computing the local time
+ * of some unix time stamp.
+ *
+ * Return: Returns the UTC time offset in seconds.
+ */
 static int
 ruter_time_offset(char *offset) {
 	int h, m;
