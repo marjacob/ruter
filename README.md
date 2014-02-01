@@ -9,7 +9,7 @@ UTF8 characters are supported. I do my very best to conform to the [Linux kernel
 
 ## Building
 
-Build the code by issuing `make` or `make debug`. The executable `ruter` can be found in the `bin` directory.
+Build the code by issuing `make` or `make debug`. The executable `ruter` can be found in the `bin` directory. Removing all generated files is just a matter of issuing `make clean`.
 
 ## Usage
 
