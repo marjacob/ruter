@@ -54,6 +54,9 @@ static struct ruter_travel
 	//json_value *value = NULL;
 	struct ruter_travel *proposal = ruter_travel_init();
 	
+	/* Temporary measure to stop compiler whining. */
+	free(ruter_stage_init());
+	
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		//name = data->u.object.values[i].name;
 		//value = data->u.object.values[i].value;

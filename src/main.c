@@ -6,7 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <wchar.h>
-#include "ruter/json.h"
+#include "json.h"
 #include "ruter/ruter.h"
 
 static int find(struct ruter_session *session, char *place);
