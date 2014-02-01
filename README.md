@@ -1,5 +1,5 @@
 **Development will be resumed once Ruter publishes its new API.**
-This is *alpha* code and should not be expected to function very well. A lot of code will be removed, changed or added when the new API is released. The travel planner functionality has not yet been implemented.
+This is *alpha* code and bugs should be expected. However, everything compiles and some functionality is usable (searching and departure information). A lot of code will be removed, changed or added when the new API is released. The travel planner functionality has not yet been implemented.
 
 # ruter
 
