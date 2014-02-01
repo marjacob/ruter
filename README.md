@@ -3,7 +3,7 @@ This is *alpha* code and should not be expected to function very well. A lot of 
 
 # ruter
 
-REST based client for the Ruter JSON API written in C.
+This is a client for the REST/JSON based Ruter API written in C. I do my very best to conform to the [Linux kernel coding style](https://www.kernel.org/doc/Documentation/CodingStyle) at all times.
 
 ## Building
 
