@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "ruter/json.h"
+#include "json.h"
 #include "ruter/time.h"
 
 static int

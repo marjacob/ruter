@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ruter/json.h"
+#include "json.h"
 #include "ruter/line.h"
 #include "ruter/stop.h"
 #include "ruter/util.h"

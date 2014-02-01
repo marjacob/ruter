@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "ruter/json.h"
+#include "json.h"
 #include "ruter/ruter.h"
 
 struct ruter_stop

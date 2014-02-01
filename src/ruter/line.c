@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "ruter/json.h"
+#include "json.h"
 #include "ruter/line.h"
 #include "ruter/util.h"
 
