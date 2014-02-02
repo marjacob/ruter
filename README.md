@@ -25,5 +25,5 @@ Use the `-s` option to show the departures from a place. A list of possible matc
 
 ## Dependencies
 
-*   [json-parser](https://github.com/udp/json-parser/)
+*   [json-parser](https://github.com/udp/json-parser/) (included)
 *   [libcurl](http://curl.haxx.se/libcurl/)
