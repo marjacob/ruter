@@ -6,7 +6,7 @@
 
 /**
  * ruter_time_offset() - Computes time offset in seconds.
- * @offset:	A character string with a UTC offset formatted as 
+ * @offset:	A character string representing a UTC offset formatted as 
  *		+hhmm or -hhmm.
  *
  * The ruter_time_offset() function takes a UTC offset and calculates its
