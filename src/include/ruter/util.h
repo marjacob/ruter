@@ -6,6 +6,7 @@
 
 /**
  * ruter_safe_free() - Frees dynamically allocated memory and ignores NULL.
+ *
  * @ptr:	Pointer to dynamically allocated memory.
  *
  * Frees dynamically allocated memory by calling free(). The only difference
@@ -17,6 +18,7 @@ ruter_safe_free(void *const ptr);
 
 /**
  * ruter_strfill() - Extracts a string from JSON data.
+ *
  * @str:	Pointer to destination string structure.
  * @value:	Pointer to JSON source value.
  *

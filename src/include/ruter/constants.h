@@ -21,6 +21,7 @@
 
 /**
  * enum place_type - Various kinds of stops.
+ *
  * @PT_STOP:	A regular stop for public transportation.
  * @PT_AREA:	An area that may contain stops.
  * @PT_POI:	A point of interest that may have stops nearby.
@@ -37,6 +38,7 @@ enum place_type {
 
 /**
  * enum transport_type - Various methods of transportation.
+ *
  * @TT_WALKING:		Usually indicates a short walk between stops.
  * @TT_AIRPORT_BUS:	Transport to an airport available by bus.
  * @TT_BUS:		Transport available by bus.
@@ -64,6 +66,7 @@ enum transport_type {
  
 /**
  * enum vehicle_mode - Various methods of transportation.
+ *
  * @VM_BUS:	Realtime information available for bus.
  * @VM_FERRY:	Realtime information available for ferry.
  * @VM_RAIL:	Realtime information available for rail.

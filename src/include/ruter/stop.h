@@ -9,6 +9,7 @@
 
 /**
  * struct ruter_stop - Describes a stop.
+ *
  * @id:		Unique stop ID.
  * @type:	Describes the kind of stop this is.
  * @realtime	Non-zero if the stop supports realtime traffic information.
@@ -18,7 +19,7 @@
  * @lines	All lines going through the stop.
  * @stops	All stops belonging to an area.
  * @next	Next stop in the linked list.
- * 
+ *
  * This structure describes the various properties of a stop. The type of the
  * stop influences which of the properties are available. The 'stops' field
  * for example is usually only non-NULL if type is 'POI'. These details has 
@@ -38,6 +39,7 @@ struct ruter_stop {
 
 /**
  * ruter_stop_free() - Frees a stop and all its fields.
+ *
  * @stop:	Pointer to stop.
  *
  * Recursively frees a stop and everything the stop structure points to.
@@ -49,6 +51,7 @@ ruter_stop_free(struct ruter_stop *const stop);
 
 /**
  * ruter_stop_parse() - Builds a stop structure from JSON data.
+ *
  * @data:	Pointer to JSON data.
  *
  * JSON data is extracted and placed inside more intuitive data structures.

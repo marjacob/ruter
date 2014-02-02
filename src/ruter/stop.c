@@ -26,6 +26,7 @@ static struct ruter_stop
 
 /**
  * ruter_stop_array_parse() - Parses a JSON array of stops.
+ *
  * @data:	Pointer to JSON data.
  *
  * Parses a JSON array of stops into a graph of stops. Each stop may contain
