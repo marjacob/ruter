@@ -21,7 +21,7 @@
  * 
  * This structure describes the various properties of a stop. The type of the
  * stop influences which of the properties are available. The 'stops' field
- * for example is usually only non-NULL if type is 'POI'. These details have 
+ * for example is usually only non-NULL if type is 'POI'. These details has 
  * not been documented in the official API though.
  */
 struct ruter_stop {
@@ -55,7 +55,7 @@ ruter_stop_free(struct ruter_stop *const stop);
  * Calling this function will often produce a graph, so remember to
  * check the next pointer and stops pointer.
  *
- * Return: Pointer to graph of stops.
+ * Return: Pointer to graph of stops on success or NULL on failure.
  */
 struct ruter_stop
 *ruter_stop_parse(const json_value *const data);

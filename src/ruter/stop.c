@@ -31,7 +31,7 @@ static struct ruter_stop
  * Parses a JSON array of stops into a graph of stops. Each stop may contain
  * a pointer to a list of stops in addition to its next pointer.
  *
- * Return: Pointer to graph of stops.
+ * Return: Pointer to graph of stops on success or NULL on failure.
  */
 static struct ruter_stop
 *ruter_stop_array_parse(const json_value *const data)
