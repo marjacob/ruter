@@ -7,14 +7,16 @@
 #include "ruter/types.h"
 #include "ruter/util.h"
 
-void ruter_safe_free(void *ptr)
+void
+ruter_safe_free(void *const ptr)
 {
 	if (NULL != ptr) {
 		free(ptr);
 	}
 }
 
-void ruter_strfill(struct ruter_string *str, json_value *value)
+void
+ruter_strfill(struct ruter_string * const str, const json_value *const value)
 {
 	if (NULL == str) {
 		return;
