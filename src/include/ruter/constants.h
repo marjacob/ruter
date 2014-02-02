@@ -2,7 +2,7 @@
 #define __H_RUTER_CONSTANTS__
 
 /* Initial size of the data receive buffer. 
- * The buffer size will be increased automatically when necessary. */
+ * The buffer size is increased automatically when necessary. */
 #ifndef RUTER_BUFFER_SIZE
 #	define RUTER_BUFFER_SIZE 8192
 #endif
@@ -18,8 +18,6 @@
 #ifndef RUTER_USER_AGENT
 #	define RUTER_USER_AGENT "PosixRuterCLI/0.4-alpha"
 #endif
-
-/* See http://labs.ruter.no/how-to-use-the-api/about-the-data-model.aspx */
 
 /**
  * enum place_type - Various kinds of stops.
@@ -82,5 +80,8 @@ enum vehicle_mode {
 	VM_TRAM = 3,
 	VM_METRO = 4
 };
+
+/* About the data model:
+ * http://labs.ruter.no/how-to-use-the-api/about-the-data-model.aspx */
 
 #endif
