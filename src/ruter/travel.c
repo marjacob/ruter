@@ -2,6 +2,7 @@
 #include <string.h>
 #include "ruter/stop.h"
 #include "ruter/travel.h"
+#include "ruter/util.h"
 
 static struct ruter_travel travel_zero = { { 0 } };
 static struct ruter_stage stage_zero = { 0 };
@@ -46,7 +47,7 @@ ruter_travel_free(struct ruter_travel *travel)
 static struct ruter_travel
 *ruter_proposal_parse(json_value *data)
 {
-	if (!json_array_parse(data)) {
+	if (!is_json_array(data)) {
 		return NULL;
 	}
 	
