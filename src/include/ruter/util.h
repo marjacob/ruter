@@ -26,7 +26,7 @@ is_json_array(const json_value *data);
  * Return: Returns nonzero if the value is a valid JSON object.
  */
 int
-is_json_object(const json_value *data)
+is_json_object(const json_value *data);
 
 /**
  * ruter_strfill() - Extracts a string from JSON data.
