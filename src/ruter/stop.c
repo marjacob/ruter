@@ -19,7 +19,7 @@ static struct ruter_stop
 static struct ruter_stop
 *ruter_stop_array_parse(const json_value *data)
 {
-	if (NULL == data || json_array != data->type) {
+	if (!is_json_array(data)) {
 		return NULL;
 	}
 
@@ -62,11 +62,9 @@ ruter_stop_free(struct ruter_stop *stop)
 struct ruter_stop
 *ruter_stop_parse(const json_value *data)
 {
-	if (NULL == data) {
-		return NULL;
-	} else if (json_array == data->type) {
+	if (is_json_array(data)) {
 		return ruter_stop_array_parse(data);
-	} else if (json_object != data->type) {
+	} else if (!is_json_object(data)) {
 		return NULL;
 	}
 

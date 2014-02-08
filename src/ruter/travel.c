@@ -46,7 +46,7 @@ ruter_travel_free(struct ruter_travel *travel)
 static struct ruter_travel
 *ruter_proposal_parse(json_value *data)
 {
-	if (NULL == data || json_array != data->type) {
+	if (!json_array_parse(data)) {
 		return NULL;
 	}
 	

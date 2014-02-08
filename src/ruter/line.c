@@ -17,7 +17,7 @@ static struct ruter_line
 static struct ruter_line
 *ruter_line_array_parse(json_value *data)
 {
-	if (NULL == data || json_array != data->type) {
+	if (!is_json_array(data)) {
 		return NULL;
 	}
 
@@ -56,11 +56,9 @@ ruter_line_free(struct ruter_line *line)
 struct ruter_line
 *ruter_line_parse(json_value *data)
 {
-	if (NULL == data) {
-		return NULL;
-	} else if (json_array == data->type) {
+	if (is_json_array(data)) {
 		return ruter_line_array_parse(data);
-	} else if (json_object != data->type) {
+	} else if (!is_json_object(data)) {
 		return NULL;
 	}
 
