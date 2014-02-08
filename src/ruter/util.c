@@ -16,7 +16,7 @@ is_json_array(const json_value *data)
 int
 is_json_object(const json_value *data)
 {
-	return (NULL != data && json_object == data->type)
+	return (NULL != data && json_object == data->type);
 }
 
 void
