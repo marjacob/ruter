@@ -8,6 +8,14 @@
 
 static struct ruter_departure departure_zero = { 0 };
 
+/**
+ * ruter_departure_init() - Allocates and initialises a departure structure.
+ *
+ * Allocates a departure structure and initialises all fields to their 
+ * respective zero state. Integers are set to 0 and pointers are set to NULL.
+ *
+ * Return: Pointer to departure structure.
+ */
 static struct ruter_departure
 *ruter_departure_init(void)
 {
@@ -16,6 +24,17 @@ static struct ruter_departure
 	return dep;
 }
 
+/**
+ * ruter_departure_array_parse() - Parses a JSON array of departures.
+ *
+ * @data:	Pointer to JSON data.
+ *
+ * Parses a JSON array of departures into a graph of departures. Each 
+ * departure may contain a pointer to a list of stops in addition to its next
+ * pointer.
+ *
+ * Return: Pointer to graph of departures on success or NULL on failure.
+ */
 static struct ruter_departure
 *ruter_departure_array_parse(json_value *data)
 {
@@ -23,9 +42,10 @@ static struct ruter_departure
 		return NULL;
 	}
 
-	struct ruter_departure *dep = NULL;
-	struct ruter_departure *deps = NULL;
-	struct ruter_departure *last_dep = NULL;
+	struct ruter_departure
+		*dep = NULL,
+		*deps = NULL,
+		*last_dep = NULL;
 
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
 		dep = ruter_departure_parse(data->u.array.values[i]);
@@ -82,17 +102,17 @@ struct ruter_departure
 		} else if (0 == strcmp("DeparturePlatformName", name)) {
 			ruter_strfill(&dep->platform, value);
 		} else if (0 == strcmp("VehicleMode", name)) {
-			dep->vehicle_mode = value->u.integer;
+			dep->vehicle = value->u.integer;
 		} else if (0 == strcmp("InCongestion", name)) {
-			dep->in_congestion = value->u.boolean;
+			dep->congested = value->u.boolean;
 		} else if (0 == strcmp("AimedArrivalTime", name)) {
-			ruter_time_parse(&dep->aimed_arrival, value);
+			ruter_time_parse(&dep->a_arrival, value);
 		} else if (0 == strcmp("AimedDepartureTime", name)) {
-			ruter_time_parse(&dep->aimed_departure, value);
+			ruter_time_parse(&dep->a_depart, value);
 		} else if (0 == strcmp("ExpectedArrivalTime", name)) {
-			ruter_time_parse(&dep->expected_arrival, value);
+			ruter_time_parse(&dep->e_arrival, value);
 		} else if (0 == strcmp("ExpectedDepartureTime", name)) {
-			ruter_time_parse(&dep->expected_departure, value);
+			ruter_time_parse(&dep->e_depart, value);
 		}
 	}
 

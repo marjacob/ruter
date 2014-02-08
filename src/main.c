@@ -184,29 +184,29 @@ static void print_events(struct ruter_departure *dep)
 		wprintf(
 			format,
 			cur->destination.ptr,
-			VM_BUS == cur->vehicle_mode
+			VM_BUS == cur->vehicle
 				? L"Bus" :
-			VM_FERRY == cur->vehicle_mode
+			VM_FERRY == cur->vehicle
 				? L"Ferry" :
-			VM_RAIL == cur->vehicle_mode
+			VM_RAIL == cur->vehicle
 				? L"Rail" :
-			VM_TRAM == cur->vehicle_mode
+			VM_TRAM == cur->vehicle
 				? L"Tram" :
-			VM_METRO == cur->vehicle_mode
+			VM_METRO == cur->vehicle
 				? L"Metro" : L"N/A",			
 			NULL == cur->platform.ptr 
 				? L"" : cur->platform.ptr, 
 			cur->line_name.ptr);
 		wprintf(
 			L"%02d:%02d (%02d:%02d) | %02d:%02d (%02d:%02d)\n", 
-			cur->aimed_arrival.tm_hour, 
-			cur->aimed_arrival.tm_min,
-			cur->expected_arrival.tm_hour, 
-			cur->expected_arrival.tm_min,
-			cur->aimed_departure.tm_hour, 
-			cur->aimed_departure.tm_min,
-			cur->expected_departure.tm_hour, 
-			cur->expected_departure.tm_min);
+			cur->a_arrival.tm_hour, 
+			cur->a_arrival.tm_min,
+			cur->e_arrival.tm_hour, 
+			cur->e_arrival.tm_min,
+			cur->a_depart.tm_hour, 
+			cur->a_depart.tm_min,
+			cur->e_depart.tm_hour, 
+			cur->e_depart.tm_min);
 		cur = cur->next;
 	}
 }
