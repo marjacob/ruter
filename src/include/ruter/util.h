@@ -38,6 +38,6 @@ is_json_object(const json_value *data);
  * it into a string structure.
  */
 void
-ruter_strfill(struct ruter_string * const str, const json_value *const value);
+ruter_strfill(struct ruter_string *str, const json_value *value);
 
 #endif

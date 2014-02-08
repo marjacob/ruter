@@ -20,7 +20,7 @@ is_json_object(const json_value *data)
 }
 
 void
-ruter_strfill(struct ruter_string * const str, const json_value *const value)
+ruter_strfill(struct ruter_string *str, const json_value *value)
 {
 	if (NULL == str) {
 		return;
