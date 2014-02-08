@@ -21,9 +21,10 @@ static struct ruter_line
 		return NULL;
 	}
 
-	struct ruter_line *line = NULL;
-	struct ruter_line *lines = NULL;
-	struct ruter_line *last_line = NULL;
+	struct ruter_line
+		*line = NULL,
+		*lines = NULL,
+		*last_line = NULL;
 
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
 		line = ruter_line_parse(data->u.array.values[i]);
