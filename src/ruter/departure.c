@@ -8,14 +8,6 @@
 
 static struct ruter_departure departure_zero = { 0 };
 
-/**
- * ruter_departure_init() - Allocates and initialises a departure structure.
- *
- * Allocates a departure structure and initialises all fields to their 
- * respective zero state. Integers are set to 0 and pointers are set to NULL.
- *
- * Return: Pointer to departure structure.
- */
 static struct ruter_departure
 *ruter_departure_init(void)
 {
@@ -24,17 +16,6 @@ static struct ruter_departure
 	return dep;
 }
 
-/**
- * ruter_departure_array_parse() - Parses a JSON array of departures.
- *
- * @data:	Pointer to JSON data.
- *
- * Parses a JSON array of departures into a graph of departures. Each 
- * departure may contain a pointer to a list of stops in addition to its next
- * pointer.
- *
- * Return: Pointer to graph of departures on success or NULL on failure.
- */
 static struct ruter_departure
 *ruter_departure_array_parse(json_value *data)
 {
