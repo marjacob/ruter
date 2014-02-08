@@ -17,6 +17,18 @@ int
 is_json_array(const json_value *data);
 
 /**
+ * is_json_object() - Checks if a JSON value is an object.
+ *
+ * @data:	Pointer to JSON value.
+ *
+ * Checks whether a JSON value pointer points to a JSON object.
+ *
+ * Return: Returns nonzero if the value is a valid JSON object.
+ */
+int
+is_json_object(const json_value *data)
+
+/**
  * ruter_strfill() - Extracts a string from JSON data.
  *
  * @str:	Pointer to destination string structure.

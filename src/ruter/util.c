@@ -13,6 +13,12 @@ is_json_array(const json_value *data)
 	return (NULL != data && json_array == data->type);
 }
 
+int
+is_json_object(const json_value *data)
+{
+	return (NULL != data && json_object == data->type)
+}
+
 void
 ruter_strfill(struct ruter_string * const str, const json_value *const value)
 {
