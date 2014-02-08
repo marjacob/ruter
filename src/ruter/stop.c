@@ -8,14 +8,6 @@
 
 static struct ruter_stop stop_zero = { 0 };
 
-/**
- * ruter_stop_init() - Allocates and initialises a stop structure.
- *
- * Allocates a stop structure and initialises all fields to their respective 
- * zero state. Integers are set to 0 and pointers are set to NULL.
- *
- * Return: Pointer to stop structure.
- */
 static struct ruter_stop
 *ruter_stop_init(void)
 {
@@ -24,18 +16,8 @@ static struct ruter_stop
 	return stop;
 }
 
-/**
- * ruter_stop_array_parse() - Parses a JSON array of stops.
- *
- * @data:	Pointer to JSON data.
- *
- * Parses a JSON array of stops into a graph of stops. Each stop may contain
- * a pointer to a list of stops in addition to its next pointer.
- *
- * Return: Pointer to graph of stops on success or NULL on failure.
- */
 static struct ruter_stop
-*ruter_stop_array_parse(const json_value *const data)
+*ruter_stop_array_parse(const json_value *data)
 {
 	if (NULL == data || json_array != data->type) {
 		return NULL;
@@ -64,7 +46,7 @@ static struct ruter_stop
 }
 
 void
-ruter_stop_free(struct ruter_stop *const stop)
+ruter_stop_free(struct ruter_stop *stop)
 {
 	if (NULL != stop) {
 		ruter_line_free(stop->lines);
@@ -78,7 +60,7 @@ ruter_stop_free(struct ruter_stop *const stop)
 }
 
 struct ruter_stop
-*ruter_stop_parse(const json_value *const data)
+*ruter_stop_parse(const json_value *data)
 {
 	if (NULL == data) {
 		return NULL;

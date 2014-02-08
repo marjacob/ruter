@@ -47,7 +47,7 @@ struct ruter_stop {
  * Take care not to do that.
  */
 void
-ruter_stop_free(struct ruter_stop *const stop);
+ruter_stop_free(struct ruter_stop *stop);
 
 /**
  * ruter_stop_parse() - Builds a stop structure from JSON data.
@@ -61,6 +61,6 @@ ruter_stop_free(struct ruter_stop *const stop);
  * Return: Pointer to graph of stops on success or NULL on failure.
  */
 struct ruter_stop
-*ruter_stop_parse(const json_value *const data);
+*ruter_stop_parse(const json_value *data);
 
 #endif
