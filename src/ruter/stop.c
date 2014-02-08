@@ -52,9 +52,9 @@ ruter_stop_free(struct ruter_stop *stop)
 		ruter_line_free(stop->lines);
 		ruter_stop_free(stop->stops);
 		ruter_stop_free(stop->next);
-		ruter_safe_free(stop->name.ptr);
-		ruter_safe_free(stop->district.ptr);
-		ruter_safe_free(stop->zone.ptr);
+		free(stop->name.ptr);
+		free(stop->district.ptr);
+		free(stop->zone.ptr);
 		free(stop);
 	}
 }

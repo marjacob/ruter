@@ -69,9 +69,9 @@ ruter_departure_free(struct ruter_departure *dep)
 {
 	if (NULL != dep) {
 		ruter_departure_free(dep->next);
-		ruter_safe_free(dep->dest.ptr);
-		ruter_safe_free(dep->line_name.ptr);
-		ruter_safe_free(dep->platform.ptr);
+		free(dep->dest.ptr);
+		free(dep->line_name.ptr);
+		free(dep->platform.ptr);
 		free(dep);
 	}
 }

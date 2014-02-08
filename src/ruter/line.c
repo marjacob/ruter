@@ -48,7 +48,7 @@ ruter_line_free(struct ruter_line *line)
 {
 	if (NULL != line) {
 		ruter_line_free(line->next);
-		ruter_safe_free(line->name.ptr);
+		free(line->name.ptr);
 		free(line);
 	}
 }

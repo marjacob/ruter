@@ -92,7 +92,7 @@ ruter_close(struct ruter_session *session)
 	curl_easy_cleanup(session->curl);
 	curl_global_cleanup();
 	curl_slist_free_all(session->header);
-	ruter_safe_free(session->buf);
+	free(session->buf);
 	
 	*session = session_zero;
 
