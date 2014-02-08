@@ -69,7 +69,7 @@ ruter_departure_free(struct ruter_departure *dep)
 {
 	if (NULL != dep) {
 		ruter_departure_free(dep->next);
-		ruter_safe_free(dep->destination.ptr);
+		ruter_safe_free(dep->dest.ptr);
 		ruter_safe_free(dep->line_name.ptr);
 		ruter_safe_free(dep->platform.ptr);
 		free(dep);
@@ -96,7 +96,7 @@ struct ruter_departure
 		value = data->u.object.values[i].value;
 
 		if (0 == strcmp("DestinationName", name)) {
-			ruter_strfill(&dep->destination, value);
+			ruter_strfill(&dep->dest, value);
 		} else if (0 == strcmp("PublishedLineName", name)) {
 			ruter_strfill(&dep->line_name, value);
 		} else if (0 == strcmp("DeparturePlatformName", name)) {

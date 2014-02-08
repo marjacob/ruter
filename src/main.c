@@ -166,8 +166,8 @@ static void print_events(struct ruter_departure *dep)
 	size_t max_line = 0;
 	
 	while (NULL != cur) {
-		max_dest = cur->destination.length > max_dest
-			? cur->destination.length
+		max_dest = cur->dest.length > max_dest
+			? cur->dest.length
 			: max_dest;
 		max_line = cur->line_name.length > max_line
 			? cur->line_name.length
@@ -183,7 +183,7 @@ static void print_events(struct ruter_departure *dep)
 	while (NULL != cur) {
 		wprintf(
 			format,
-			cur->destination.ptr,
+			cur->dest.ptr,
 			VM_BUS == cur->vehicle
 				? L"Bus" :
 			VM_FERRY == cur->vehicle

@@ -29,7 +29,7 @@ struct ruter_departure {
 	struct tm a_depart;
 	struct tm e_arrival;
 	struct tm e_depart;
-	struct ruter_string destination;
+	struct ruter_string dest;
 	struct ruter_string line_name;
 	struct ruter_string platform;
 	struct ruter_departure *next;
