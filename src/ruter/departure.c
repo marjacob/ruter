@@ -19,7 +19,7 @@ static struct ruter_departure
 static struct ruter_departure
 *ruter_departure_array_parse(json_value *data)
 {
-	if (NULL == data || json_array != data->type) {
+	if (!is_json_array(data)) {
 		return NULL;
 	}
 
@@ -60,11 +60,9 @@ ruter_departure_free(struct ruter_departure *dep)
 struct ruter_departure
 *ruter_departure_parse(json_value *data)
 {
-	if (NULL == data) {
-		return NULL;
-	} else if (json_array == data->type) {
+	if (is_json_array(data)) {
 		return ruter_departure_array_parse(data);
-	} else if (json_object != data->type) {
+	} else if (!is_json_object(data)) {
 		return NULL;
 	}
 
