@@ -5,6 +5,18 @@
 #include "types.h"
 
 /**
+ * is_json_array() - Checks if a JSON value is an array.
+ *
+ * @data:	Pointer to JSON value.
+ *
+ * Checks whether a JSON value pointer points to a JSON array.
+ *
+ * Return: Returns nonzero if the value is a valid JSON array.
+ */
+int
+is_json_array(const json_value *data);
+
+/**
  * ruter_strfill() - Extracts a string from JSON data.
  *
  * @str:	Pointer to destination string structure.
