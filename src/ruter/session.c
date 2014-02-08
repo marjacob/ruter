@@ -7,6 +7,20 @@
 
 static struct ruter_session session_zero = { 0 };
 
+/**
+ * write_data() - Internal libcurl callback function.
+ *
+ * @ptr:	Pointer to received data.
+ * @size:	Unit size.
+ * @nmemb:	Number of units.
+ * @userdata:	Points to the Ruter session structure.
+ *
+ * This function gets called by libcurl as soon as there is data received
+ * that needs to be saved. The size of the data pointed to by ptr is size 
+ * multiplied with nmemb, it will not be zero terminated.
+ *
+ * Return: Describe the return value of foobar.
+ */
 static size_t
 write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
