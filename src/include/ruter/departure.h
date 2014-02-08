@@ -11,9 +11,9 @@
  *
  * @congested:	Indicates whether a departure is affected by congestion.
  * @vehicle:	Describes the kind of stop this is.
- * @a_arrival:	Aimed arrival time.
+ * @a_arrive:	Aimed arrival time.
  * @a_depart:	Aimed departure time.
- * @e_arrival:	Expected arrival time.
+ * @e_arrive:	Expected arrival time.
  * @e_depart:	Expected departure time.
  * @dest:	Name of the destination.
  * @line_name:	Name of the line.
@@ -25,9 +25,9 @@
 struct ruter_departure {
 	int congested;
 	enum vehicle_mode vehicle;
-	struct tm a_arrival;
+	struct tm a_arrive;
 	struct tm a_depart;
-	struct tm e_arrival;
+	struct tm e_arrive;
 	struct tm e_depart;
 	struct ruter_string dest;
 	struct ruter_string line_name;

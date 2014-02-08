@@ -199,10 +199,10 @@ static void print_events(struct ruter_departure *dep)
 			cur->line_name.ptr);
 		wprintf(
 			L"%02d:%02d (%02d:%02d) | %02d:%02d (%02d:%02d)\n", 
-			cur->a_arrival.tm_hour, 
-			cur->a_arrival.tm_min,
-			cur->e_arrival.tm_hour, 
-			cur->e_arrival.tm_min,
+			cur->a_arrive.tm_hour, 
+			cur->a_arrive.tm_min,
+			cur->e_arrive.tm_hour, 
+			cur->e_arrive.tm_min,
 			cur->a_depart.tm_hour, 
 			cur->a_depart.tm_min,
 			cur->e_depart.tm_hour, 

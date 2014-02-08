@@ -87,11 +87,11 @@ struct ruter_departure
 		} else if (0 == strcmp("InCongestion", name)) {
 			dep->congested = value->u.boolean;
 		} else if (0 == strcmp("AimedArrivalTime", name)) {
-			ruter_time_parse(&dep->a_arrival, value);
+			ruter_time_parse(&dep->a_arrive, value);
 		} else if (0 == strcmp("AimedDepartureTime", name)) {
 			ruter_time_parse(&dep->a_depart, value);
 		} else if (0 == strcmp("ExpectedArrivalTime", name)) {
-			ruter_time_parse(&dep->e_arrival, value);
+			ruter_time_parse(&dep->e_arrive, value);
 		} else if (0 == strcmp("ExpectedDepartureTime", name)) {
 			ruter_time_parse(&dep->e_depart, value);
 		}
