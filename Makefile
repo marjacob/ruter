@@ -5,9 +5,9 @@ BIN = ruter
 LIB = 
 
 # Directories
-BINDIR = bin
-OBJDIR = obj
-SRCDIR = src
+BINDIR = bin/
+OBJDIR = obj/
+SRCDIR = src/
 INCDIR = $(SRCDIR)/include
 
 # Recursive wildcard function
@@ -19,7 +19,7 @@ OBJ = $(subst $(SRCDIR),$(OBJDIR),$(subst .c,.o,$(CFILES)))
 
 # Generate headers list recursively and qualify paths
 HEADERS := $(call rwildcard,$(INCDIR),*.h)
-BINARY = $(addprefix $(BINDIR)/, $(BIN))
+BINARY = $(addprefix $(BINDIR),$(BIN))
 OBJECTS = $(OBJ)
 
 # Compiler
@@ -55,7 +55,7 @@ $(BINARY) : $(OBJECTS)
 	@printf "\r%s\n" "$(DONE)"
 
 # Compile source to object code
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADERS)
+$(OBJECTS): $(OBJDIR)%.o : $(SRCDIR)%.c $(HEADERS)
 	@$(DIRGUARD)
 	@printf "%s Building object %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(CC) $(CFLAGS) $< -o $@
