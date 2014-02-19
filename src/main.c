@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <wchar.h>
+#include "csrc.h"
 #include "json.h"
 #include "ruter/ruter.h"
 
@@ -16,7 +17,7 @@ static int show(struct ruter_session *session, char *place);
 static int travel(struct ruter_session *session, char *origin, char *dest);
 
 int main(int argc, char *argv[])
-{
+{	
 	extern char *optarg;
 	extern int optind;
 	int c;
@@ -38,6 +39,16 @@ int main(int argc, char *argv[])
 			argv[0]);
 		return EXIT_FAILURE;
 	}
+	
+	csrc_t *src = csrc_init(argc, argv);
+	
+	for (char cur = csrc_next(src); '\0' != cur; cur = csrc_next(src)) {
+		wprintf(L"%c ", cur);
+	}
+	
+	csrc_free(src);
+	
+	return EXIT_SUCCESS;
 	
 	while ((c = getopt(argc, argv, "d:f:o:s:")) != -1) {
 		switch (c) {
