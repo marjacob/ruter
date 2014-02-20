@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
+	/* Will eventually replace getopt(). */
 	csrc_t *src = csrc_init(argc, argv);
 	tok_t *list = tok_tokenize(src);
 	args_t *args = args_parse(list);
@@ -49,8 +50,6 @@ int main(int argc, char *argv[])
 	args_free(args);
 	tok_free(list);
 	csrc_free(src);
-	
-	return EXIT_SUCCESS;
 	
 	while ((c = getopt(argc, argv, "d:f:o:s:")) != -1) {
 		switch (c) {
