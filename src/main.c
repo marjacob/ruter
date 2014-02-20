@@ -9,6 +9,7 @@
 #include "csrc.h"
 #include "json.h"
 #include "ruter/ruter.h"
+#include "token.h"
 
 static int find(struct ruter_session *session, char *place);
 
@@ -42,10 +43,25 @@ int main(int argc, char *argv[])
 	
 	csrc_t *src = csrc_init(argc, argv);
 	
-	for (char cur = csrc_next(src); '\0' != cur; cur = csrc_next(src)) {
-		wprintf(L"%c ", cur);
+	tok_t *list = tok_tokenize(src);
+	
+	for (tok_t *t = list; t; t = t->next) {
+		switch (t->type) {
+			case TOK_FIND:
+				wprintf(L"FindToken\n");
+				break;
+			case TOK_SHOW:
+				wprintf(L"ShowToken\n");
+				break;
+			case TOK_TEXT:
+				wprintf(L"TextToken (%s)\n", t->text);
+				break;
+			default:
+				continue;
+		}
 	}
 	
+	tok_free(list);
 	csrc_free(src);
 	
 	return EXIT_SUCCESS;
