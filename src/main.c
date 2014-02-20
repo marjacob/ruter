@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <wchar.h>
+#include "args/args.h"
 #include "args/csrc.h"
 #include "args/token.h"
 #include "json.h"
@@ -42,25 +43,10 @@ int main(int argc, char *argv[])
 	}
 	
 	csrc_t *src = csrc_init(argc, argv);
-	
 	tok_t *list = tok_tokenize(src);
-	
-	for (tok_t *t = list; t; t = t->next) {
-		switch (t->type) {
-			case TOK_FIND:
-				wprintf(L"FindToken\n");
-				break;
-			case TOK_SHOW:
-				wprintf(L"ShowToken\n");
-				break;
-			case TOK_TEXT:
-				wprintf(L"TextToken (%s)\n", t->text);
-				break;
-			default:
-				continue;
-		}
-	}
-	
+	args_t *args = args_parse(list);
+	wprintf(L"Find: %s\nShow: %s\n", args->find, args->show);
+	args_free(args);
 	tok_free(list);
 	csrc_free(src);
 	
