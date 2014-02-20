@@ -3,8 +3,27 @@
 
 #include <stdlib.h>
 
+/**
+ * util_strdup() - Creates a duplicate of a string.
+ *
+ * @s		Pointer to zero terminated string.
+ *
+ * Duplicates a zero terminated string.
+ *
+ * Returns: Pointer to duplicate string.
+ */
 char *util_strdup(const char *s);
 
+/**
+ * util_strndup() - Creates a duplicate of a string.
+ *
+ * @s		Pointer to zero terminated string.
+ * @maxlen	Maximum allowed string length.
+ *
+ * Duplicates at most n characters from the source string.
+ *
+ * Returns: Pointer to duplicate string.
+ */
 char *util_strndup(char const *s, size_t n);
 
 /**
