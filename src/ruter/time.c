@@ -3,7 +3,7 @@
 #include <time.h>
 #include "json.h"
 #include "ruter/time.h"
-#include "ruter/util.h"
+#include "util.h"
 
 /**
  * ruter_time_offset() - Computes time offset in seconds.
@@ -20,7 +20,7 @@ static int
 ruter_time_offset(char *offset) {
 	int h, m;
 	
-	if (NULL == offset || 5 > ruter_strnlen(offset, 5)) {
+	if (NULL == offset || 5 > util_strnlen(offset, 5)) {
 		return 0;
 	} else {
 		h = (offset[1] - 0x30) * 10 + (offset[2] - 0x30);
