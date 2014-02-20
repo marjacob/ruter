@@ -29,14 +29,14 @@ int main(int argc, char *argv[])
 	
 	if (NULL == setlocale(LC_ALL, "")) {
 		fprintf(stderr, 
-			"%s: setlocale() failed to honor our request\n", 
+			"%s: setlocale() failed\n", 
 			argv[0]);
 		return EXIT_FAILURE;
 	}
 	
 	if (fwide(stdout, 1) <= 0) {
 		fprintf(stderr,
-			"%s: fwide() failed to change stream orientation\n",
+			"%s: fwide() failed\n",
 			argv[0]);
 		return EXIT_FAILURE;
 	}
