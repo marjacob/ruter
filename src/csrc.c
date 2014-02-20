@@ -22,22 +22,18 @@ char csrc_next(csrc_t *src)
 		return cur;
 	}
 	
-	do {
-		cur = src->argv[src->cur_row][src->cur_col++];
+	cur = src->argv[src->cur_row][src->cur_col++];
 		
-		if ('\0' == cur) {
-			src->cur_row++;
-			src->cur_col = 0;
-		} else {
-			break;
-		}
-		
-	} while (src->cur_row < src->argc);
+	if ('\0' == cur && src->cur_row < src->argc) {
+		src->cur_row++;
+		src->cur_col = 0;
+		cur = ' ';
+	}
 	
 	return cur;
 }
 
-void csrc_reset(csrc_t *src)
+void csrc_rewind(csrc_t *src)
 {
 	src->cur_row = 1;
 	src->cur_col = 0;

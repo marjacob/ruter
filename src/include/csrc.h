@@ -14,7 +14,7 @@ csrc_t *csrc_init(size_t argc, char *argv[]);
 
 char csrc_next(csrc_t *src);
 
-void csrc_reset(csrc_t *src);
+void csrc_rewind(csrc_t *src);
 
 void csrc_free(csrc_t *src);
 
