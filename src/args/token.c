@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <string.h>
-#include "csrc.h"
-#include "token.h"
+#include "args/csrc.h"
+#include "args/token.h"
 
 inline static bool is_sep(char c)
 {
