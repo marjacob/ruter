@@ -19,7 +19,7 @@
 static inline size_t ruter_strnlen(const char *s, size_t maxlen)
 {
 	register const char *p;
-	for(p = s; *p && maxlen--; ++p);
+	for (p = s; *p && maxlen--; ++p);
 	return(p - s);
 }
 
