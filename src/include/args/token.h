@@ -6,7 +6,8 @@
 typedef enum {
 	TOK_SHOW,
 	TOK_FIND,
-	TOK_TEXT
+	TOK_TEXT,
+	TOK_NONE
 } tok_e;
 
 typedef struct tok {
