@@ -1,8 +1,27 @@
 #ifndef __H_RUTER_UTILITIES__
 #define __H_RUTER_UTILITIES__
 
+#include <stdlib.h>
 #include "json.h"
 #include "types.h"
+
+/**
+ * ruter_strnlen() - Computes the length of a string.
+ *
+ * @s		Pointer to zero terminated string.
+ * @maxlen	Maximum allowed string length.
+ *
+ * Computes the number of characters in the string pointed to by s, not 
+ * including the termination character, but at most maxlen.
+ *
+ * Returns: The length of a string in characters.
+ */
+static inline size_t ruter_strnlen(const char *s, size_t maxlen)
+{
+	register const char *p;
+	for(p = s; *p && maxlen--; ++p);
+	return(p - s);
+}
 
 /**
  * is_json_array() - Checks if a JSON value is an array.
