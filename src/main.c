@@ -19,7 +19,7 @@ static int show(struct ruter_session *session, char *place);
 static int travel(struct ruter_session *session, char *origin, char *dest);
 
 int main(int argc, char *argv[])
-{		
+{	
 	if (NULL == setlocale(LC_ALL, "")) {
 		fprintf(stderr, 
 			"%s: setlocale() failed\n", 
@@ -34,23 +34,30 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	args_t *args = args_parse(argc, argv);
 	struct ruter_session session;
 	
 	if (!ruter_init(&session, 0)) {
-		wprintf(L"%s: failed to init curl\n", argv[0]);
+		wprintf(L"%s: ruter_init() failed\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 	
-	if (args->from && args->to) {
-		travel(&session, args->from, args->to);
-	} else if (args->find) {
-		find(&session, args->find);
-	} else if (args->show) {
-		show(&session, args->show);
+	struct args args;
+	
+	if (!args_parse(&args, argc, argv)) {
+		wprintf(L"%s: args_parse() failed\n");
+		ruter_close(&session);
+		return EXIT_FAILURE;
 	}
 	
-	args_free(args);
+	if (args.from && args.to) {
+		travel(&session, args.from, args.to);
+	} else if (args.find) {
+		find(&session, args.find);
+	} else if (args.show) {
+		show(&session, args.show);
+	}
+	
+	args_free(&args);
 	ruter_close(&session);
 	
 	return EXIT_SUCCESS;

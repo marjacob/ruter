@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <stdlib.h>
 #include "args/args.h"
 #include "args/csrc.h"
@@ -7,15 +6,13 @@
 
 #include <wchar.h>
 
-static args_t args_zero = { 0 };
+static struct args args_zero = { 0 };
 
-args_t *args_parse(size_t argc, char **argv)
+int args_parse(struct args *args, size_t argc, char **argv)
 {
 	csrc_t *src = csrc_init(argc, argv);
 	tok_t *tokens = tok_tokenize(src);
-	
 	tok_t *prev = NULL;
-	args_t *args = malloc(sizeof(*args));
 	*args = args_zero;
 	
 	for (tok_t *t = tokens; t; t = t->next) {
@@ -57,14 +54,13 @@ args_t *args_parse(size_t argc, char **argv)
 	tok_free(tokens);
 	csrc_free(src);
 	
-	return args;
+	return 1;
 }
 
-void args_free(args_t *args)
+void args_free(struct args *args)
 {
 	free(args->find);
 	free(args->from);
 	free(args->show);
 	free(args->to);
-	free(args);
 }
