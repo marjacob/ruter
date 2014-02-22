@@ -4,10 +4,12 @@
 #include "args/csrc.h"
 
 typedef enum {
+	TOK_NONE,
 	TOK_SHOW,
 	TOK_FIND,
 	TOK_TEXT,
-	TOK_NONE
+	TOK_FROM,
+	TOK_TO
 } tok_e;
 
 typedef struct tok {

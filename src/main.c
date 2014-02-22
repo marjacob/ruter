@@ -19,15 +19,7 @@ static int show(struct ruter_session *session, char *place);
 static int travel(struct ruter_session *session, char *origin, char *dest);
 
 int main(int argc, char *argv[])
-{	
-	extern char *optarg;
-	extern int optind;
-	int c;
-	char *origin = NULL;
-	char *destination = NULL;
-	char *find_place = NULL;
-	char *show_place = NULL;
-	
+{		
 	if (NULL == setlocale(LC_ALL, "")) {
 		fprintf(stderr, 
 			"%s: setlocale() failed\n", 
@@ -42,41 +34,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	/* Will eventually replace getopt(). */
-	csrc_t *src = csrc_init(argc, argv);
-	tok_t *list = tok_tokenize(src);
-	args_t *args = args_parse(list);
-	wprintf(L"Find: %s\nShow: %s\n", args->find, args->show);
-	args_free(args);
-	tok_free(list);
-	csrc_free(src);
-	
-	while ((c = getopt(argc, argv, "d:f:o:s:")) != -1) {
-		switch (c) {
-		case 'd':
-			destination = optarg;
-			break;
-		case 'f':
-			find_place = optarg;
-			break;
-		case 'o':
-			origin = optarg;
-			break;
-		case 's':
-			show_place = optarg;
-			break;
-		case '?':
-			return EXIT_FAILURE;
-		}
-	}
-	
-	if (optind < argc) {
-		/* these are the arguments after the command-line options */ 
-		for (; optind < argc; optind++) {
-			wprintf(L"argument: \"%s\"\n", argv[optind]);
-		}
-	}
-	
+	args_t *args = args_parse(argc, argv);
 	struct ruter_session session;
 	
 	if (!ruter_init(&session, 0)) {
@@ -84,14 +42,15 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	if (NULL != origin && NULL != destination) {
-		travel(&session, origin, destination);
-	} else if (NULL != find_place) {
-		find(&session, find_place);
-	} else if (NULL != show_place) {
-		show(&session, show_place);
+	if (args->from && args->to) {
+		travel(&session, args->from, args->to);
+	} else if (args->find) {
+		find(&session, args->find);
+	} else if (args->show) {
+		show(&session, args->show);
 	}
 	
+	args_free(args);
 	ruter_close(&session);
 	
 	return EXIT_SUCCESS;
