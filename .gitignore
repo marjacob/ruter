@@ -1,3 +1,6 @@
+# Vim
+*.swp
+
 # Object files
 *.o
 *.ko
