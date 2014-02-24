@@ -12,13 +12,13 @@ typedef struct {
 inline static size_t
 wstr_len(const wstr_t *s)
 {
-	return !s ? s : s->length;
+	return !s ? 0 : s->length;
 }
 
 inline static wchar_t
 *wstr_ptr(const wstr_t *s)
 {
-	return !s ? s : s->ptr;
+	return !s ? NULL : s->ptr;
 }
 
 inline static void

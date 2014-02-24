@@ -26,11 +26,11 @@ wstr_t *wstr_from_mbs(const char *s, size_t n)
 	}
 	
 	n = n > 0 ? n : strlen(s);
-	wstr_t *str = malloc(sizeof(*str) + sizeof(*s) * (n + 1));
+	wstr_t *str = malloc(sizeof(*str) + sizeof(*str->ptr) * (n + 1));
 	str->ptr = (wchar_t*)(str + 1);
 	mbstate_t ps = { 0 };
 	const char *src = s;
-
+	
 	if (0 > (str->length = mbsrtowcs(str->ptr, &src, n, &ps))) {
 		free(str);
 		str = NULL;
