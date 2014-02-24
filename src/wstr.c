@@ -10,7 +10,7 @@ wstr_t *wstr_new(const wchar_t *s, size_t n)
 	}
 	
 	n = n > 0 ? n : wcslen(s);
-	wstr_t *str = malloc(sizeof(*str) + sizeof(*s) * (n + 1));
+	wstr_t *str = malloc(sizeof(*str) + sizeof(*str->ptr) * (n + 1));
 	str->ptr = (wchar_t*)(str + 1);
 	wcsncpy(str->ptr, s, n);
 	str->ptr[n] = '\0';
