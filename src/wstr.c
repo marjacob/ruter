@@ -41,18 +41,3 @@ wstr_t *wstr_from_mbs(const char *s, size_t n)
 	return str;
 }
 
-size_t wstr_len(const wstr_t *s)
-{
-	return !s ? 0 : s->length;
-}
-
-wchar_t *wstr_ptr(const wstr_t *s)
-{
-	return !s ? NULL : s->ptr;
-}
-
-void wstr_free(wstr_t *s)
-{
-	free(s);
-}
-
