@@ -3,7 +3,7 @@
 #include <wchar.h>
 #include "wstr.h"
 
-wstr_t *wstr_new(const wchar_t *s, size_t n)
+wstr_t *wstr_wcs(const wchar_t *s, size_t n)
 {
 	if (!s) {
 		return NULL;
@@ -19,7 +19,7 @@ wstr_t *wstr_new(const wchar_t *s, size_t n)
 	return str;
 }
 
-wstr_t *wstr_from_mbs(const char *s, size_t n)
+wstr_t *wstr_mbs(const char *s, size_t n)
 {
 	if (!s) {
 		return NULL;

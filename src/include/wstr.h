@@ -28,10 +28,10 @@ wstr_free(wstr_t *s)
 }
 
 wstr_t
-*wstr_new(const wchar_t *s, size_t n);
+*wstr_wcs(const wchar_t *s, size_t n);
 
 wstr_t
-*wstr_from_mbs(const char *s, size_t n);
+*wstr_mbs(const char *s, size_t n);
 
 size_t
 wstr_len(const wstr_t *s);

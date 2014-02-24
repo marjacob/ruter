@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	wstr_t *ptr = wstr_from_mbs("OMG IT WORKS", 0);
+	wstr_t *ptr = wstr_mbs("OMG IT WORKS", 0);
 	wprintf(L"%ls\n", wstr_ptr(ptr));
 	wstr_free(ptr);
 
