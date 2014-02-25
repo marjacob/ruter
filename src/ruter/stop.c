@@ -5,6 +5,7 @@
 #include "ruter/line.h"
 #include "ruter/stop.h"
 #include "ruter/util.h"
+#include "wstr.h"
 
 static struct ruter_stop stop_zero = { 0 };
 
@@ -31,9 +32,9 @@ static struct ruter_stop
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
 		stop = ruter_stop_parse(data->u.array.values[i]);
 
-		if (NULL == stop) {
+		if (!stop) {
 			continue;
-		} else if (NULL == stops) {
+		} else if (!stops) {
 			stops = stop;
 		} else {
 			last_stop->next = stop;
@@ -48,13 +49,13 @@ static struct ruter_stop
 void
 ruter_stop_free(struct ruter_stop *stop)
 {
-	if (NULL != stop) {
+	if (stop) {
 		ruter_line_free(stop->lines);
 		ruter_stop_free(stop->stops);
 		ruter_stop_free(stop->next);
-		free(stop->name.ptr);
-		free(stop->district.ptr);
-		free(stop->zone.ptr);
+		wstr_free(stop->name);
+		wstr_free(stop->district);
+		wstr_free(stop->zone);
 		free(stop);
 	}
 }
@@ -82,11 +83,11 @@ struct ruter_stop
 				return NULL;
 			}
 		} else if (0 == strcmp("District", name)) {
-			ruter_strfill(&stop->district, value);
+			stop->district = wstr_from_json(value);
 		} else if (0 == strcmp("Name", name)) {
-			ruter_strfill(&stop->name, value);
+			stop->name = wstr_from_json(value);
 		} else if (0 == strcmp("Zone", name)) {
-			ruter_strfill(&stop->zone, value);
+			stop->zone = wstr_from_json(value);
 		} else if (0 == strcmp("Type", name)) {
 			stop->type = value->u.integer;
 		} else if (0 == strcmp("Stops", name)) {
@@ -100,3 +101,4 @@ struct ruter_stop
 
 	return stop;
 }
+

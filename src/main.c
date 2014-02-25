@@ -35,10 +35,6 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	wstr_t *ptr = wstr_mbs("OMG IT WORKS", 0);
-	wprintf(L"%ls\n", wstr_ptr(ptr));
-	wstr_free(ptr);
-
 	struct ruter_session session;
 	
 	if (!ruter_init(&session, 0)) {
@@ -77,8 +73,8 @@ static int64_t request_stop(struct ruter_session *session, char *place)
 		if (PT_STOP == stop->type) {
 			wprintf(
 				L"%ls (%ls) [y/n]: ", 
-				stop->name.ptr, 
-				stop->district.ptr);
+				wstr_ptr(stop->name), 
+				wstr_ptr(stop->district));
 				
 			size_t len = sizeof(buf) / sizeof(wchar_t);
 			
@@ -122,14 +118,14 @@ static void print_stops(struct ruter_stop *stops, int level)
 		break;
 	}
 	
-	wprintf(L"%ls (%d)", stops->name.ptr, stops->name.length);
+	wprintf(L"%ls (%d)", wstr_ptr(stops->name), wstr_len(stops->name));
 	
-	if (NULL != stops->district.ptr) {
-		wprintf(L" (%ls)", stops->district.ptr);
+	if (NULL != wstr_ptr(stops->district)) {
+		wprintf(L" (%ls)", wstr_ptr(stops->district));
 	}
 	
-	if (NULL != stops->zone.ptr) {
-		wprintf(L" (sone %ls)", stops->zone.ptr);
+	if (NULL != wstr_ptr(stops->zone)) {
+		wprintf(L" (sone %ls)", wstr_ptr(stops->zone));
 	}
 	
 	if (stops->realtime) {

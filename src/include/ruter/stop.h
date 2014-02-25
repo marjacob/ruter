@@ -5,7 +5,7 @@
 #include "constants.h"
 #include "json.h"
 #include "line.h"
-#include "types.h"
+#include "wstr.h"
 
 /**
  * struct ruter_stop - Describes a stop.
@@ -13,12 +13,12 @@
  * @id:		Unique stop ID.
  * @type:	Describes the kind of stop this is.
  * @realtime	Non-zero if the stop supports realtime traffic information.
- * @name	Name of the stop.
- * @district	Name of the district where the stop is located.
- * @zone	Zone where the stop is located.
  * @lines	All lines going through the stop.
- * @stops	All stops belonging to an area.
  * @next	Next stop in the linked list.
+ * @stops	All stops belonging to an area.
+ * @district	Name of the district where the stop is located.
+ * @name	Name of the stop.
+ * @zone	Zone where the stop is located.
  *
  * This structure describes the various properties of a stop. The type of the
  * stop influences which of the properties are available. The 'stops' field
@@ -29,12 +29,12 @@ struct ruter_stop {
 	int64_t id;
 	enum place_type type;
 	int realtime;
-	struct ruter_string name;
-	struct ruter_string district;
-	struct ruter_string zone;
 	struct ruter_line *lines;
-	struct ruter_stop *stops;
 	struct ruter_stop *next;
+	struct ruter_stop *stops;
+	wstr_t *district;
+	wstr_t *name;
+	wstr_t *zone;
 };
 
 /**
