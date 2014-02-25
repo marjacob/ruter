@@ -4,6 +4,12 @@
 #include <stdlib.h>
 #include "json.h"
 #include "types.h"
+#include "wstr.h"
+
+inline static wstr_t *wstr_from_json(const json_value *v)
+{
+	return v ? wstr_mbs(v->u.string.ptr, v->u.string.length) : NULL;
+}
 
 /**
  * is_json_array() - Checks if a JSON value is an array.
@@ -42,3 +48,4 @@ void
 ruter_strfill(struct ruter_string *str, const json_value *value);
 
 #endif
+
