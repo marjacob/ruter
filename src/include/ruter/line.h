@@ -5,22 +5,23 @@
 #include "constants.h"
 #include "json.h"
 #include "types.h"
+#include "wstr.h"
 
 /**
  * struct ruter_line - Describes a line.
  *
  * @id:		Unique stop ID.
  * @type:	Describes the kind of transportation available.
- * @name	Name of the line.
  * @next	Pointer to next line in the linked list.
+ * @name	Name of the line.
  *
  * This structure describes the various properties of a line.
  */
 struct ruter_line {
 	int64_t id;
 	enum transport_type type;
-	struct ruter_string name;
 	struct ruter_line *next;
+	wstr_t *name;
 };
 
 /**

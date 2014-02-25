@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "json.h"
@@ -9,7 +8,7 @@
 
 static struct ruter_stop stop_zero = { 0 };
 
-static struct ruter_stop
+inline static struct ruter_stop
 *ruter_stop_init(void)
 {
 	struct ruter_stop *stop = malloc(sizeof(*stop));
@@ -77,24 +76,22 @@ struct ruter_stop
 		name = data->u.object.values[i].name;
 		value = data->u.object.values[i].value;
 
-		if (0 == strcmp("ID", name)) {
-			if (0 == (stop->id = value->u.integer)) {
-				ruter_stop_free(stop);
-				return NULL;
-			}
-		} else if (0 == strcmp("District", name)) {
+		if (!strcmp("ID", name) && !(stop->id = value->u.integer)) {
+			ruter_stop_free(stop);
+			return NULL;
+		} else if (!strcmp("District", name)) {
 			stop->district = wstr_from_json(value);
-		} else if (0 == strcmp("Name", name)) {
+		} else if (!strcmp("Name", name)) {
 			stop->name = wstr_from_json(value);
-		} else if (0 == strcmp("Zone", name)) {
+		} else if (!strcmp("Zone", name)) {
 			stop->zone = wstr_from_json(value);
-		} else if (0 == strcmp("Type", name)) {
+		} else if (!strcmp("Type", name)) {
 			stop->type = value->u.integer;
-		} else if (0 == strcmp("Stops", name)) {
+		} else if (!strcmp("Stops", name)) {
 			stop->stops = ruter_stop_array_parse(value);
-		} else if (0 == strcmp("Lines", name)) {
+		} else if (!strcmp("Lines", name)) {
 			stop->lines = ruter_line_parse(value);
-		} else if (0 == strcmp("RealTimeStop", name)) {
+		} else if (strcmp("RealTimeStop", name)) {
 			stop->realtime = value->u.boolean;
 		}
 	}

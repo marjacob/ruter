@@ -6,7 +6,7 @@
 
 static struct ruter_line line_zero = { 0 };
 
-static struct ruter_line
+inline static struct ruter_line
 *ruter_line_init(void)
 {
 	struct ruter_line *line = malloc(sizeof(*line));
@@ -29,9 +29,9 @@ static struct ruter_line
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
 		line = ruter_line_parse(data->u.array.values[i]);
 
-		if (NULL == line) {
+		if (!line) {
 			continue;
-		} else if (NULL == lines) {
+		} else if (!lines) {
 			lines = line;
 		} else {
 			last_line->next = line;
@@ -46,9 +46,9 @@ static struct ruter_line
 void
 ruter_line_free(struct ruter_line *line)
 {
-	if (NULL != line) {
+	if (line) {
 		ruter_line_free(line->next);
-		free(line->name.ptr);
+		wstr_free(line->name);
 		free(line);
 	}
 }
@@ -69,18 +69,18 @@ struct ruter_line
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;
 		value = data->u.object.values[i].value;
+		line->id = value->u.integer;
 
-		if (0 == strcmp("LineID", name)) {
-			if (0 == (line->id = value->u.integer)) {
+		if (!strcmp("LineID", name) && !line->id) {
 				ruter_line_free(line);
 				return NULL;
-			}
-		} else if (0 == strcmp("LineName", name)) {
-			ruter_strfill(&line->name, value);
-		} else if (0 == strcmp("Transportation", name)) {
-			line->type = (enum transport_type)value->u.integer;
+		} else if (!strcmp("LineName", name)) {
+			line->name = wstr_from_json(value);
+		} else if (!strcmp("Transportation", name)) {
+			line->type = value->u.integer;
 		}
 	}
 
 	return line;
 }
+
