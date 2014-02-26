@@ -145,11 +145,11 @@ static void print_events(struct ruter_departure *dep)
 	size_t max_line = 0;
 	
 	while (NULL != cur) {
-		max_dest = cur->dest.length > max_dest
-			? cur->dest.length
+		max_dest = wstr_len(cur->dest) > max_dest
+			? wstr_len(cur->dest)
 			: max_dest;
-		max_line = cur->line_name.length > max_line
-			? cur->line_name.length
+		max_line = wstr_len(cur->line_name) > max_line
+			? wstr_len(cur->line_name)
 			: max_line;
 		cur = cur->next;
 	}
@@ -159,10 +159,10 @@ static void print_events(struct ruter_departure *dep)
 	wchar_t format[512];
 	swprintf(format, 512, meta_format, max_dest, max_line);
 	
-	while (NULL != cur) {
+	while (cur) {
 		wprintf(
 			format,
-			cur->dest.ptr,
+			wstr_ptr(cur->dest),
 			VM_BUS == cur->vehicle
 				? L"Bus" :
 			VM_FERRY == cur->vehicle
@@ -173,9 +173,9 @@ static void print_events(struct ruter_departure *dep)
 				? L"Tram" :
 			VM_METRO == cur->vehicle
 				? L"Metro" : L"N/A",			
-			NULL == cur->platform.ptr 
-				? L"" : cur->platform.ptr, 
-			cur->line_name.ptr);
+			!wstr_ptr(cur->platform)
+				? L"" : wstr_ptr(cur->platform), 
+			wstr_ptr(cur->line_name));
 		wprintf(
 			L"%02d:%02d (%02d:%02d) | %02d:%02d (%02d:%02d)\n", 
 			cur->a_arrive.tm_hour, 

@@ -4,13 +4,14 @@
 #include <time.h>
 #include "constants.h"
 #include "json.h"
-#include "types.h"
+#include "wstr.h"
 
 /**
  * struct ruter_departure - Describes a departure.
  *
  * @congested:	Indicates whether a departure is affected by congestion.
  * @vehicle:	Describes the kind of stop this is.
+ * @next	Next departure in the linked list.
  * @a_arrive:	Aimed arrival time.
  * @a_depart:	Aimed departure time.
  * @e_arrive:	Expected arrival time.
@@ -18,21 +19,20 @@
  * @dest:	Name of the destination.
  * @line_name:	Name of the line.
  * @platform	Departure platform.
- * @next	Next departure in the linked list.
  *
  * This structure describes the various properties of a departure.
  */
 struct ruter_departure {
 	int congested;
 	enum vehicle_mode vehicle;
+	struct ruter_departure *next;
 	struct tm a_arrive;
 	struct tm a_depart;
 	struct tm e_arrive;
 	struct tm e_depart;
-	struct ruter_string dest;
-	struct ruter_string line_name;
-	struct ruter_string platform;
-	struct ruter_departure *next;
+	wstr_t *dest;
+	wstr_t *line_name;
+	wstr_t *platform;
 };
 
 /**
