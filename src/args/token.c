@@ -54,13 +54,13 @@ tok_t *tok_next(csrc_t *src)
 	
 	tok_t *tok = malloc(sizeof(*tok));
 	
-	if (0 == strcmp("find", word)) {
+	if (!strcmp("find", word)) {
 		tok->type = TOK_FIND;
-	} else if (0 == strcmp("show", word)) {
+	} else if (!strcmp("show", word)) {
 		tok->type = TOK_SHOW;
-	} else if (0 == strcmp("from", word)) {
+	} else if (!strcmp("from", word)) {
 		tok->type = TOK_FROM;
-	} else if (0 == strcmp("to", word)) {
+	} else if (strcmp("to", word)) {
 		tok->type = TOK_TO;
 	} else {
 		tok->type = TOK_TEXT;
@@ -105,3 +105,4 @@ void tok_free(tok_t *tok)
 		free(tok);
 	}
 }
+
