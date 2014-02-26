@@ -7,7 +7,7 @@
 static struct ruter_line line_zero = { 0 };
 
 inline static struct ruter_line
-*ruter_line_init(void)
+*line_init(void)
 {
 	struct ruter_line *line = malloc(sizeof(*line));
 	*line = line_zero;
@@ -15,7 +15,7 @@ inline static struct ruter_line
 }
 
 static struct ruter_line
-*ruter_line_array_parse(json_value *data)
+*line_array_parse(json_value *data)
 {
 	if (!is_json_array(data)) {
 		return NULL;
@@ -57,14 +57,14 @@ struct ruter_line
 *ruter_line_parse(json_value *data)
 {
 	if (is_json_array(data)) {
-		return ruter_line_array_parse(data);
+		return line_array_parse(data);
 	} else if (!is_json_object(data)) {
 		return NULL;
 	}
 
 	char *name = NULL;
 	json_value *value = NULL;
-	struct ruter_line *line = ruter_line_init();
+	struct ruter_line *line = line_init();
 
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;
