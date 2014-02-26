@@ -9,7 +9,7 @@
 static struct ruter_stop stop_zero = { 0 };
 
 inline static struct ruter_stop
-*ruter_stop_init(void)
+*stop_init(void)
 {
 	struct ruter_stop *stop = malloc(sizeof(*stop));
 	*stop = stop_zero;
@@ -17,7 +17,7 @@ inline static struct ruter_stop
 }
 
 static struct ruter_stop
-*ruter_stop_array_parse(const json_value *data)
+*stop_array_parse(const json_value *data)
 {
 	if (!is_json_array(data)) {
 		return NULL;
@@ -63,14 +63,14 @@ struct ruter_stop
 *ruter_stop_parse(const json_value *data)
 {
 	if (is_json_array(data)) {
-		return ruter_stop_array_parse(data);
+		return stop_array_parse(data);
 	} else if (!is_json_object(data)) {
 		return NULL;
 	}
 
 	char *name = NULL;
 	json_value *value = NULL;
-	struct ruter_stop *stop = ruter_stop_init();
+	struct ruter_stop *stop = stop_init();
 
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;
@@ -88,7 +88,7 @@ struct ruter_stop
 		} else if (!strcmp("Type", name)) {
 			stop->type = value->u.integer;
 		} else if (!strcmp("Stops", name)) {
-			stop->stops = ruter_stop_array_parse(value);
+			stop->stops = stop_array_parse(value);
 		} else if (!strcmp("Lines", name)) {
 			stop->lines = ruter_line_parse(value);
 		} else if (strcmp("RealTimeStop", name)) {
