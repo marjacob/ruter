@@ -10,7 +10,7 @@
 static struct ruter_departure departure_zero = { 0 };
 
 static struct ruter_departure
-*ruter_departure_init(void)
+*departure_init(void)
 {
 	struct ruter_departure *dep = malloc(sizeof(*dep));
 	*dep = departure_zero;
@@ -18,7 +18,7 @@ static struct ruter_departure
 }
 
 static struct ruter_departure
-*ruter_departure_array_parse(json_value *data)
+*departure_array_parse(json_value *data)
 {
 	if (!is_json_array(data)) {
 		return NULL;
@@ -62,14 +62,14 @@ struct ruter_departure
 *ruter_departure_parse(json_value *data)
 {
 	if (is_json_array(data)) {
-		return ruter_departure_array_parse(data);
+		return departure_array_parse(data);
 	} else if (!is_json_object(data)) {
 		return NULL;
 	}
 
 	char *name = NULL;
 	json_value *value = NULL;
-	struct ruter_departure *dep = ruter_departure_init();
+	struct ruter_departure *dep = departure_init();
 
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;
