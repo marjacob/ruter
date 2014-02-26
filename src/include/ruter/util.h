@@ -20,8 +20,11 @@ inline static wstr_t *wstr_from_json(const json_value *v)
  *
  * Return: Returns nonzero if the value is a valid JSON array.
  */
-int
-is_json_array(const json_value *data);
+inline static int
+is_json_array(const json_value *data)
+{
+	return (data && json_array == data->type);
+}
 
 /**
  * is_json_object() - Checks if a JSON value is an object.
@@ -32,20 +35,11 @@ is_json_array(const json_value *data);
  *
  * Return: Returns nonzero if the value is a valid JSON object.
  */
-int
-is_json_object(const json_value *data);
-
-/**
- * ruter_strfill() - Extracts a string from JSON data.
- *
- * @str:	Pointer to destination string structure.
- * @value:	Pointer to JSON source value.
- *
- * Converts a JSON character array into a multibyte character array and copies
- * it into a string structure.
- */
-void
-ruter_strfill(struct ruter_string *str, const json_value *value);
+inline static int
+is_json_object(const json_value *data)
+{
+	return (data && json_object == data->type);
+}
 
 #endif
 
