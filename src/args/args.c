@@ -4,8 +4,6 @@
 #include "args/token.h"
 #include "util.h"
 
-#include <wchar.h>
-
 static struct args args_zero = { 0 };
 
 int args_parse(struct args *args, size_t argc, char **argv)
@@ -64,3 +62,4 @@ void args_free(struct args *args)
 	free(args->show);
 	free(args->to);
 }
+
