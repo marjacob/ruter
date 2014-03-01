@@ -1,6 +1,5 @@
-#include "args/csrc.h"
-
 #include <stdlib.h>
+#include "args/csrc.h"
 
 csrc_t *csrc_init(size_t argc, char **argv)
 {
@@ -29,7 +28,7 @@ char csrc_next(csrc_t *src)
 		src->cur_col = 0;
 		cur = ' ';
 	}
-	
+
 	return cur;
 }
 
