@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 /**
- * struct ruter_session - Contains the session state.
+ * ruter_t - Contains the session state.
  *
  * @curl:	Curl session handle.
  * 		Must not be shared between threads.
@@ -19,10 +19,10 @@
  * 		number.
  *
  * This is an internal structure and its fields are not supposed to be read or
- * written. A ruter_session should not be shared between different threads, as
- * it uses libraries that are not thread safe.
+ * written. A ruter_t should not be shared between different threads, as it 
+ * uses libraries that are not thread safe.
  */
-struct ruter_session {
+typedef struct {
 	CURL *curl;
 	CURLcode code;
 	size_t bufcap;
@@ -31,10 +31,10 @@ struct ruter_session {
 	char *buf;
 	char uri[RUTER_API_LENGTH];
 	const char *(*strerror)(CURLcode);
-};
+} ruter_t;
 
 /**
- * ruter_init() - Initialises a session structure.
+ * ruter_open() - Initialises a session structure.
  *
  * @session:	Pointer to Ruter session structure.
  * @bufcap:	Initial maximum buffer size. This value maye increase.
@@ -45,7 +45,7 @@ struct ruter_session {
  * Return: Returns nonzero on success.
  */
 int
-ruter_init(struct ruter_session *session, size_t bufcap);
+ruter_open(ruter_t *session, size_t bufcap);
 
 /**
  * ruter_close() - Closes all open handles associated with a session structure.
@@ -56,6 +56,6 @@ ruter_init(struct ruter_session *session, size_t bufcap);
  * associated with libcurl.
  */
 void
-ruter_close(struct ruter_session *session);
+ruter_close(ruter_t *session);
 
 #endif

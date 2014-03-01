@@ -13,15 +13,15 @@
 #include "ruter/ruter.h"
 #include "wstr.h"
 
-static int find(struct ruter_session *session, char *place);
+static int find(ruter_t *session, char *place);
 
-static int show(struct ruter_session *session, char *place);
+static int show(ruter_t *session, char *place);
 
-static int travel(struct ruter_session *session, char *origin, char *dest);
+static int travel(ruter_t *session, char *origin, char *dest);
 
 int main(int argc, char *argv[])
 {	
-	if (NULL == setlocale(LC_ALL, "")) {
+	if (!setlocale(LC_ALL, "")) {
 		fprintf(stderr, 
 			"%s: setlocale() failed\n", 
 			argv[0]);
@@ -35,9 +35,9 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	struct ruter_session session;
+	ruter_t session;
 	
-	if (!ruter_init(&session, 0)) {
+	if (!ruter_open(&session, 0)) {
 		wprintf(L"%s: ruter_init() failed\n", argv[0]);
 		return EXIT_FAILURE;
 	}
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 		ruter_close(&session);
 		return EXIT_FAILURE;
 	}
-	
+
 	if (args.from && args.to) {
 		travel(&session, args.from, args.to);
 	} else if (args.find) {
@@ -63,13 +63,13 @@ int main(int argc, char *argv[])
 	
 	return EXIT_SUCCESS;
 }
-static int64_t request_stop(struct ruter_session *session, char *place)
+static int64_t request_stop(ruter_t *session, char *place)
 {
 	struct ruter_stop *stops = ruter_find(session, place);
 	struct ruter_stop *stop = stops;
 	wchar_t buf[8];
 	
-	while (NULL != stop) {
+	while (stop) {
 		if (PT_STOP == stop->type) {
 			wprintf(
 				L"%ls (%ls) [y/n]: ", 
@@ -78,7 +78,7 @@ static int64_t request_stop(struct ruter_session *session, char *place)
 				
 			size_t len = sizeof(buf) / sizeof(wchar_t);
 			
-			if (NULL == fgetws(buf, len, stdin)) {
+			if (!fgetws(buf, len, stdin)) {
 				continue;
 			} else if (L'y' == buf[0]) {
 				break;
@@ -87,7 +87,7 @@ static int64_t request_stop(struct ruter_session *session, char *place)
 		stop = stop->next;
 	}
 	
-	int64_t stop_id = NULL != stop ? stop->id : 0;
+	int64_t stop_id = stop ? stop->id : 0;
 	ruter_stop_free(stops);
 	
 	return stop_id;
@@ -95,7 +95,7 @@ static int64_t request_stop(struct ruter_session *session, char *place)
 
 static void print_stops(struct ruter_stop *stops, int level)
 {
-	if (NULL == stops) {
+	if (!stops) {
 		return;
 	}
 	
@@ -144,7 +144,7 @@ static void print_events(struct ruter_departure *dep)
 	size_t max_dest = 0;
 	size_t max_line = 0;
 	
-	while (NULL != cur) {
+	while (cur) {
 		max_dest = wstr_len(cur->dest) > max_dest
 			? wstr_len(cur->dest)
 			: max_dest;
@@ -190,11 +190,11 @@ static void print_events(struct ruter_departure *dep)
 	}
 }
 
-static int find(struct ruter_session *session, char *place)
+static int find(ruter_t *session, char *place)
 {
 	struct ruter_stop *stops = ruter_find(session, place);
 	
-	if (NULL == stops) {
+	if (!stops) {
 		wprintf(L"no stops found\n");
 		return 0;
 	}
@@ -205,17 +205,17 @@ static int find(struct ruter_session *session, char *place)
 	return 0;
 }
 
-static int show(struct ruter_session *session, char *place)
+static int show(ruter_t *session, char *place)
 {
 	int64_t stop_id = request_stop(session, place);
 	
-	if (0 == stop_id) {
+	if (!stop_id) {
 		return 0;
 	}
 		
 	struct ruter_departure *deps = ruter_departures(session, stop_id);
 	
-	if (NULL == deps) {
+	if (!deps) {
 		wprintf(L"no realtime events found\n");
 		return 0;
 	}
@@ -226,12 +226,12 @@ static int show(struct ruter_session *session, char *place)
 	return 0;
 }
 
-static int travel(struct ruter_session *session, char *origin, char *dest)
+static int travel(ruter_t *session, char *origin, char *dest)
 {
 	int64_t origin_id = request_stop(session, origin);
 	int64_t dest_id = request_stop(session, dest);
 	
-	if (0 == origin_id || 0 == dest_id) {
+	if (!origin_id || !dest_id) {
 		return 0;
 	}
 	
@@ -248,3 +248,4 @@ static int travel(struct ruter_session *session, char *origin, char *dest)
 	
 	return 0;
 }
+

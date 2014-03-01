@@ -8,14 +8,14 @@
 #include "ruter/ruter.h"
 
 struct ruter_stop
-*ruter_find(struct ruter_session *session, char *place)
+*ruter_find(ruter_t *session, char *place)
 {
 	int success = 0;
 	char *name = NULL;
 	json_value *data = NULL;
 	struct ruter_stop *stops = NULL;
 
-	if (NULL == (name = curl_easy_escape(session->curl, place, 0))) {
+	if (!(name = curl_easy_escape(session->curl, place, 0))) {
 		return NULL;
 	} else {
 		success = ruter_rest(session, "Place/FindPlaces", name);
@@ -26,7 +26,7 @@ struct ruter_stop
 		return NULL;
 	}
 
-	if (NULL == (data = json_parse(session->buf, session->bufsize))) {
+	if (!(data = json_parse(session->buf, session->bufsize))) {
 		return NULL;
 	}
 
@@ -37,7 +37,7 @@ struct ruter_stop
 }
 
 struct ruter_departure
-*ruter_departures(struct ruter_session *session, int64_t id)
+*ruter_departures(ruter_t *session, int64_t id)
 {
 	char stop_id[32];
 	json_value *data = NULL;
@@ -48,7 +48,7 @@ struct ruter_departure
 		return NULL;
 	}
 
-	if (NULL == (data = json_parse(session->buf, session->bufsize))) {
+	if (!(data = json_parse(session->buf, session->bufsize))) {
 		return NULL;
 	}
 
@@ -60,7 +60,7 @@ struct ruter_departure
 
 struct ruter_travel
 *ruter_travel(
-	struct ruter_session *session, 
+	ruter_t *session, 
 	struct tm *time,
 	int after, 
 	int64_t from_id, 
@@ -90,7 +90,7 @@ struct ruter_travel
 	
 	json_value *data = NULL;
 	
-	if (NULL == (data = json_parse(session->buf, session->bufsize))) {
+	if (!(data = json_parse(session->buf, session->bufsize))) {
 		return NULL;
 	}
 	
@@ -101,7 +101,7 @@ struct ruter_travel
 }
 
 int
-ruter_rest(struct ruter_session *session, char *method, char *args)
+ruter_rest(ruter_t *session, char *method, char *args)
 {
 	session->bufsize = snprintf(
 		session->buf,
@@ -127,5 +127,5 @@ ruter_rest(struct ruter_session *session, char *method, char *args)
 	session->bufsize = 0;
 	session->code = curl_easy_perform(session->curl);
 
-	return (0 == session->code);
+	return !session->code;
 }

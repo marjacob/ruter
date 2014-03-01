@@ -5,23 +5,17 @@
 #include "ruter/session.h"
 #include "ruter/util.h"
 
-static struct ruter_session session_zero = { 0 };
+static ruter_t session_zero = { 0 };
 
 static size_t
 write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
-	struct ruter_session *session = (struct ruter_session*)userdata;
+	ruter_t *session = (ruter_t*)userdata;
 	size_t data_size = (size * nmemb);
 	size_t total_size = data_size + session->bufsize;
 
 	if (total_size + 1 > session->bufcap) {
 		session->buf = realloc(session->buf, total_size + 1);
-
-		if (NULL == session->buf) {
-			session->bufcap = 0;
-			return 0;
-		}
-
 		session->bufcap = total_size;
 	}
 
@@ -34,7 +28,7 @@ write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 }
 
 int
-ruter_init(struct ruter_session *session, size_t bufcap)
+ruter_open(ruter_t *session, size_t bufcap)
 {
 	*session = session_zero;
 	
@@ -42,7 +36,7 @@ ruter_init(struct ruter_session *session, size_t bufcap)
 		return 0;
 	}
 
-	if (NULL == (session->curl = curl_easy_init())) {
+	if (!(session->curl = curl_easy_init())) {
 		curl_global_cleanup();
 		return 0;
 	}
@@ -59,9 +53,7 @@ ruter_init(struct ruter_session *session, size_t bufcap)
 	curl_easy_setopt(session->curl, CURLOPT_WRITEDATA, session);
 
 	session->bufcap = (0 >= bufcap) ? RUTER_BUFFER_SIZE : bufcap;
-	if (NULL == (session->buf = malloc(session->bufcap))) {
-		return 0;
-	}
+	session->buf = malloc(session->bufcap);
 	
 	strncpy(session->uri, RUTER_API_URI, RUTER_API_LENGTH);
 
@@ -69,9 +61,9 @@ ruter_init(struct ruter_session *session, size_t bufcap)
 }
 
 void
-ruter_close(struct ruter_session *session)
+ruter_close(ruter_t *session)
 {
-	if (NULL == session) {
+	if (!session) {
 		return;
 	}
 	
@@ -84,3 +76,4 @@ ruter_close(struct ruter_session *session)
 
 	return;
 }
+
