@@ -41,21 +41,27 @@ ruter_open(ruter_t *session, size_t bufcap)
 		return 0;
 	}
 	
+	strncpy(session->uri, RUTER_API_URI, RUTER_API_LENGTH);
+	session->bufcap = (0 >= bufcap) ? RUTER_BUFFER_SIZE : bufcap;
+	session->buf = malloc(session->bufcap);	
 	session->header = NULL;
 	session->header = curl_slist_append(
 		session->header, "Accept: application/json");
 	session->header = curl_slist_append(
 		session->header, "Accept-Charset: utf-8");
-
+	
 	curl_easy_setopt(session->curl, CURLOPT_HTTPHEADER, session->header);
 	curl_easy_setopt(session->curl, CURLOPT_USERAGENT, RUTER_USER_AGENT);
 	curl_easy_setopt(session->curl, CURLOPT_WRITEFUNCTION, write_data);
 	curl_easy_setopt(session->curl, CURLOPT_WRITEDATA, session);
-
-	session->bufcap = (0 >= bufcap) ? RUTER_BUFFER_SIZE : bufcap;
-	session->buf = malloc(session->bufcap);
 	
-	strncpy(session->uri, RUTER_API_URI, RUTER_API_LENGTH);
+	/* SSL */
+	curl_easy_setopt(session->curl, CURLOPT_SSL_VERIFYHOST, 0L);
+	curl_easy_setopt(session->curl, CURLOPT_SSL_VERIFYPEER, 0L);
+	curl_easy_setopt(
+		session->curl, 
+		CURLOPT_SSLVERSION, 
+		CURL_SSLVERSION_SSLv3); 
 
 	return 1;
 }
