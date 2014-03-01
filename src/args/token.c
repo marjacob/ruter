@@ -60,7 +60,7 @@ tok_t *tok_next(csrc_t *src)
 		tok->type = TOK_SHOW;
 	} else if (!strcmp("from", word)) {
 		tok->type = TOK_FROM;
-	} else if (strcmp("to", word)) {
+	} else if (!strcmp("to", word)) {
 		tok->type = TOK_TO;
 	} else {
 		tok->type = TOK_TEXT;
