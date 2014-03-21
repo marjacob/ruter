@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 			argv[0]);
 		return EXIT_FAILURE;
 	}
-	
+
 	ruter_t session;
 	
 	if (!ruter_open(&session, 0)) {
@@ -102,34 +102,18 @@ static void print_stops(struct ruter_stop *stops, int level)
 	for (int i = 0; i < level; i++) {
 		wprintf(L"\t");
 	}
+		
+	wprintf(L"%" PRId64 L": %ls", stops->id, wstr_ptr(stops->name));
 	
-	switch (stops->type) {
-	case PT_STOP:
-		wprintf(L"Stop: ");
-		break;
-	case PT_AREA:
-		wprintf(L"Area: ");
-		break;
-	case PT_POI:
-		wprintf(L"POI: ");
-		break;
-	case PT_STREET:
-		wprintf(L"Street: ");
-		break;
-	}
-	
-	wprintf(L"%ls (%d)", wstr_ptr(stops->name), wstr_len(stops->name));
-	
-	if (NULL != wstr_ptr(stops->district)) {
+	if (!wstr_empty(stops->zone) && !wstr_empty(stops->district)) {
+		wprintf(
+			L" (%ls, %ls)", 
+			wstr_ptr(stops->zone),
+			wstr_ptr(stops->district));
+	} else if (!wstr_empty(stops->zone)) {
+		wprintf(L" (%ls)", wstr_ptr(stops->zone));
+	} else if (!wstr_empty(stops->district)) {
 		wprintf(L" (%ls)", wstr_ptr(stops->district));
-	}
-	
-	if (NULL != wstr_ptr(stops->zone)) {
-		wprintf(L" (sone %ls)", wstr_ptr(stops->zone));
-	}
-	
-	if (stops->realtime) {
-		wprintf(L" (realtime)");
 	}
 	
 	wprintf(L"\n");
