@@ -21,6 +21,12 @@ inline static wchar_t
 	return !s ? NULL : s->ptr;
 }
 
+inline static int
+wstr_empty(const wstr_t *s)
+{
+	return !wstr_ptr(s) || !wstr_len(s);
+}
+
 inline static void
 wstr_free(wstr_t *s)
 {
