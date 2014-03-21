@@ -30,13 +30,15 @@ write_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 int
 ruter_open(ruter_t *session, size_t bufcap)
 {
+	CURL *curl;
+	struct curl_slist *hdr = NULL;
 	*session = session_zero;
 	
 	if (0 != (session->code = curl_global_init(CURL_GLOBAL_ALL))) {
 		return 0;
 	}
-
-	if (!(session->curl = curl_easy_init())) {
+	
+	if (!(curl = curl_easy_init())) {
 		curl_global_cleanup();
 		return 0;
 	}
@@ -44,24 +46,20 @@ ruter_open(ruter_t *session, size_t bufcap)
 	strncpy(session->uri, RUTER_API_URI, RUTER_API_LENGTH);
 	session->bufcap = (0 >= bufcap) ? RUTER_BUFFER_SIZE : bufcap;
 	session->buf = malloc(session->bufcap);	
-	session->header = NULL;
-	session->header = curl_slist_append(
-		session->header, "Accept: application/json");
-	session->header = curl_slist_append(
-		session->header, "Accept-Charset: utf-8");
 	
-	curl_easy_setopt(session->curl, CURLOPT_HTTPHEADER, session->header);
-	curl_easy_setopt(session->curl, CURLOPT_USERAGENT, RUTER_USER_AGENT);
-	curl_easy_setopt(session->curl, CURLOPT_WRITEFUNCTION, write_data);
-	curl_easy_setopt(session->curl, CURLOPT_WRITEDATA, session);
+	hdr = curl_slist_append(hdr, "Accept: application/json");
+	hdr = curl_slist_append(hdr, "Accept-Charset: utf-8");
 	
-	/* SSL */
-	curl_easy_setopt(session->curl, CURLOPT_SSL_VERIFYHOST, 0L);
-	curl_easy_setopt(session->curl, CURLOPT_SSL_VERIFYPEER, 0L);
-	curl_easy_setopt(
-		session->curl, 
-		CURLOPT_SSLVERSION, 
-		CURL_SSLVERSION_SSLv3); 
+	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, session->header);
+	curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_SSLv3); 
+	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+	curl_easy_setopt(curl, CURLOPT_USERAGENT, RUTER_USER_AGENT);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, session);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+	
+	session->curl = curl;
+	session->header = hdr;
 
 	return 1;
 }
@@ -69,17 +67,12 @@ ruter_open(ruter_t *session, size_t bufcap)
 void
 ruter_close(ruter_t *session)
 {
-	if (!session) {
-		return;
+	if (session) {
+		curl_easy_cleanup(session->curl);
+		curl_global_cleanup();
+		curl_slist_free_all(session->header);
+		free(session->buf);
+		*session = session_zero;
 	}
-	
-	curl_easy_cleanup(session->curl);
-	curl_global_cleanup();
-	curl_slist_free_all(session->header);
-	free(session->buf);
-	
-	*session = session_zero;
-
-	return;
 }
 
