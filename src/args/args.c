@@ -19,28 +19,34 @@ int args_parse(struct args *args, size_t argc, char **argv)
 			break;
 		case TOK_TEXT:
 			if (TOK_TO == t->type) {
+				free(args->from);
 				args->from = util_strdup(prev->text);
 			} else if (TOK_FROM == t->type) {
+				free(args->to);
 				args->to = util_strdup(prev->text);
 			}
 			break;
 		case TOK_FROM:
 			if (TOK_TEXT == t->type) {
+				free(args->from);
 				args->from = util_strdup(t->text);
 			}
 			break;
 		case TOK_TO:
 			if (TOK_TEXT == t->type) {
+				free(args->to);
 				args->to = util_strdup(t->text);
 			}
 			break;
 		case TOK_FIND:
 			if (TOK_TEXT == t->type) {
+				free(args->find);
 				args->find = util_strdup(t->text);
 			}
 			break;
 		case TOK_SHOW:
 			if (TOK_TEXT == t->type) {
+				free(args->show);
 				args->show = util_strdup(t->text);
 			}
 			break;
