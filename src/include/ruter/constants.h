@@ -88,3 +88,4 @@ enum vehicle_mode {
  * http://labs.ruter.no/how-to-use-the-api/about-the-data-model.aspx */
 
 #endif
+
