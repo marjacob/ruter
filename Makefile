@@ -52,6 +52,11 @@ DONE = [ OK ]
 # Release build (default)
 all: $(BINARY)
 
+# Optimised build
+opt: CFLAGS += -O2
+opt: MODE = optimised
+opt: all
+
 # Debug build
 debug: CFLAGS += -g
 debug: MODE = debug
