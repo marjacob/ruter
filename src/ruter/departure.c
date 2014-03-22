@@ -9,7 +9,7 @@
 
 static struct ruter_departure departure_zero = { 0 };
 
-static struct ruter_departure
+inline static struct ruter_departure
 *departure_init(void)
 {
 	struct ruter_departure *dep = malloc(sizeof(*dep));
