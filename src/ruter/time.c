@@ -20,7 +20,7 @@ static int
 ruter_time_offset(char *offset) {
 	int h, m;
 	
-	if (NULL == offset || 5 > util_strnlen(offset, 5)) {
+	if (!offset || 5 > util_strnlen(offset, 5)) {
 		return 0;
 	} else {
 		h = (offset[1] - 0x30) * 10 + (offset[2] - 0x30);
@@ -33,7 +33,7 @@ ruter_time_offset(char *offset) {
 int
 ruter_time_parse(struct tm *tm, json_value *data)
 {
-	if (NULL == data || NULL == tm) {
+	if (!data || !tm) {
 		return 0;
 	}
 	
@@ -41,7 +41,7 @@ ruter_time_parse(struct tm *tm, json_value *data)
 	char prefix[] = "/Date(";
 	size_t prefixlen = sizeof(prefix) - 1;
 	
-	if (NULL == time || 0 != strncmp(prefix, time, prefixlen)) {
+	if (!time || strncmp(prefix, time, prefixlen)) {
 		return 0;
 	}
 	
