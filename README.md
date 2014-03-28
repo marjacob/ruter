@@ -3,7 +3,7 @@ This is *alpha* code and bugs should be expected. However, everything compiles a
 
 # ruter
 
-*Ruter AS* is a common management company for public transport in Oslo and Akershus in Norway. They provide real time travel information and travel planners on their [website](https://ruter.no/) and through an [API](http://api.ruter.no/reisrest/help/). This program is my attempt to make that functionality available from the terminal. I am in no way affiliated with *Ruter AS*.
+*Ruter AS* is a common management company for public transport in Oslo and Akershus in Norway. They provide real time travel information and travel planners on their [website](https://ruter.no/) and through an [API](http://api.ruter.no/ReisRest/help). This program is my attempt to make that functionality available from the terminal. I am in no way affiliated with *Ruter AS*.
 
 UTF8 characters are supported. I do my very best to conform to the [Linux kernel coding style](https://www.kernel.org/doc/Documentation/CodingStyle) at all times.
 
