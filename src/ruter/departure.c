@@ -7,47 +7,46 @@
 #include "ruter/util.h"
 #include "wstr.h"
 
-static struct ruter_departure departure_zero = { 0 };
+static departure_t departure_zero = { 0 };
 
-inline static struct ruter_departure
+inline static departure_t
 *departure_init(void)
 {
-	struct ruter_departure *dep = malloc(sizeof(*dep));
+	departure_t *dep = malloc(sizeof(*dep));
 	*dep = departure_zero;
 	return dep;
 }
 
-static struct ruter_departure
+static departure_t
 *departure_array_parse(json_value *data)
 {
 	if (!is_json_array(data)) {
 		return NULL;
 	}
 
-	struct ruter_departure
-		*dep = NULL,
-		*deps = NULL,
-		*last_dep = NULL;
+	departure_t *curr = NULL;
+	departure_t *head = NULL;
+	departure_t *tail = NULL;
 
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
-		dep = ruter_departure_parse(data->u.array.values[i]);
+		curr = ruter_departure_parse(data->u.array.values[i]);
 
-		if (!dep) {
+		if (!curr) {
 			continue;
-		} else if (!deps) {
-			deps = dep;
+		} else if (!head) {
+			head = curr;
 		} else {
-			last_dep->next = dep;
+			tail->next = curr;
 		}
 
-		last_dep = dep;
+		tail = curr;
 	}
 
-	return deps;
+	return head;
 }
 
 void
-ruter_departure_free(struct ruter_departure *dep)
+ruter_departure_free(departure_t *dep)
 {
 	if (NULL != dep) {
 		ruter_departure_free(dep->next);
@@ -58,7 +57,7 @@ ruter_departure_free(struct ruter_departure *dep)
 	}
 }
 
-struct ruter_departure
+departure_t
 *ruter_departure_parse(json_value *data)
 {
 	if (is_json_array(data)) {
@@ -69,7 +68,7 @@ struct ruter_departure
 
 	char *name = NULL;
 	json_value *value = NULL;
-	struct ruter_departure *dep = departure_init();
+	departure_t *dep = departure_init();
 
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;

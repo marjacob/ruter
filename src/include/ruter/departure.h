@@ -1,5 +1,5 @@
-#ifndef __H_RUTER_EVENT__
-#define __H_RUTER_EVENT__
+#ifndef __H_RUTER_DEPARTURE__
+#define __H_RUTER_DEPARTURE__
 
 #include <time.h>
 #include "constants.h"
@@ -24,7 +24,7 @@
  */
 struct ruter_departure {
 	int congested;
-	enum vehicle_mode vehicle;
+	vehicle_t vehicle;
 	struct ruter_departure *next;
 	struct tm a_arrive;
 	struct tm a_depart;
@@ -34,6 +34,8 @@ struct ruter_departure {
 	wstr_t *line_name;
 	wstr_t *platform;
 };
+
+typedef struct ruter_departure departure_t;
 
 /**
  * ruter_departure_free() - Frees a departure and all its fields.
@@ -45,7 +47,7 @@ struct ruter_departure {
  * Take care not to do that.
  */
 void
-ruter_departure_free(struct ruter_departure *event);
+ruter_departure_free(departure_t *event);
 
 /**
  * ruter_departure_parse() - Builds a departure structure from JSON data.
@@ -58,7 +60,8 @@ ruter_departure_free(struct ruter_departure *event);
  *
  * Return: Pointer to list of departures on success or NULL on failure.
  */
-struct ruter_departure
+departure_t
 *ruter_departure_parse(json_value *data);
 
 #endif
+
