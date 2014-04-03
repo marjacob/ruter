@@ -17,7 +17,7 @@
  * Return: Returns the UTC time offset in seconds.
  */
 static int
-ruter_time_offset(char *offset) {
+time_offset(char *offset) {
 	int h, m;
 	
 	if (!offset || 5 > util_strnlen(offset, 5)) {
@@ -47,7 +47,7 @@ ruter_time_parse(struct tm *tm, json_value *data)
 	
 	char *endptr = NULL;
 	unsigned long long int ms = strtoull(time + prefixlen, &endptr, 10);
-	time_t seconds = (ms / 1000) + ruter_time_offset(endptr);
+	time_t seconds = (ms / 1000) + time_offset(endptr);
 	
 	memcpy(tm, gmtime(&seconds), sizeof(*tm));
 	
