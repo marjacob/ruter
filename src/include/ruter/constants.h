@@ -4,11 +4,11 @@
 /* Initial size of the data receive buffer. 
  * The buffer size is increased automatically when necessary. */
 #ifndef RUTER_BUFFER_SIZE
-#	define RUTER_BUFFER_SIZE 8192
+#	define RUTER_BUFFER_SIZE (8192)
 #endif
 
 #ifndef RUTER_API_URI
-#	define RUTER_API_URI "https://reis.trafikanten.no/ReisRest"
+#	define RUTER_API_URI ("https://reis.trafikanten.no/ReisRest")
 #endif
 
 #ifndef RUTER_API_LENGTH
@@ -16,11 +16,11 @@
 #endif
 
 #ifndef RUTER_USER_AGENT
-#	define RUTER_USER_AGENT "PosixRuterCLI/0.4-alpha"
+#	define RUTER_USER_AGENT ("PosixRuterCLI/0.4-alpha")
 #endif
 
 /**
- * enum place_type - Various kinds of stops.
+ * place_t - Various kinds of stops.
  *
  * @PT_STOP:	A regular stop for public transportation.
  * @PT_AREA:	An area that may contain stops.
@@ -29,15 +29,15 @@
  *
  * These are the various kinds of stops available through the API.
  */
-enum place_type {
+typedef enum {
 	PT_STOP = 0,
 	PT_AREA = 1,
 	PT_POI = 2,
 	PT_STREET = 3
-};
+} place_t;
 
 /**
- * enum transport_type - Various methods of transportation.
+ * transport_t - Various methods of transportation.
  *
  * @TT_WALKING:		Usually indicates a short walk between stops.
  * @TT_AIRPORT_BUS:	Transport to an airport available by bus.
@@ -52,7 +52,7 @@ enum place_type {
  * These are the various methods of transportation available trough the 
  * travel planner API.
  */
-enum transport_type {
+typedef enum {
 	TT_WALKING = 0,
 	TT_AIRPORT_BUS = 1,
 	TT_BUS = 2,
@@ -62,11 +62,12 @@ enum transport_type {
 	TT_TRAIN = 6,
 	TT_TRAM = 7,
 	TT_METRO = 8
-};
+} transport_t;
  
 /**
- * enum vehicle_mode - Various methods of transportation.
+ * vehicle_t - Various methods of transportation.
  *
+ * @VM_NONE:	No realtime information available.
  * @VM_BUS:	Realtime information available for bus.
  * @VM_FERRY:	Realtime information available for ferry.
  * @VM_RAIL:	Realtime information available for rail.
@@ -76,13 +77,14 @@ enum transport_type {
  * These are the various methods of transportation available through the 
  * realtime systems API.
  */
-enum vehicle_mode {
+typedef enum {
+	VM_NONE = -1,
 	VM_BUS = 0,
 	VM_FERRY = 1,
 	VM_RAIL = 2,
 	VM_TRAM = 3,
 	VM_METRO = 4
-};
+} vehicle_t;
 
 /* About the data model:
  * http://labs.ruter.no/how-to-use-the-api/about-the-data-model.aspx */
