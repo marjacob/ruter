@@ -8,7 +8,7 @@ LIB =
 BINDIR = bin/
 OBJDIR = obj/
 SRCDIR = src/
-INCDIR = $(SRCDIR)/include
+INCDIR = $(SRCDIR)include/
 
 # Recursive wildcard function
 rwildcard = \
@@ -63,14 +63,14 @@ debug: MODE = debug
 debug: all
 
 # Build binary
-$(BINARY) : $(OBJECTS)
+$(BINARY): $(OBJECTS)
 	@$(DIRGUARD)
 	@printf "%s Linking executable %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(LINK) $(OBJECTS) $(LIB) $(LFLAGS) -o $@
 	@printf "\r%s\n" "$(DONE)"
 
 # Compile source to object code
-$(OBJECTS): $(OBJDIR)%.o : $(SRCDIR)%.c $(HEADERS)
+$(OBJECTS): $(OBJDIR)%.o: $(SRCDIR)%.c $(HEADERS)
 	@$(DIRGUARD)
 	@printf "%s Building object %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(CC) $(CFLAGS) $< -o $@
