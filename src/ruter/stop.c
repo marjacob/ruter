@@ -6,47 +6,46 @@
 #include "ruter/util.h"
 #include "wstr.h"
 
-static struct ruter_stop stop_zero = { 0 };
+static stop_t stop_zero = { 0 };
 
-inline static struct ruter_stop
+inline static stop_t
 *stop_init(void)
 {
-	struct ruter_stop *stop = malloc(sizeof(*stop));
+	stop_t *stop = malloc(sizeof(*stop));
 	*stop = stop_zero;
 	return stop;
 }
 
-static struct ruter_stop
+static stop_t
 *stop_array_parse(const json_value *data)
 {
 	if (!is_json_array(data)) {
 		return NULL;
 	}
 
-	struct ruter_stop 
-		*stop = NULL, 
-		*stops = NULL, 
-		*last_stop = NULL;
+	stop_t *curr = NULL;
+	stop_t *head = NULL;
+	stop_t *tail = NULL;
 
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
-		stop = ruter_stop_parse(data->u.array.values[i]);
+		curr = ruter_stop_parse(data->u.array.values[i]);
 
-		if (!stop) {
+		if (!curr) {
 			continue;
-		} else if (!stops) {
-			stops = stop;
+		} else if (!head) {
+			head = curr;
 		} else {
-			last_stop->next = stop;
+			tail->next = curr;
 		}
 
-		last_stop = stop;
+		tail = curr;
 	}
 
-	return stops;
+	return head;
 }
 
 void
-ruter_stop_free(struct ruter_stop *stop)
+ruter_stop_free(stop_t *stop)
 {
 	if (stop) {
 		ruter_line_free(stop->lines);
@@ -59,7 +58,29 @@ ruter_stop_free(struct ruter_stop *stop)
 	}
 }
 
-struct ruter_stop
+vehicle_t
+ruter_stop_mode(const stop_t *stop)
+{
+	if (stop && PT_STOP == stop->type && wstr_len(stop->name)) {
+		wchar_t *name = wstr_ptr(stop->name);
+
+		if (wcsstr(name, L"tog]")) {
+			return VM_RAIL;
+		} else if (wcsstr(name, L"[buss]")) {
+			return VM_BUS;
+		} else if (wcsstr(name, L"[T-bane]")) {
+			return VM_METRO;
+		} else if (wcsstr(name, L"trikk")) {
+			return VM_TRAM;
+		} else if (wcsstr(name, L"[båt]")) {
+			return VM_FERRY;
+		}
+	}
+
+	return VM_NONE;
+}
+
+stop_t
 *ruter_stop_parse(const json_value *data)
 {
 	if (is_json_array(data)) {
@@ -70,7 +91,7 @@ struct ruter_stop
 
 	char *name = NULL;
 	json_value *value = NULL;
-	struct ruter_stop *stop = stop_init();
+	stop_t *stop = stop_init();
 
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;

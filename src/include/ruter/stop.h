@@ -13,12 +13,12 @@
  * @id:		Unique stop ID.
  * @type:	Describes the kind of stop this is.
  * @realtime	Non-zero if the stop supports realtime traffic information.
- * @lines	All lines going through the stop.
- * @next	Next stop in the linked list.
- * @stops	All stops belonging to an area.
  * @district	Name of the district where the stop is located.
  * @name	Name of the stop.
  * @zone	Zone where the stop is located.
+ * @lines	All lines going through the stop.
+ * @next	Next stop in the linked list.
+ * @stops	All stops belonging to an area.
  *
  * This structure describes the various properties of a stop. The type of the
  * stop influences which of the properties are available. The 'stops' field
@@ -27,15 +27,17 @@
  */
 struct ruter_stop {
 	int64_t id;
-	enum place_type type;
+	place_t type;
 	int realtime;
-	struct ruter_line *lines;
-	struct ruter_stop *next;
-	struct ruter_stop *stops;
 	wstr_t *district;
 	wstr_t *name;
 	wstr_t *zone;
+	struct ruter_line *lines;
+	struct ruter_stop *next;
+	struct ruter_stop *stops;
 };
+
+typedef struct ruter_stop stop_t;
 
 /**
  * ruter_stop_free() - Frees a stop and all its fields.
@@ -47,7 +49,21 @@ struct ruter_stop {
  * Take care not to do that.
  */
 void
-ruter_stop_free(struct ruter_stop *stop);
+ruter_stop_free(stop_t *stop);
+
+/**
+ * ruter_stop_mode() - Returns the mode of transportation for a stop.
+ *
+ * @stop:	Pointer to stop.
+ *
+ * Attempts to guess the mode of transportation by looking for known clues
+ * in the name of the stop, as Ruter encodes this information by adding it
+ * as tags in the stop name.
+ *
+ * Return: A value of type vehicle_t indicating the mode of transportation.
+ */
+vehicle_t
+ruter_stop_mode(const stop_t *stop);
 
 /**
  * ruter_stop_parse() - Builds a stop structure from JSON data.
@@ -60,7 +76,25 @@ ruter_stop_free(struct ruter_stop *stop);
  *
  * Return: Pointer to graph of stops on success or NULL on failure.
  */
-struct ruter_stop
+stop_t
 *ruter_stop_parse(const json_value *data);
 
+/**
+ * ruter_stop_match() - Checks the mode of transportation for a stop.
+ *
+ * @stop:	Pointer to stop.
+ *
+ * Checks whether a stop supports a given mode of transportation.
+ *
+ * Return: A non-zero value if the stop supports the mode of transportation.
+ */
+inline static uint8_t
+ruter_stop_match(const stop_t *stop, vehicle_t mode)
+{
+	return stop
+		&& (PT_STOP == stop->type)
+		&& (VM_NONE == mode || ruter_stop_mode(stop) == mode);
+}
+
 #endif
+
