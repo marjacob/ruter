@@ -4,47 +4,46 @@
 #include "ruter/line.h"
 #include "ruter/util.h"
 
-static struct ruter_line line_zero = { 0 };
+static line_t line_zero = { 0 };
 
-inline static struct ruter_line
+inline static line_t
 *line_init(void)
 {
-	struct ruter_line *line = malloc(sizeof(*line));
+	line_t *line = malloc(sizeof(*line));
 	*line = line_zero;
 	return line;
 }
 
-static struct ruter_line
+static line_t
 *line_array_parse(json_value *data)
 {
 	if (!is_json_array(data)) {
 		return NULL;
 	}
 
-	struct ruter_line
-		*line = NULL,
-		*lines = NULL,
-		*last_line = NULL;
+	line_t *curr = NULL;
+	line_t *head = NULL;
+	line_t *tail = NULL;
 
 	for (int i = 0, j = data->u.array.length; i < j; i++) {
-		line = ruter_line_parse(data->u.array.values[i]);
+		curr = ruter_line_parse(data->u.array.values[i]);
 
-		if (!line) {
+		if (!curr) {
 			continue;
-		} else if (!lines) {
-			lines = line;
+		} else if (!head) {
+			head= curr;
 		} else {
-			last_line->next = line;
+			tail->next = curr;
 		}
 
-		last_line = line;
+		tail = curr;
 	}
 
-	return lines;
+	return head;
 }
 
 void
-ruter_line_free(struct ruter_line *line)
+ruter_line_free(line_t *line)
 {
 	if (line) {
 		ruter_line_free(line->next);
@@ -53,7 +52,7 @@ ruter_line_free(struct ruter_line *line)
 	}
 }
 
-struct ruter_line
+line_t
 *ruter_line_parse(json_value *data)
 {
 	if (is_json_array(data)) {
@@ -64,7 +63,7 @@ struct ruter_line
 
 	char *name = NULL;
 	json_value *value = NULL;
-	struct ruter_line *line = line_init();
+	line_t *line = line_init();
 
 	for (int i = 0, j = data->u.object.length; i < j; i++) {
 		name = data->u.object.values[i].name;
@@ -72,8 +71,8 @@ struct ruter_line
 		line->id = value->u.integer;
 
 		if (!strcmp("LineID", name) && !line->id) {
-				ruter_line_free(line);
-				return NULL;
+			ruter_line_free(line);
+			return NULL;
 		} else if (!strcmp("LineName", name)) {
 			line->name = wstr_from_json(value);
 		} else if (!strcmp("Transportation", name)) {

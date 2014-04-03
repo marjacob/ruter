@@ -19,10 +19,12 @@
  */
 struct ruter_line {
 	int64_t id;
-	enum transport_type type;
+	transport_t type;
 	struct ruter_line *next;
 	wstr_t *name;
 };
+
+typedef struct ruter_line line_t;
 
 /**
  * ruter_line_free() - Frees a line and all its fields.
@@ -34,7 +36,7 @@ struct ruter_line {
  * Take care not to do that.
  */
 void
-ruter_line_free(struct ruter_line *line);
+ruter_line_free(line_t *line);
 
 /**
  * ruter_line_parse() - Builds a line structure from JSON data.
@@ -47,7 +49,7 @@ ruter_line_free(struct ruter_line *line);
  *
  * Return: Pointer to list of lines on success or NULL on failure.
  */
-struct ruter_line
+line_t
 *ruter_line_parse(json_value *data);
 
 #endif
