@@ -48,7 +48,7 @@ static departure_t
 void
 ruter_departure_free(departure_t *dep)
 {
-	if (NULL != dep) {
+	if (dep) {
 		ruter_departure_free(dep->next);
 		wstr_free(dep->dest);
 		wstr_free(dep->line_name);
