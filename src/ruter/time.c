@@ -6,11 +6,11 @@
 #include "util.h"
 
 /**
- * ruter_time_offset() - Computes time offset in seconds.
+ * time_offset() - Computes time offset in seconds.
  * @offset:	A character string representing a UTC offset formatted as 
  *		+hhmm or -hhmm.
  *
- * The ruter_time_offset() function takes a UTC offset and calculates its
+ * The time_offset() function takes a UTC offset and calculates its
  * representation in seconds. This is useful for computing the local time
  * of some unix time stamp.
  *
