@@ -70,7 +70,7 @@ $(BINARY): $(OBJECTS)
 	@printf "\r%s\n" "$(DONE)"
 
 # Compile source to object code
-$(OBJECTS): $(OBJDIR)%.o: $(SRCDIR)%.c $(HEADERS)
+$(OBJECTS): $(OBJDIR)%.o: $(SRCDIR)%.c $(HEADERS) Makefile
 	@$(DIRGUARD)
 	@printf "%s Building object %s (%s)" "$(WAIT)" "$@" "$(MODE)"
 	@$(CC) $(CFLAGS) $< -o $@
