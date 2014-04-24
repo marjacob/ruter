@@ -3,6 +3,7 @@
 #include "json.h"
 #include "ruter/line.h"
 #include "ruter/util.h"
+#include "wstr.h"
 
 static line_t line_zero = { 0 };
 
@@ -48,9 +49,11 @@ line_t
 	line_t *copy = NULL;
 	
 	if (line) {
-		copy = malloc(sizeof(*copy));
-		memcpy(copy, line, sizeof(*copy));
+		copy = line_init();
+		copy->id = line->id;
+		copy->name = wstr_dup(line->name);
 		copy->next = ruter_line_copy(copy->next);
+		copy->type = line->type;
 	}
 	
 	return copy;
