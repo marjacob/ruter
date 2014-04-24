@@ -39,6 +39,21 @@ struct ruter_stop
 *ruter_find(ruter_t *session, char *place);
 
 /**
+ * ruter_guess() - Guess the desired stop.
+ *
+ * @session:	Pointer to Ruter session structure.
+ * @place:	Search hint like a name or address.
+ * @mode:	Desired mode of transportation.
+ *
+ * Returns the stop structure of the guessed stop. Pass VM_NONE as the 'mode'
+ * argument to ignore mode of transportation.
+ *
+ * Return: Pointer to stop.
+ */
+stop_t
+*ruter_guess(ruter_t *session, char *place, vehicle_t mode);
+
+/**
  * ruter_departures() - Retrieves departures from a stop.
  *
  * @session:	Pointer to Ruter session structure.

@@ -69,23 +69,6 @@ main(int argc, char *argv[])
 }
 
 static int64_t
-guess_stop(ruter_t *session, char *place, vehicle_t mode)
-{
-	stop_t *head = ruter_find(session, place);
-	int64_t id = 0;
-	
-	for (stop_t *stop = head; stop->next; stop = stop->next) {
-		if (ruter_stop_match(stop, VM_NONE)) {
-			id = stop->id;
-			break;
-		}
-	}
-
-	ruter_stop_free(head);
-	return id;
-}
-
-static int64_t
 request_stop(ruter_t *session, char *place)
 {
 	stop_t *head = ruter_find(session, place);
@@ -209,14 +192,26 @@ find(ruter_t *session, char *place)
 static int
 show(ruter_t *session, char *place)
 {
-	int64_t stop_id = guess_stop(session, place, VM_NONE);
-	
-	if (!stop_id) {
+	stop_t *stop = ruter_guess(session, place, VM_NONE);
+
+	if (!stop) {
 		return 0;
 	}
 		
-	departure_t *deps = ruter_departures(session, stop_id);
+	wprintf(L"%ls", wstr_ptr(stop->name));
+
+	if (!wstr_empty(stop->district)) {
+		wprintf(L" %ls", wstr_ptr(stop->district));
+	}
 	
+	if (!wstr_empty(stop->zone)) {
+		wprintf(L" (%ls)", wstr_ptr(stop->zone));
+	}
+
+	wprintf(L"\n");
+	departure_t *deps = ruter_departures(session, stop->id);
+	ruter_stop_free(stop);
+
 	if (!deps) {
 		wprintf(L"no realtime events found\n");
 		return 0;

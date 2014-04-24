@@ -27,6 +27,16 @@ struct ruter_line {
 typedef struct ruter_line line_t;
 
 /**
+ * ruter_line_copy() - Copies a line and all its fields.
+ *
+ * @stop:	Pointer to line.
+ *
+ * Recursively copies a line and everything the line structure points to.
+ */
+line_t
+*ruter_line_copy(const line_t *line);
+
+/**
  * ruter_line_free() - Frees a line and all its fields.
  *
  * @stop:	Pointer to line.

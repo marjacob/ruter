@@ -44,6 +44,26 @@ static stop_t
 	return head;
 }
 
+stop_t
+*ruter_stop_copy(const stop_t *stop)
+{
+	stop_t *copy = NULL;
+	
+	if (stop) {
+		copy = stop_init();
+		copy->district = wstr_dup(stop->district);
+		copy->id = stop->id;
+		copy->lines = ruter_line_copy(stop->lines);
+		copy->name = wstr_dup(stop->name);
+		copy->realtime = stop->realtime;
+		copy->stops = ruter_stop_copy(stop->stops);
+		copy->type = stop->type;
+		copy->zone = wstr_dup(stop->zone);
+	}
+
+	return copy;
+}
+
 void
 ruter_stop_free(stop_t *stop)
 {
@@ -63,7 +83,7 @@ ruter_stop_mode(const stop_t *stop)
 {
 	if (stop && PT_STOP == stop->type && wstr_len(stop->name)) {
 		wchar_t *name = wstr_ptr(stop->name);
-
+		
 		if (wcsstr(name, L"tog]")) {
 			return VM_RAIL;
 		} else if (wcsstr(name, L"[buss]")) {

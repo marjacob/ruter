@@ -41,7 +41,7 @@ static departure_t
 
 		tail = curr;
 	}
-
+	
 	return head;
 }
 

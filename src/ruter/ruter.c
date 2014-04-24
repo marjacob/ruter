@@ -7,13 +7,11 @@
 #include "json.h"
 #include "ruter/ruter.h"
 
-struct ruter_stop
+stop_t
 *ruter_find(ruter_t *session, char *place)
 {
 	int success = 0;
 	char *name = NULL;
-	json_value *data = NULL;
-	struct ruter_stop *stops = NULL;
 
 	if (!(name = curl_easy_escape(session->curl, place, 0))) {
 		return NULL;
@@ -25,18 +23,37 @@ struct ruter_stop
 	if (!success) {
 		return NULL;
 	}
+	
+	json_value *data = NULL;
 
 	if (!(data = json_parse(session->buf, session->bufsize))) {
 		return NULL;
 	}
 
-	stops = ruter_stop_parse(data);
+	stop_t *stops = ruter_stop_parse(data);
 	json_value_free(data);
 
 	return stops;
 }
 
-struct ruter_departure
+stop_t
+*ruter_guess(ruter_t *session, char *place, vehicle_t mode)
+{
+	stop_t *match = NULL;
+	stop_t *head = ruter_find(session, place);
+	
+	for (stop_t *stop = head; stop->next; stop = stop->next) {
+		if (ruter_stop_match(stop, mode)) {
+			match = ruter_stop_copy(stop);
+			break;
+		}
+	}
+
+	ruter_stop_free(head);
+	return match;
+}
+
+departure_t
 *ruter_departures(ruter_t *session, int64_t id)
 {
 	char stop_id[32];
@@ -52,7 +69,7 @@ struct ruter_departure
 		return NULL;
 	}
 
-	struct ruter_departure *deps = ruter_departure_parse(data);
+	departure_t *deps = ruter_departure_parse(data);
 	json_value_free(data);
 
 	return deps;

@@ -42,6 +42,20 @@ static line_t
 	return head;
 }
 
+line_t
+*ruter_line_copy(const line_t *line)
+{
+	line_t *copy = NULL;
+	
+	if (line) {
+		copy = malloc(sizeof(*copy));
+		memcpy(copy, line, sizeof(*copy));
+		copy->next = ruter_line_copy(copy->next);
+	}
+	
+	return copy;
+}
+
 void
 ruter_line_free(line_t *line)
 {

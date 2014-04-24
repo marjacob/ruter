@@ -40,6 +40,16 @@ struct ruter_stop {
 typedef struct ruter_stop stop_t;
 
 /**
+ * ruter_stop_copy() - Copies a stop and all its fields.
+ *
+ * @stop:	Pointer to stop.
+ *
+ * Recursively copies a stop and everything the stop structure points to.
+ */
+stop_t
+*ruter_stop_copy(const stop_t *stop);
+
+/**
  * ruter_stop_free() - Frees a stop and all its fields.
  *
  * @stop:	Pointer to stop.

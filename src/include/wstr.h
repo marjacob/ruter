@@ -5,14 +5,20 @@
 #include <wchar.h>
 
 typedef struct {
-	size_t length;
+	size_t len;
 	wchar_t *ptr;
 } wstr_t;
  
 inline static size_t
 wstr_len(const wstr_t *s)
 {
-	return !s ? 0 : s->length;
+	return !s ? 0 : s->len;
+}
+
+inline static size_t
+wstr_size(const wstr_t *s)
+{
+	return !s ? 0 : sizeof(*s->ptr) * (s->len + 1);
 }
 
 inline static wchar_t
@@ -32,6 +38,9 @@ wstr_free(wstr_t *s)
 {
 	free(s);
 }
+
+wstr_t
+*wstr_dup(const wstr_t *s);
 
 wstr_t
 *wstr_wcs(const wchar_t *s, size_t n);
