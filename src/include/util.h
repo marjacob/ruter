@@ -4,6 +4,36 @@
 #include <stdlib.h>
 
 /**
+ * util_max() - Selects the larger of two values.
+ *
+ * @x		An unsigned integer.
+ * @y		An unsigned integer.
+ *
+ * Compares two unsigned integers and returns the largest of them.
+ *
+ * Returns: Largest value.
+ */
+inline static size_t util_max(size_t x, size_t y)
+{
+	return x > y ? x : y;
+}
+
+/**
+ * util_min() - Selects the smaller of two values.
+ *
+ * @x		An unsigned integer.
+ * @y		An unsigned integer.
+ *
+ * Compares two unsigned integers and returns the smallest of them.
+ *
+ * Returns: Smallest value.
+ */
+inline static size_t util_min(size_t x, size_t y)
+{
+	return x < y ? x : y;
+}
+
+/**
  * util_strdup() - Creates a duplicate of a string.
  *
  * @s		Pointer to zero terminated string.

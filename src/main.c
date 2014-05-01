@@ -11,6 +11,7 @@
 #include "args/token.h"
 #include "json.h"
 #include "ruter/ruter.h"
+#include "table.h"
 #include "wstr.h"
 
 static int
@@ -21,6 +22,11 @@ show(ruter_t *session, char *place);
 
 static int
 travel(ruter_t *session, char *origin, char *dest);
+
+static void write_line(wchar_t *ptr, size_t len, void *user)
+{
+	wprintf(L"%ls\n", ptr);
+}
 
 int
 main(int argc, char *argv[])
@@ -61,7 +67,7 @@ main(int argc, char *argv[])
 	} else if (args.show) {
 		show(&session, args.show);
 	}
-	
+
 	args_free(&args);
 	ruter_close(&session);
 	
@@ -128,49 +134,63 @@ print_stops(stop_t *stops, int level)
 }
 
 static void
-print_events(departure_t *dep)
+print_events(departure_t *dep, const stop_t *stop)
 {
-	size_t max_dest = 0;
-	size_t max_line = 0;
-	
-	for (departure_t *cur = dep; cur; cur = cur->next) {
-		max_dest = wstr_len(cur->dest) > max_dest
-			? wstr_len(cur->dest)
-			: max_dest;
-		max_line = wstr_len(cur->line_name) > max_line
-			? wstr_len(cur->line_name)
-			: max_line;
-	}
-	
-	wchar_t meta_format[] = L"%%%zuls | %%5ls | %%2ls | %%%zuls | ";
-	wchar_t format[512];
-	swprintf(format, 512, meta_format, max_dest, max_line);
+	table_t *table = NULL;
+	size_t rows = 0;
 
 	for (departure_t *cur = dep; cur; cur = cur->next) {
-		wprintf(
-			format,
-			wstr_ptr(cur->dest),
-			VM_BUS == cur->vehicle
-				? L"Bus" :
-			VM_FERRY == cur->vehicle
-				? L"Ferry" :
-			VM_RAIL == cur->vehicle
-				? L"Rail" :
-			VM_TRAM == cur->vehicle
-				? L"Tram" :
-			VM_METRO == cur->vehicle
-				? L"Metro" : L"N/A",			
-			!wstr_ptr(cur->platform)
-				? L"" : wstr_ptr(cur->platform), 
-			wstr_ptr(cur->line_name));
-		
-		wprintf(
-			L"%02d:%02d (%02d:%02d)\n", 
+		rows++;
+	}
+
+	table = table_create(5, rows, write_line);
+	table_set_title(table, wstr_ptr(stop->name));
+	table_set_header(
+		table, 
+		L"Destination", 
+		L"Type", 
+		L"Platform", 
+		L"Line", 
+		L"Departure");
+	
+	size_t row = 0;
+	wchar_t *time = malloc(sizeof(*time) * 14 * rows);
+	wchar_t *type = malloc(sizeof(*type) * 6 * rows);
+	wchar_t *ptime = time;
+	wchar_t *ptype = type;
+	
+	for (departure_t *cur = dep; cur; cur = cur->next) {
+		swprintf(ptime, 14, L"%02d:%02d (%02d:%02d)", 
 			cur->a_depart.tm_hour, 
 			cur->a_depart.tm_min,
 			cur->e_depart.tm_hour, 
 			cur->e_depart.tm_min);
+
+		swprintf(ptype, 6, L"%ls", 
+			VM_BUS == cur->vehicle ? L"Bus" :
+			VM_FERRY == cur->vehicle ? L"Ferry" :
+			VM_RAIL == cur->vehicle ? L"Train" :
+			VM_TRAM == cur->vehicle ? L"Tram" :
+			VM_METRO == cur->vehicle ? L"Metro" : L"");
+	
+		table_set_row(
+			table, 
+			row, 
+			wstr_ptr(cur->dest),
+			ptype,
+			wstr_ptr(cur->platform),
+			wstr_ptr(cur->line_name),
+			ptime);
+
+		ptime += 14;
+		ptype += 6;
+		row++;
 	}
+
+	table_print(table);
+	table_free(table);
+	free(time);
+	free(type);
 }
 
 static int
@@ -198,26 +218,16 @@ show(ruter_t *session, char *place)
 		return 0;
 	}
 		
-	wprintf(L"%ls", wstr_ptr(stop->name));
-
-	if (!wstr_empty(stop->district)) {
-		wprintf(L" %ls", wstr_ptr(stop->district));
-	}
-	
-	if (!wstr_empty(stop->zone)) {
-		wprintf(L" (%ls)", wstr_ptr(stop->zone));
-	}
-
-	wprintf(L"\n");
 	departure_t *deps = ruter_departures(session, stop->id);
-	ruter_stop_free(stop);
 
 	if (!deps) {
+		ruter_stop_free(stop);
 		wprintf(L"no realtime events found\n");
 		return 0;
 	}
 	
-	print_events(deps);
+	print_events(deps, stop);
+	ruter_stop_free(stop);
 	ruter_departure_free(deps);
 	
 	return 0;
