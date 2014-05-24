@@ -8,7 +8,8 @@
 
 #define CELL(table, col, row) (table->table[row * table->cols + col])
 
-table_t *table_create(size_t cols, size_t rows, writelfunc write)
+table_t
+*table_create(size_t cols, size_t rows, writelfunc write)
 {
 	table_t *table = NULL;
 	char *table_mem = NULL;
@@ -33,6 +34,8 @@ table_t *table_create(size_t cols, size_t rows, writelfunc write)
 		table->write = write;
 		table->user = NULL;
 		table->limit = 16;
+	} else {
+		return NULL;
 	}
 	
 	for (size_t i = 0, j = cols * (rows + 1); i < j; i++) {
@@ -46,19 +49,22 @@ table_t *table_create(size_t cols, size_t rows, writelfunc write)
 	return table;
 }
 
-inline static uint8_t within(const table_t *table, size_t col, size_t row)
+inline static uint8_t
+within(const table_t *table, size_t col, size_t row)
 {
 	return table ? table->cols > col && table->rows > row : 0;
 }
 
-void table_set_cell(table_t *table, size_t col, size_t row, wchar_t *value)
+void
+table_set_cell(table_t *table, size_t col, size_t row, wchar_t *value)
 {
 	if (within(table, col, row)) {
 		CELL(table, col, row) = value;
 	}
 }
 
-static void set_row(table_t *table, size_t row, va_list args)
+static void
+set_row(table_t *table, size_t row, va_list args)
 {
 	if (table) {
 		wchar_t *value;
@@ -70,7 +76,8 @@ static void set_row(table_t *table, size_t row, va_list args)
 	}
 }
 
-void table_set_row(table_t *table, size_t row, ...)
+void
+table_set_row(table_t *table, size_t row, ...)
 {
 	if (table) {
 		va_list args;
@@ -81,7 +88,8 @@ void table_set_row(table_t *table, size_t row, ...)
 	}
 }
 
-void table_set_header(table_t *table, ...)
+void
+table_set_header(table_t *table, ...)
 {
 	if (table) {
 		va_list args;
@@ -94,14 +102,16 @@ void table_set_header(table_t *table, ...)
 	}
 }
 
-void table_set_title(table_t *table, wchar_t *title)
+void
+table_set_title(table_t *table, wchar_t *title)
 {
 	if (table) {
 		table->title = title;
 	}
 }
 
-inline static wchar_t *print_fill(wchar_t *s, size_t n, wchar_t c)
+inline static wchar_t
+*print_fill(wchar_t *s, size_t n, wchar_t c)
 {
 	for (wchar_t *p = s + n; s < p; *s++ = c);
 	return s;
@@ -127,7 +137,8 @@ static wchar_t
 	return s;
 }
 
-static void print_row(const table_t *table, wchar_t *s, size_t row)
+static void
+print_row(const table_t *table, wchar_t *s, size_t row)
 {
 	wchar_t *buf = s;
 
@@ -140,7 +151,8 @@ static void print_row(const table_t *table, wchar_t *s, size_t row)
 	s = buf;
 }
 
-static void set_col_div(const table_t *table, wchar_t *s, wchar_t c)
+static void
+set_col_div(const table_t *table, wchar_t *s, wchar_t c)
 {
 	for (size_t col = 0, pos = 0; col < table->cols - 1; col++) {
 		pos += 2 + table->width[col] + 1;
@@ -156,7 +168,8 @@ typedef enum {
 	SEP_BOTTOM
 } sep_t;
 
-static void print_separator(const table_t *table, wchar_t *s, sep_t sep)
+static void
+print_separator(const table_t *table, wchar_t *s, sep_t sep)
 {
 	wchar_t *first = s;
 	wchar_t *last = s + table->line_width - 1;
@@ -194,7 +207,8 @@ static void print_separator(const table_t *table, wchar_t *s, sep_t sep)
 	table->write(first, table->line_width, table->user);
 }
 
-static void print_title(const table_t *table, wchar_t *s)
+static void
+print_title(const table_t *table, wchar_t *s)
 {
 	if (table->title) {
 		print_separator(table, s, SEP_TITLE_TOP);
@@ -215,7 +229,8 @@ static void print_title(const table_t *table, wchar_t *s)
 	}
 }
 
-static void print_header(table_t *table, wchar_t *s)
+static void
+print_header(table_t *table, wchar_t *s)
 {
 	print_title(table, s);
 	size_t row = table->rows++;
@@ -224,7 +239,8 @@ static void print_header(table_t *table, wchar_t *s)
 	table->rows--;
 }
 
-void table_print(table_t *table)
+void
+table_print(table_t *table)
 {
 	if (!table || !table->write) {
 		return;

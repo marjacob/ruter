@@ -45,7 +45,7 @@ DIRGUARD = @mkdir -p $(@D)
 RM = rm -rf
 
 # Text
-MODE = release
+MODE = normal
 WAIT = [ .. ]
 DONE = [ OK ]
 
@@ -53,9 +53,9 @@ DONE = [ OK ]
 all: $(BINARY)
 
 # Optimised build
-opt: CFLAGS += -O2
-opt: MODE = optimised
-opt: all
+release: CFLAGS += -O3
+release: MODE = release
+release: all
 
 # Debug build
 debug: CFLAGS += -g
