@@ -2,6 +2,7 @@
 #define __H_UTILITIES__
 
 #include <stdlib.h>
+#include "ruter/constants.h"
 
 /**
  * util_max() - Selects the larger of two values.
@@ -13,7 +14,8 @@
  *
  * Returns: Largest value.
  */
-inline static size_t util_max(size_t x, size_t y)
+inline static size_t
+util_max(size_t x, size_t y)
 {
 	return x > y ? x : y;
 }
@@ -28,7 +30,8 @@ inline static size_t util_max(size_t x, size_t y)
  *
  * Returns: Smallest value.
  */
-inline static size_t util_min(size_t x, size_t y)
+inline static size_t
+util_min(size_t x, size_t y)
 {
 	return x < y ? x : y;
 }
@@ -42,7 +45,8 @@ inline static size_t util_min(size_t x, size_t y)
  *
  * Returns: Pointer to duplicate string.
  */
-char *util_strdup(const char *s);
+char
+*util_strdup(const char *s);
 
 /**
  * util_strndup() - Creates a duplicate of a string.
@@ -54,7 +58,8 @@ char *util_strdup(const char *s);
  *
  * Returns: Pointer to duplicate string.
  */
-char *util_strndup(char const *s, size_t n);
+char
+*util_strndup(char const *s, size_t n);
 
 /**
  * util_strnlen() - Computes the length of a string.
@@ -67,6 +72,38 @@ char *util_strndup(char const *s, size_t n);
  *
  * Returns: The length of a string in characters.
  */
-size_t util_strnlen(const char *s, size_t maxlen);
+size_t
+util_strnlen(const char *s, size_t maxlen);
+
+/**
+ * util_vehicle_mode() - Interprets a textual vehicle mode.
+ * 
+ * @s		Pointer to zero terminated string.
+ *
+ * Interprets the contents of the string pointed to by 's' and returns its
+ * numerical representation as defined in the vehicle_t enumeration in 
+ * constants.h.
+ *
+ * Returns: Numerical vehicle mode.
+ */
+vehicle_t
+util_vehicle_mode(const char *s);
+
+/**
+ * util_vehicle_text() - Returns a textual vehicle mode.
+ * 
+ * @s		Numerical vehicle mode.
+ * @wchar	Boolean value indicating whether the returned pointer should
+ * 		point to a regular or a wide character array.
+ * 
+ * Returns the textual representation of the vehicle mode specified by
+ * 'vehicle'. This string is statically allocated and should not be changed
+ * or freed.
+ *
+ * Returns: Numerical vehicle mode.
+ */
+char
+*util_vehicle_text(vehicle_t vehicle, int wchar);
 
 #endif
+

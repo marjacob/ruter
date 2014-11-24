@@ -8,7 +8,7 @@
 #endif
 
 #ifndef RUTER_API_URI
-#	define RUTER_API_URI ("https://reis.trafikanten.no/ReisRest")
+#	define RUTER_API_URI ("https://reis.trafikanten.no/")
 #endif
 
 #ifndef RUTER_API_LENGTH

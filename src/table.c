@@ -33,7 +33,7 @@ table_t
 		table->title = NULL;
 		table->write = write;
 		table->user = NULL;
-		table->limit = 16;
+		table->limit = 0;
 	} else {
 		return NULL;
 	}
@@ -137,7 +137,7 @@ static wchar_t
 	return s;
 }
 
-static void
+inline static void
 print_row(const table_t *table, wchar_t *s, size_t row)
 {
 	wchar_t *buf = s;
@@ -151,7 +151,7 @@ print_row(const table_t *table, wchar_t *s, size_t row)
 	s = buf;
 }
 
-static void
+inline static void
 set_col_div(const table_t *table, wchar_t *s, wchar_t c)
 {
 	for (size_t col = 0, pos = 0; col < table->cols - 1; col++) {

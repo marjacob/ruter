@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "json.h"
+#include "ruter/json.h"
 #include "ruter/ruter.h"
 
 stop_t
@@ -16,7 +16,7 @@ stop_t
 	if (!(name = curl_easy_escape(session->curl, place, 0))) {
 		return NULL;
 	} else {
-		success = ruter_rest(session, "Place/FindPlaces", name);
+		success = ruter_rest(session, "ReisRest/Place/FindPlaces", name);
 		curl_free(name);
 	}
 
@@ -42,6 +42,10 @@ stop_t
 	stop_t *match = NULL;
 	stop_t *head = ruter_find(session, place);
 	
+	if (!head) {
+		return NULL;
+	}
+	
 	for (stop_t *stop = head; stop->next; stop = stop->next) {
 		if (ruter_stop_match(stop, mode)) {
 			match = ruter_stop_copy(stop);
@@ -61,7 +65,7 @@ departure_t
 
 	snprintf(stop_id, sizeof(stop_id), "%" PRIi64, id);
 
-	if (!ruter_rest(session, "RealTime/GetAllDepartures", stop_id)) {
+	if (!ruter_rest(session, "ReisRest/RealTime/GetAllDepartures", stop_id)) {
 		return NULL;
 	}
 
@@ -75,7 +79,7 @@ departure_t
 	return deps;
 }
 
-struct ruter_travel
+proposal_t
 *ruter_travel(
 	ruter_t *session, 
 	struct tm *time,
@@ -93,15 +97,15 @@ struct ruter_travel
 		"&fromplace=%" PRIi64
 		"&toplace=%" PRIi64,
 		time->tm_mday, 
-		time->tm_mon, 
-		time->tm_year, 
+		time->tm_mon + 1, 
+		time->tm_year + 1900, 
 		time->tm_hour, 
 		time->tm_min,
 		after ? "true" : "false",
 		from_id,
 		to_id);
-		
-	if (!ruter_rest(session, "Travel/GetTravelsByPlaces", buf)) {
+	
+	if (!ruter_rest(session, "ReisRest/Travel/GetTravelsByPlaces", buf)) {
 		return NULL;
 	}
 	
@@ -111,38 +115,8 @@ struct ruter_travel
 		return NULL;
 	}
 	
-	struct ruter_travel *proposals = ruter_travel_parse(data);
+	proposal_t *proposals = ruter_travel_parse(data);
 	json_value_free(data);
 
 	return proposals;
-}
-
-int
-ruter_rest(ruter_t *session, char *method, char *args)
-{
-	session->bufsize = snprintf(
-		session->buf,
-		session->bufcap,
-		"%s/%s/%s",
-		session->uri,
-		method,
-		args);
-
-	if (0 > session->bufsize) {
-		return 0;
-	}
-
-	session->code = curl_easy_setopt(
-		session->curl,
-		CURLOPT_URL,
-		session->buf);
-
-	if (CURLE_OK != session->code) {
-		return 0;
-	}
-
-	session->bufsize = 0;
-	session->code = curl_easy_perform(session->curl);
-
-	return !session->code;
 }

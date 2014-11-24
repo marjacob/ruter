@@ -64,6 +64,40 @@ ruter_open(ruter_t *session, size_t bufcap)
 	return 1;
 }
 
+int
+ruter_rest(ruter_t *session, char *method, char *args)
+{
+	session->bufsize = snprintf(
+		session->buf,
+		session->bufcap,
+		"%s/%s/%s",
+		session->uri,
+		method,
+		args);
+
+	if (0 > session->bufsize) {
+		return 0;
+	}
+	
+	char *url = NULL;
+	if (!(url = curl_easy_escape(session->curl, session->buf, 0))) {
+		return 0;
+	}
+	
+	session->code = curl_easy_setopt(session->curl, CURLOPT_URL, url);
+
+	if (CURLE_OK != session->code) {
+		curl_free(url);
+		return 0;
+	}
+
+	session->bufsize = 0;
+	session->code = curl_easy_perform(session->curl);
+
+	curl_free(url);
+	return !session->code;
+}
+
 void
 ruter_close(ruter_t *session)
 {

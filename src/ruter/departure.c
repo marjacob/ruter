@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
-#include "json.h"
 #include "ruter/constants.h"
 #include "ruter/departure.h"
+#include "ruter/json.h"
 #include "ruter/time.h"
 #include "ruter/util.h"
 #include "wstr.h"

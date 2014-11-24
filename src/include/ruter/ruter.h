@@ -11,21 +11,6 @@
 #include "travel.h"
 
 /**
- * ruter_rest() - Performs a REST call.
- *
- * @session:	Pointer to Ruter session structure.
- * @method:	Remote method to call.
- * @args:	Method arguments.
- *
- * A call to the specified method with the specified arguments is performed
- * and the received data is stored in session->buf.
- *
- * Return: Nonzero value on success.
- */
-int
-ruter_rest(ruter_t *session, char *method, char *args);
-
-/**
  * ruter_find() - Searches for a place.
  *
  * @session:	Pointer to Ruter session structure.
@@ -81,7 +66,7 @@ struct ruter_departure
  *
  * Return: Pointer to list of travel plans on success or NULL on failure.
  */
-struct ruter_travel
+proposal_t
 *ruter_travel(
 	ruter_t *session, 
 	struct tm *time, 

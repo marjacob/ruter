@@ -14,14 +14,18 @@ Build the code by issuing `make` or `make debug`. The executable `ruter` can be 
 ## Usage
 
 ### Searching
-Searching for a place can be done with the `find` option.
+Searching for a place can be done with the `--search` (or `-s`) option.
 
-	ruter find nationaltheatret
+	ruter --search nationaltheatret
 
 ### Departures
-Use the `show` option to show the departures from a place. A list of possible matches will be printed. Select the correct place by entering `y` followed by pressing return.
+Use the `--from` (or `-f`) option to show the departures from a place.
 
-	ruter show nationaltheatret
+	ruter --from forsk
+
+The number of printed results can be controlled with the `--limit` (ir `-l`) option (zero indicates no limit), and the desired kind of transportation can be indicated with the `--kind` (or `-k`) option.
+
+	ruter -f national -k metro -l 8
 
 ## Dependencies
 

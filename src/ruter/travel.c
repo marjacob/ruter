@@ -1,74 +1,81 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ruter/stop.h"
+#include "ruter/time.h"
 #include "ruter/travel.h"
 #include "ruter/util.h"
 
-static struct ruter_travel travel_zero = { { 0 } };
-static struct ruter_stage stage_zero = { 0 };
+static proposal_t proposal_zero = { { 0 } };
 
-static struct ruter_travel
+static proposal_t
 *ruter_travel_init(void)
 {
-	struct ruter_travel *proposal = malloc(sizeof(*proposal));
-	*proposal = travel_zero;
+	proposal_t *proposal = malloc(sizeof(*proposal));
+	*proposal = proposal_zero;
 	return proposal;
-}
-
-static struct ruter_stage
-*ruter_stage_init(void)
-{
-	struct ruter_stage *stage = malloc(sizeof(*stage));
-	*stage = stage_zero;
-	return stage;
-}
-
-static void
-ruter_stage_free(struct ruter_stage *stage)
-{
-	if (NULL != stage) {
-		ruter_stage_free(stage->next);
-		ruter_stop_free(stage->arrival_stop);
-		ruter_stop_free(stage->departure_stop);
-		free(stage);
-	}
 }
 
 void
-ruter_travel_free(struct ruter_travel *travel)
+ruter_travel_free(proposal_t *proposals)
 {
-	if (NULL != travel) {
-		ruter_travel_free(travel->next);
-		ruter_stage_free(travel->stages);
-		free(travel);
+	if (proposals) {
+		ruter_travel_free(proposals->next);
+		free(proposals);
 	}
 }
 
-static struct ruter_travel
-*ruter_proposal_parse(json_value *data)
+proposal_t
+*parse_proposal(json_value *data)
 {
-	if (!is_json_array(data)) {
+	if (!(data && json_object == data->type)) {
 		return NULL;
 	}
 	
-	//char *name = NULL;
-	//json_value *value = NULL;
-	struct ruter_travel *proposal = ruter_travel_init();
+	proposal_t *proposal = ruter_travel_init();
 	
-	/* Temporary measure to stop compiler whining. */
-	free(ruter_stage_init());
+	char *name = NULL;
+	json_value *value = NULL;
+
+	for (size_t i = 0, j = data->u.object.length; i < j; i++) {
+		name = data->u.object.values[i].name;
+		value = data->u.object.values[i].value;
 	
-	for (int i = 0, j = data->u.object.length; i < j; i++) {
-		//name = data->u.object.values[i].name;
-		//value = data->u.object.values[i].value;
-		
-		
+		if (!strcmp("ArrivalTime", name)) {
+			ruter_time_parse(&proposal->arrival, value);
+		} else if (!strcmp("DepartureTime", name)) {
+			ruter_time_parse(&proposal->departure, value);
+		}
 	}
 	
 	return proposal;
 }
 
-struct ruter_travel
+inline static json_value
+*get_proposals(json_value *data)
+{
+	static const char entry[] = "TravelProposals";
+	
+	if (!(data && json_object == data->type)) {
+		return NULL;
+	}
+	
+	char *name = NULL;
+	json_value *value = NULL;
+
+	for (size_t i = 0, j = data->u.object.length; i < j; i++) {
+		name = data->u.object.values[i].name;
+		value = data->u.object.values[i].value;
+		
+		/* Return JSON array of travel proposals. */
+		if (!strncmp(entry, name, sizeof(entry) - 1)) {
+			return value;
+		}
+	}
+	
+	return NULL;
+}
+
+proposal_t
 *ruter_travel_parse(json_value *data)
 {
 	if (NULL == data) {
@@ -77,41 +84,28 @@ struct ruter_travel
 		return ruter_travel_parse(data->u.object.values[0].value);
 	}
 	
-	int valid = 0;
-	char *name = NULL;
-	json_value *value = NULL;
+	json_value *json = get_proposals(data);
 	
-	for (int i = 0, j = data->u.object.length; i < j; i++) {
-		name = data->u.object.values[i].name;
-		value = data->u.object.values[i].value;
-
-		if (0 == strcmp("TravelProposals", name)) {
-			valid = 1;
-			break;
-		}
-	}
-	
-	if (!valid) {
+	if (!json) {
 		return NULL;
 	}
 	
-	struct ruter_travel *proposals = NULL;
-	struct ruter_travel *proposal = NULL;
-	struct ruter_travel *last = NULL;
+	proposal_t *curr = NULL;
+	proposal_t *head = NULL;
+	proposal_t *tail = NULL;
 	
-	for (int i = 0, j = data->u.object.length; i < j; i++) {
-		name = data->u.object.values[i].name;
-		value = data->u.object.values[i].value;
-		proposal = ruter_proposal_parse(value);
+	for (int i = 0, j = json->u.array.length; i < j; i++) {
+		curr = parse_proposal(json->u.array.values[i]);
 		
-		if (NULL == proposals) {
-			proposals = proposal;
+		if (!head) {
+			head = curr;
 		} else {
-			last->next = proposal;
+			tail->next = curr;
 		}
 		
-		last = proposal;
+		tail = curr;
 	}
-	
-	return proposals;
+
+	return head;
 }
+

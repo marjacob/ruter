@@ -3,6 +3,7 @@
 
 #include <curl/curl.h>
 #include <stddef.h>
+#include "ruter/constants.h"
 
 /**
  * ruter_t - Contains the session state.
@@ -46,6 +47,21 @@ typedef struct {
  */
 int
 ruter_open(ruter_t *session, size_t bufcap);
+
+/**
+ * ruter_rest() - Performs a REST call.
+ *
+ * @session:	Pointer to Ruter session structure.
+ * @method:	Remote method to call.
+ * @args:	Method arguments.
+ *
+ * A call to the specified method with the specified arguments is performed
+ * and the received data is stored in session->buf.
+ *
+ * Return: Nonzero value on success.
+ */
+int
+ruter_rest(ruter_t *session, char *method, char *args);
 
 /**
  * ruter_close() - Closes all open handles associated with a session structure.

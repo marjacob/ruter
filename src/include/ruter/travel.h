@@ -3,28 +3,18 @@
 
 #include <time.h>
 #include "json.h"
-#include "stop.h"
 #include "types.h"
 
-struct ruter_stage {
-	struct ruter_stop *arrival_stop;
-	struct ruter_stop *departure_stop;
-	struct tm arrival_time;
-	struct tm departure_time;
-	struct ruter_stage *next;
-};
-
-struct ruter_travel {
+typedef struct proposal_t {
 	struct tm arrival;
 	struct tm departure;
-	struct ruter_stage *stages;
-	struct ruter_travel *next;
-};
+	struct proposal_t *next;
+} proposal_t;
 
 void
-ruter_travel_free(struct ruter_travel *travel);
+ruter_travel_free(proposal_t *proposals);
 
-struct ruter_travel
+proposal_t
 *ruter_travel_parse(json_value *data);
 
 #endif
