@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 	}
 	
 	shared_ptr<Ruter::Place> place = ruter->GetStop("3010930");
+	auto places = ruter->GetPlaces("forsk", nullptr);
 	
 	return EXIT_SUCCESS;
 }

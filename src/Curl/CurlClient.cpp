@@ -2,7 +2,6 @@
 #include <memory>
 #include <string>
 #include "Curl/CurlClient.hpp"
-#include "Curl/CurlBuffer.hpp"
 #include "Curl/CurlException.hpp"
 #include "Curl/ParameterCollection.hpp"
 
@@ -14,19 +13,9 @@ using std::vector;
 
 static size_t write(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
-	Curl::CurlBuffer *buf = static_cast<Curl::CurlBuffer*>(userdata);
-
 	size_t cbChunk = (size * nmemb);
-	size_t cbTotal = (cbChunk + buf->BufferSize);
-
-	if (cbTotal + 1 > buf->BufferCapacity) {
-		buf->Buffer.resize(cbTotal + 1, '\0');
-		buf->BufferCapacity = cbTotal;
-	}
-
-	buf->Buffer.insert(buf->Buffer.end(), ptr, ptr + cbChunk);
-	buf->BufferSize += cbChunk;
-	
+	auto *buf = static_cast<std::vector<char>*>(userdata);
+	buf->insert(buf->end(), ptr, ptr + cbChunk);
 	return cbChunk;
 }
 
@@ -63,7 +52,7 @@ namespace Curl
 		SetSslVersion(CURL_SSLVERSION_SSLv3);
 		SetUserAgent("PosixRuter++/0.1");
 		SetWriteCallback(write);
-		SetWriteData(&m_buf);
+		SetWriteData(&m_buffer);
 
 		m_header = hdr;
 	}
@@ -124,13 +113,12 @@ namespace Curl
 	shared_ptr<string> CurlClient::Request()
 	{
 		OnRequest();
-
-		m_buf.BufferSize = 0;
+		
 		CurlException::OnFailure(curl_easy_perform(m_curl));
 
 		shared_ptr<string> data = make_shared<string>(
-			m_buf.Buffer.begin(),
-			m_buf.Buffer.end());
+			m_buffer.begin(),
+			m_buffer.end());
 
 		OnRequestCompleted(data);
 
@@ -154,7 +142,7 @@ namespace Curl
 
 	void CurlClient::OnRequestCompleted(shared_ptr<string> data)
 	{
-		return;
+		m_buffer.clear();
 	}
 
 	void CurlClient::SetReadCallback(CurlReadCallback read)

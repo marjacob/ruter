@@ -5,7 +5,6 @@
 #include <curl/curl.h>
 #include <memory>
 #include <string>
-#include "Curl/CurlBuffer.hpp"
 #include "Curl/Parameter.hpp"
 #include "Curl/ParameterCollection.hpp"
 
@@ -33,10 +32,10 @@ namespace Curl
 		~CurlClient();
 	private:
 		CURL *m_curl;
-		CurlBuffer m_buf;
 		ParameterCollection *m_params;
 		std::string m_baseUrl;
 		std::string m_resourceUri;
+		std::vector<char> m_buffer;
 		struct curl_slist *m_header;
 		
 		void SetReadCallback(CurlReadCallback read);

@@ -5,7 +5,6 @@
  * Before  version  7.17.0,  strings  were  not  copied.
  */
 
-#include "./Curl/CurlBuffer.hpp"
 #include "./Curl/CurlClient.hpp"
 #include "./Curl/CurlException.hpp"
 #include "./Curl/IParameter.hpp"
