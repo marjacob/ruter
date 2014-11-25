@@ -13,7 +13,8 @@ namespace Ruter
 		Ruter();
 		virtual ~Ruter();
 		
-		std::shared_ptr<Place> GetStop(const std::string& id);
+		std::shared_ptr<Place>
+		GetStop(const std::string& id);
 		
 		std::shared_ptr<std::list<std::shared_ptr<Place>>>
 		GetPlaces(const std::string& search, Location *location);
