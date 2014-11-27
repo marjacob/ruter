@@ -38,8 +38,7 @@ namespace Ruter {
 	
 	Location& Location::operator=(const Location& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_x = other.m_x;
 			m_y = other.m_y;
 		}
@@ -49,8 +48,7 @@ namespace Ruter {
 	
 	Location& Location::operator=(Location&& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_x = move(other.m_x);
 			m_y = move(other.m_y);
 		}

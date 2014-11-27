@@ -44,8 +44,7 @@ namespace Ruter {
 	
 	Place& Place::operator=(const Place& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_id = other.m_id;
 			m_name = other.m_name;
 			m_district = other.m_district;
@@ -57,8 +56,7 @@ namespace Ruter {
 	
 	Place& Place::operator=(Place&& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_name = move(other.m_id);
 			m_name = move(other.m_name);
 			m_district = move(other.m_district);

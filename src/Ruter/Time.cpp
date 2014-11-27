@@ -78,8 +78,7 @@ namespace Ruter {
 	
 	Time& Time::operator=(Time&& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_isDeparture = move(other.m_isDeparture);
 			m_time = move(other.m_time);
 		}
@@ -89,8 +88,7 @@ namespace Ruter {
 	
 	Time& Time::operator=(const Time& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_isDeparture = other.m_isDeparture;
 			m_time = other.m_time;
 		}

@@ -32,8 +32,7 @@ namespace Ruter {
 	
 	County& County::operator=(const County& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_name = other.m_name;
 		}
 		
@@ -42,8 +41,7 @@ namespace Ruter {
 	
 	County& County::operator=(County&& other)
 	{
-		if (this != &other)
-		{
+		if (this != &other) {
 			m_name = move(other.m_name);
 		}
 		
