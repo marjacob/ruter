@@ -50,15 +50,30 @@ namespace Ruter
 	{
 		return;
 	}
-	
-	Time& Time::operator=(const Time& other)
+
+	const Time Time::operator--(int)
 	{
-		if (this != &other)
-		{
-			m_isDeparture = other.m_isDeparture;
-			m_time = other.m_time;
-		}
-		
+		Time time(*this);
+		--(*this);
+		return time;
+	}
+	
+	const Time Time::operator++(int)
+	{
+		Time time(*this);
+		++(*this);
+		return time;
+	}
+
+	Time& Time::operator--()
+	{
+		m_time -= 60;
+		return *this;
+	}
+	
+	Time& Time::operator++()
+	{
+		m_time += 60;
 		return *this;
 	}
 	
@@ -68,6 +83,17 @@ namespace Ruter
 		{
 			m_isDeparture = move(other.m_isDeparture);
 			m_time = move(other.m_time);
+		}
+		
+		return *this;
+	}
+	
+	Time& Time::operator=(const Time& other)
+	{
+		if (this != &other)
+		{
+			m_isDeparture = other.m_isDeparture;
+			m_time = other.m_time;
 		}
 		
 		return *this;

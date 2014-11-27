@@ -11,11 +11,15 @@ namespace Ruter {
 		explicit Time(bool isDeparture = true);
 		explicit Time(std::time_t time, bool isDeparture = true);
 		explicit Time(std::tm& time, bool isDeparture = true);
-		explicit Time(const Time& other);
-		explicit Time(Time&& other);
+		Time(const Time& other);
+		Time(Time&& other);
 		
 		virtual ~Time() override;
 		
+		const Time operator--(int);
+		const Time operator++(int);
+		Time& operator--();
+		Time& operator++();
 		Time& operator=(const Time& other);
 		Time& operator=(Time&& other);
 		
