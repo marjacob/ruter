@@ -4,8 +4,7 @@
 
 using std::string;
 
-namespace Curl
-{
+namespace Curl {
 	string Parameter::GetKey()
 	{
 		return m_key;

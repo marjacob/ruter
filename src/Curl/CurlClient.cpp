@@ -24,8 +24,7 @@ static size_t read(void *ptr, size_t size, size_t nmemb, void *userdata)
 	return 0;
 }
 
-namespace Curl
-{
+namespace Curl {
 	CurlClient::CurlClient(string url) :
 		m_baseUrl(url), 
 		m_params(nullptr),

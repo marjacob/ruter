@@ -1,8 +1,7 @@
 #include <curl/curl.h>
 #include "Curl/CurlException.hpp"
 
-namespace Curl
-{
+namespace Curl {
 	CurlException::CurlException(CURLcode errornum)
 		: runtime_error(curl_easy_strerror(errornum))
 	{

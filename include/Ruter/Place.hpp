@@ -7,8 +7,7 @@
 #include "Curl/IParameter.hpp"
 #include "Ruter/PlaceType.hpp"
 
-namespace Ruter
-{
+namespace Ruter {
 	class Place {
 	public:
 		explicit Place();

@@ -6,8 +6,7 @@
 #include "Curl/CurlClient.hpp"
 #include "Ruter/Place.hpp"
 
-namespace Ruter
-{
+namespace Ruter {
 	class Ruter {
 	public:
 		Ruter();

@@ -8,8 +8,7 @@
 #include "Curl/Parameter.hpp"
 #include "Curl/ParameterCollection.hpp"
 
-namespace Curl
-{
+namespace Curl {
 	typedef std::size_t (*CurlReadCallback)
 		(void*, std::size_t, std::size_t, void*);
 	

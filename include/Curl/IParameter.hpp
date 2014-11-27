@@ -4,8 +4,7 @@
 #include <string>
 #include "Curl/Parameter.hpp"
 
-namespace Curl
-{
+namespace Curl {
 	class IParameter {
 	public:
 		virtual int

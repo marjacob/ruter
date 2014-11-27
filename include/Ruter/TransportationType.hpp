@@ -1,10 +1,8 @@
 #ifndef __H_F6D4251298134CC39B66F429E8015344__
 #define __H_F6D4251298134CC39B66F429E8015344__
 
-namespace Ruter
-{
-	enum class TransportationType
-	{
+namespace Ruter {
+	enum class TransportationType {
 		None = -1,
 		Walking = 0,
 		AirportBus = 1,

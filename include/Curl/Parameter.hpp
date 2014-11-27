@@ -3,8 +3,7 @@
 
 #include <string>
 
-namespace Curl
-{
+namespace Curl {
 	class Parameter {
 	public:
 		std::string GetKey();

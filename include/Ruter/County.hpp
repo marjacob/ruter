@@ -5,8 +5,7 @@
 #include "Curl/Parameter.hpp"
 #include "Curl/IParameter.hpp"
 
-namespace Ruter
-{
+namespace Ruter {
 	class County : public Curl::IParameter {
 	public:
 		explicit County(std::string name = "");

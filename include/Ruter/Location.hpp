@@ -4,8 +4,7 @@
 #include "Curl/Parameter.hpp"
 #include "Curl/IParameter.hpp"
 
-namespace Ruter
-{
+namespace Ruter {
 	class Location : public Curl::IParameter {
 	public:
 		explicit Location(double x = 0.0, double y = 0.0);

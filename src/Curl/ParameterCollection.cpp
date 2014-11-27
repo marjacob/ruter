@@ -6,8 +6,7 @@
 using std::string;
 using std::vector;
 
-namespace Curl
-{
+namespace Curl {
 	ParameterCollection::ParameterCollection() :
 		m_params()
 	{

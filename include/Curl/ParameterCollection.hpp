@@ -5,8 +5,7 @@
 #include <vector>
 #include "Curl/IParameter.hpp"
 
-namespace Curl
-{
+namespace Curl {
 	class ParameterCollection {
 	public:
 		ParameterCollection();

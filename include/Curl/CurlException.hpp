@@ -4,8 +4,7 @@
 #include <curl/curl.h>
 #include <stdexcept>
 
-namespace Curl
-{
+namespace Curl {
 	class CurlException : public std::runtime_error {
 	private:
 		CURLcode m_errornum;
