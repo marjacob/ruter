@@ -9,8 +9,7 @@ using std::move;
 using std::string;
 using std::uint32_t;
 
-namespace Ruter
-{
+namespace Ruter {
 	Place::Place() :
 		m_id(),
 		m_name(),

@@ -9,8 +9,7 @@ using std::string;
 using std::time_t;
 using std::tm;
 
-namespace Ruter
-{
+namespace Ruter {
 	Time::Time(bool isDeparture) :
 		m_isDeparture(isDeparture)
 	{

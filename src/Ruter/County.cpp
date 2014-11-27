@@ -6,8 +6,7 @@
 using std::move;
 using std::string;
 
-namespace Ruter
-{
+namespace Ruter {
 	County::County(string name) :
 		m_name(name)
 	{

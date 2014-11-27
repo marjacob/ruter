@@ -8,8 +8,7 @@ using std::move;
 using std::string;
 using std::stringstream;
 
-namespace Ruter
-{
+namespace Ruter {
 	Location::Location(double x, double y) :
 		m_x(x),
 		m_y(y)

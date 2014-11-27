@@ -11,8 +11,7 @@ using std::list;
 using std::shared_ptr;
 using std::string;
 
-namespace Ruter
-{
+namespace Ruter {
 	Ruter::Ruter() :
 		m_curl("https://reisapi.ruter.no")
 	{
