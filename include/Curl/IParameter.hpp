@@ -5,14 +5,14 @@
 #include "Curl/Parameter.hpp"
 
 namespace Curl {
-	class IParameter {
-	public:
-		virtual int
-		CreateParameter(int token, Parameter& param)
-			const = 0;
-		
-		virtual ~IParameter() {};
-	};
-}
+
+class IParameter {
+public:
+	virtual ~IParameter() {};
+	
+	virtual int CreateParameter(int token, Parameter& param) const = 0;
+};
+
+} /* namespace Curl */
 
 #endif

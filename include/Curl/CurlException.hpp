@@ -5,14 +5,16 @@
 #include <stdexcept>
 
 namespace Curl {
-	class CurlException : public std::runtime_error {
-	private:
-		CURLcode m_errornum;
-	public:
-		CurlException(CURLcode errornum);
-		CURLcode errornum() const;
-		static void OnFailure(CURLcode errornum);
-	};
-}
+
+class CurlException : public std::runtime_error {
+private:
+	CURLcode m_errornum;
+public:
+	CurlException(CURLcode errornum);
+	CURLcode errornum() const;
+	static void OnFailure(CURLcode errornum);
+};
+
+} /* namespace Curl */
 
 #endif

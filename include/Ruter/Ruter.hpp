@@ -7,19 +7,21 @@
 #include "Ruter/Place.hpp"
 
 namespace Ruter {
-	class Ruter {
-	public:
-		Ruter();
-		virtual ~Ruter();
-		
-		std::shared_ptr<Place>
-		GetStop(const std::string& id);
-		
-		std::shared_ptr<std::list<std::shared_ptr<Place>>>
-		GetPlaces(const std::string& search, Location *location);
-	private:
-		Curl::CurlClient m_curl;
-	};
-}
+
+class Ruter {
+public:
+	Ruter();
+	virtual ~Ruter();
+	
+	std::shared_ptr<Place>
+	GetStop(const std::string& id);
+	
+	std::shared_ptr<std::list<std::shared_ptr<Place>>>
+	GetPlaces(const std::string& search, Location *location);
+private:
+	Curl::CurlClient m_curl;
+};
+
+} /* namespace Ruter */
 
 #endif
