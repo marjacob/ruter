@@ -9,8 +9,9 @@ namespace Ruter {
 class Location : public Curl::IParameter {
 public:
 	explicit Location(double x = 0.0, double y = 0.0);
-	explicit Location(const Location& other);
-	explicit Location(Location&& other);
+	
+	Location(const Location& other);
+	Location(Location&& other);
 	
 	virtual ~Location() override;
 	

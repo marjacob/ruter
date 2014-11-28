@@ -12,6 +12,7 @@ public:
 	explicit Time(bool isDeparture = true);
 	explicit Time(std::time_t time, bool isDeparture = true);
 	explicit Time(std::tm& time, bool isDeparture = true);
+	
 	Time(const Time& other);
 	Time(Time&& other);
 	

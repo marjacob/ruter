@@ -11,9 +11,14 @@ namespace Ruter {
 
 class Place {
 public:
-	explicit Place();
-	explicit Place(const Place& other);
-	explicit Place(Place&& other);
+	explicit Place(
+		std::uint32_t id = 0, 
+		std::string name = "", 
+		std::string district = "", 
+		PlaceType type = PlaceType::None);
+	
+	Place(const Place& other);
+	Place(Place&& other);
 	
 	virtual ~Place();
 	

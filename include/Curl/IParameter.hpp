@@ -10,7 +10,9 @@ class IParameter {
 public:
 	virtual ~IParameter() {};
 	
-	virtual int CreateParameter(int token, Parameter& param) const = 0;
+	virtual int
+	CreateParameter(int token, Parameter& param)
+		const = 0;
 };
 
 } /* namespace Curl */

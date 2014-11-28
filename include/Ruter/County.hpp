@@ -10,8 +10,9 @@ namespace Ruter {
 class County : public Curl::IParameter {
 public:
 	explicit County(std::string name = "");
-	explicit County(const County& other);
-	explicit County(County&& other);
+	
+	County(const County& other);
+	County(County&& other);
 	
 	virtual ~County() override;
 	

@@ -11,11 +11,11 @@ using std::uint32_t;
 
 namespace Ruter {
 
-Place::Place() :
-	m_id(),
-	m_name(),
-	m_district(),
-	m_type(PlaceType::None)
+Place::Place(uint32_t id, string name, string district, PlaceType type) :
+	m_id(id),
+	m_name(name),
+	m_district(district),
+	m_type(type)
 {
 	return;
 }
