@@ -16,9 +16,9 @@ typedef std::size_t (*CurlReadCallback)
 typedef std::size_t (*CurlWriteCallback)
 	(char*, std::size_t, std::size_t, void*);
 
-class CurlClient {
+class WebClient {
 public:
-	CurlClient();
+	WebClient();
 	
 	void SetHttpHeaders(struct curl_slist *headers);
 	void SetSslVerifyHost(bool verify);
@@ -27,7 +27,7 @@ public:
 	void SetUserAgent(const std::string& useragent);
 	std::unique_ptr<std::string> Request(const WebRequest& request);
 	
-	~CurlClient();
+	~WebClient();
 private:
 	CURL *m_curl;
 	std::vector<char> m_buffer;

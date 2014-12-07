@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
 	
 	auto place = ruter->GetStop("3010930");
 	auto places = ruter->GetPlaces("forsk");
+
+	delete ruter;
 	
 	return EXIT_SUCCESS;
 }

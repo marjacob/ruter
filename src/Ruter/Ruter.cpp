@@ -14,7 +14,7 @@ using std::unique_ptr;
 
 namespace Ruter {
 
-Ruter::Ruter() : m_api("https://reisapi.ruter.no"), m_curl()
+Ruter::Ruter() : m_api("https://reisapi.ruter.no"), m_client()
 {
 	return;
 }
@@ -29,7 +29,7 @@ unique_ptr<Place> Ruter::GetStop(const string& id)
 	Curl::WebRequest request(m_api);
 	request.SetUri("Place/GetStop/" + id);
 	
-	unique_ptr<string> json = m_curl.Request(request);
+	unique_ptr<string> json = m_client.Request(request);
 	unique_ptr<Place> place(nullptr);
 	
 	if (!json) {
@@ -49,7 +49,7 @@ list<shared_ptr<Place>> Ruter::GetPlaces(
 	request.AttachParameter(location);
 	request.SetUri("Place/GetPlaces/" + search);
 	
-	unique_ptr<string> json = m_curl.Request(request);
+	unique_ptr<string> json = m_client.Request(request);
 	list<shared_ptr<Place>> places;
 	
 	if (!json) {

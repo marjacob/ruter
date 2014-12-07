@@ -1,4 +1,4 @@
-#include "Curl/CurlClient.hpp"
+#include "Curl/WebClient.hpp"
 #include <cstddef>
 #include <memory>
 #include <sstream>
@@ -26,7 +26,7 @@ static size_t read(void *ptr, size_t size, size_t nmemb, void *userdata)
 
 namespace Curl {
 
-CurlClient::CurlClient()
+WebClient::WebClient()
 {
 	CURLcode code = CURLE_OK;
 	struct curl_slist *hdr = NULL;
@@ -54,7 +54,7 @@ CurlClient::CurlClient()
 	m_header = hdr;
 }
 
-void CurlClient::SetHttpHeaders(struct curl_slist *headers)
+void WebClient::SetHttpHeaders(struct curl_slist *headers)
 {
 	CurlException::OnFailure(
 		curl_easy_setopt(
@@ -65,7 +65,7 @@ void CurlClient::SetHttpHeaders(struct curl_slist *headers)
 	);
 }
 
-void CurlClient::SetSslVerifyHost(bool verify)
+void WebClient::SetSslVerifyHost(bool verify)
 {
 	const CURLoption option = CURLOPT_SSL_VERIFYHOST;
 	CurlException::OnFailure(
@@ -73,7 +73,7 @@ void CurlClient::SetSslVerifyHost(bool verify)
 	);
 }
 
-void CurlClient::SetSslVerifyPeer(bool verify)
+void WebClient::SetSslVerifyPeer(bool verify)
 {
 	const CURLoption option = CURLOPT_SSL_VERIFYPEER;
 	CurlException::OnFailure(
@@ -81,7 +81,7 @@ void CurlClient::SetSslVerifyPeer(bool verify)
 	);
 }
 
-void CurlClient::SetSslVersion(int version)
+void WebClient::SetSslVersion(int version)
 {
 	const CURLoption option = CURLOPT_SSLVERSION;
 	CurlException::OnFailure(
@@ -89,7 +89,7 @@ void CurlClient::SetSslVersion(int version)
 	);
 }
 
-void CurlClient::SetUserAgent(const string& useragent)
+void WebClient::SetUserAgent(const string& useragent)
 {
 	const CURLoption option = CURLOPT_USERAGENT;
 	CurlException::OnFailure(
@@ -97,7 +97,7 @@ void CurlClient::SetUserAgent(const string& useragent)
 	);
 }
 
-unique_ptr<string> CurlClient::Request(const WebRequest& request)
+unique_ptr<string> WebClient::Request(const WebRequest& request)
 {
 	OnRequest(request);
 	
@@ -114,7 +114,7 @@ unique_ptr<string> CurlClient::Request(const WebRequest& request)
 
 /***** PRIVATE METHODS ***************************************/
 
-void CurlClient::OnRequest(const WebRequest& request)
+void WebClient::OnRequest(const WebRequest& request)
 {
 	string url = request.ToString();
 	CurlException::OnFailure(
@@ -122,12 +122,12 @@ void CurlClient::OnRequest(const WebRequest& request)
 	);
 }
 
-void CurlClient::OnRequestCompleted(const WebRequest& request)
+void WebClient::OnRequestCompleted(const WebRequest& request)
 {
 	return;
 }
 
-void CurlClient::SetReadCallback(CurlReadCallback read)
+void WebClient::SetReadCallback(CurlReadCallback read)
 {
 	const CURLoption option = CURLOPT_READFUNCTION;
 	CurlException::OnFailure(
@@ -135,7 +135,7 @@ void CurlClient::SetReadCallback(CurlReadCallback read)
 	);
 }
 
-void CurlClient::SetReadData(void *userdata)
+void WebClient::SetReadData(void *userdata)
 {
 	const CURLoption option = CURLOPT_READDATA;
 	CurlException::OnFailure(
@@ -143,7 +143,7 @@ void CurlClient::SetReadData(void *userdata)
 	);
 }
 
-void CurlClient::SetWriteCallback(CurlWriteCallback write)
+void WebClient::SetWriteCallback(CurlWriteCallback write)
 {
 	const CURLoption option = CURLOPT_WRITEFUNCTION;
 	CurlException::OnFailure(
@@ -151,7 +151,7 @@ void CurlClient::SetWriteCallback(CurlWriteCallback write)
 	);
 }
 
-void CurlClient::SetWriteData(void *userdata)
+void WebClient::SetWriteData(void *userdata)
 {
 	const CURLoption option = CURLOPT_WRITEDATA;
 	CurlException::OnFailure(
@@ -159,7 +159,7 @@ void CurlClient::SetWriteData(void *userdata)
 	);
 }
 
-CurlClient::~CurlClient()
+WebClient::~WebClient()
 {
 	curl_easy_cleanup(m_curl);
 	curl_global_cleanup();

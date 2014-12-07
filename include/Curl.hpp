@@ -5,10 +5,11 @@
  * Before  version  7.17.0,  strings  were  not  copied.
  */
 
-#include "./Curl/CurlClient.hpp"
 #include "./Curl/CurlException.hpp"
 #include "./Curl/IParameter.hpp"
 #include "./Curl/Parameter.hpp"
+#include "./Curl/WebClient.hpp"
 #include "./Curl/WebRequest.hpp"
+#include "./Curl/WebResponse.hpp"
 
 #endif

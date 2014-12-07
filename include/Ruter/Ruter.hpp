@@ -4,7 +4,7 @@
 #include <list>
 #include <memory>
 #include <string>
-#include "Curl/CurlClient.hpp"
+#include "Curl/WebClient.hpp"
 #include "Ruter/Place.hpp"
 
 namespace Ruter {
@@ -21,7 +21,7 @@ public:
 		const Location *location = nullptr);
 private:
 	std::string m_api;
-	Curl::CurlClient m_curl;
+	Curl::WebClient m_client;
 };
 
 } /* namespace Ruter */

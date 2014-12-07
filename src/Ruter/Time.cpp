@@ -12,15 +12,15 @@ using std::tm;
 namespace Ruter {
 
 Time::Time(bool isDeparture) :
-	m_isDeparture(isDeparture)
+	m_isDeparture(isDeparture),
+	m_time(std::time(NULL))
 {
-	m_time = std::time(NULL);
 	return;
 }
 
 Time::Time(time_t time, bool isDeparture) :
-	m_time(time),
-	m_isDeparture(isDeparture)
+	m_isDeparture(isDeparture),
+	m_time(time)
 {
 	return;
 }
