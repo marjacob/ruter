@@ -98,7 +98,7 @@ Time& Time::operator=(const Time& other)
 }
 
 int Time::CreateParameter(int token, Curl::Parameter& param) const
-{		
+{
 	if (!token) {
 		param.SetKey("time", false);
 		param.SetValue(Format(), false);

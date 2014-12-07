@@ -3,6 +3,7 @@
 
 #include <list>
 #include <memory>
+#include <string>
 #include "Curl/CurlClient.hpp"
 #include "Ruter/Place.hpp"
 
@@ -13,12 +14,13 @@ public:
 	Ruter();
 	virtual ~Ruter();
 	
-	std::shared_ptr<Place>
-	GetStop(const std::string& id);
+	std::unique_ptr<Place> GetStop(const std::string& id);
 	
-	std::shared_ptr<std::list<std::shared_ptr<Place>>>
-	GetPlaces(const std::string& search, Location *location);
+	std::list<std::shared_ptr<Place>> GetPlaces(
+		const std::string& search,
+		const Location *location = nullptr);
 private:
+	std::string m_api;
 	Curl::CurlClient m_curl;
 };
 

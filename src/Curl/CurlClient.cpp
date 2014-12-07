@@ -1,14 +1,14 @@
+#include "Curl/CurlClient.hpp"
 #include <cstddef>
 #include <memory>
+#include <sstream>
 #include <string>
-#include "Curl/CurlClient.hpp"
 #include "Curl/CurlException.hpp"
-#include "Curl/ParameterCollection.hpp"
+#include "Curl/WebRequest.hpp"
 
-using std::make_shared;
-using std::shared_ptr;
 using std::size_t;
 using std::string;
+using std::unique_ptr;
 using std::vector;
 
 static size_t write(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -26,10 +26,7 @@ static size_t read(void *ptr, size_t size, size_t nmemb, void *userdata)
 
 namespace Curl {
 
-CurlClient::CurlClient(string url) :
-	m_baseUrl(url), 
-	m_params(nullptr),
-	m_resourceUri("")
+CurlClient::CurlClient()
 {
 	CURLcode code = CURLE_OK;
 	struct curl_slist *hdr = NULL;
@@ -68,16 +65,6 @@ void CurlClient::SetHttpHeaders(struct curl_slist *headers)
 	);
 }
 
-void CurlClient::SetRequestParameters(ParameterCollection *params)
-{
-	m_params = params;
-}
-
-void CurlClient::SetRequestUri(const string& uri)
-{
-	m_resourceUri = uri;
-}
-
 void CurlClient::SetSslVerifyHost(bool verify)
 {
 	const CURLoption option = CURLOPT_SSL_VERIFYHOST;
@@ -110,39 +97,34 @@ void CurlClient::SetUserAgent(const string& useragent)
 	);
 }
 
-shared_ptr<string> CurlClient::Request()
+unique_ptr<string> CurlClient::Request(const WebRequest& request)
 {
-	OnRequest();
+	OnRequest(request);
 	
 	CurlException::OnFailure(curl_easy_perform(m_curl));
 
-	shared_ptr<string> data = make_shared<string>(
-		m_buffer.begin(),
-		m_buffer.end());
-
-	OnRequestCompleted(data);
+	unique_ptr<string> data = unique_ptr<string>(
+		new string(m_buffer.begin(), m_buffer.end()));
+	m_buffer.clear();
+	
+	OnRequestCompleted(request);
 
 	return data;
 }
 
 /***** PRIVATE METHODS ***************************************/
 
-void CurlClient::OnRequest()
+void CurlClient::OnRequest(const WebRequest& request)
 {
-	string url = m_baseUrl + "/" + m_resourceUri;
-	
-	if (m_params && m_params->Size() > 0) {
-		url += "/" + m_params->ToString();
-	}
-
+	string url = request.ToString();
 	CurlException::OnFailure(
 		curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str())
 	);
 }
 
-void CurlClient::OnRequestCompleted(shared_ptr<string> data)
+void CurlClient::OnRequestCompleted(const WebRequest& request)
 {
-	m_buffer.clear();
+	return;
 }
 
 void CurlClient::SetReadCallback(CurlReadCallback read)

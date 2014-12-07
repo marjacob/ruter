@@ -9,6 +9,6 @@
 #include "./Curl/CurlException.hpp"
 #include "./Curl/IParameter.hpp"
 #include "./Curl/Parameter.hpp"
-#include "./Curl/ParameterCollection.hpp"
+#include "./Curl/WebRequest.hpp"
 
 #endif

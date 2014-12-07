@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 #include "Curl/Parameter.hpp"
-#include "Curl/ParameterCollection.hpp"
+#include "Curl/WebRequest.hpp"
 
 namespace Curl {
 
@@ -18,23 +18,18 @@ typedef std::size_t (*CurlWriteCallback)
 
 class CurlClient {
 public:
-	CurlClient(std::string url);
+	CurlClient();
 	
 	void SetHttpHeaders(struct curl_slist *headers);
-	void SetRequestParameters(ParameterCollection *params);
-	void SetRequestUri(const std::string& uri);
 	void SetSslVerifyHost(bool verify);
 	void SetSslVerifyPeer(bool verify);
 	void SetSslVersion(int version);
 	void SetUserAgent(const std::string& useragent);
-	std::shared_ptr<std::string> Request();
+	std::unique_ptr<std::string> Request(const WebRequest& request);
 	
 	~CurlClient();
 private:
 	CURL *m_curl;
-	ParameterCollection *m_params;
-	std::string m_baseUrl;
-	std::string m_resourceUri;
 	std::vector<char> m_buffer;
 	struct curl_slist *m_header;
 	
@@ -45,8 +40,8 @@ private:
 	
 	void OnRead(char *data, std::size_t size);
 	void OnWrite(char *data, std::size_t size);
-	void OnRequest();
-	void OnRequestCompleted(std::shared_ptr<std::string> data);
+	void OnRequest(const WebRequest& request);
+	void OnRequestCompleted(const WebRequest& request);
 };
 
 } /* namespace Curl */

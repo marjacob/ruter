@@ -14,17 +14,7 @@ using std::string;
 
 int main(int argc, char *argv[])
 {
-	Curl::ParameterCollection params;
-	Ruter::County kolbotn("Færevåg");
-	Ruter::Location location(66000.0, 66000.0);
-	Ruter::Time departure;
-	params.Add(&kolbotn);
-	params.Add(&location);
-	params.Add(&departure);
-	
-	cout << params.ToString() << endl;
-	
-	Ruter::Ruter *ruter = NULL;
+	Ruter::Ruter *ruter = nullptr;
 	
 	try {
 		ruter = new Ruter::Ruter();
@@ -34,7 +24,7 @@ int main(int argc, char *argv[])
 	}
 	
 	auto place = ruter->GetStop("3010930");
-	auto places = ruter->GetPlaces("forsk", nullptr);
+	auto places = ruter->GetPlaces("forsk");
 	
 	return EXIT_SUCCESS;
 }
