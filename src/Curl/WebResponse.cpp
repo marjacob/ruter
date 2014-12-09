@@ -32,6 +32,24 @@ WebResponse::~WebResponse()
 	return;
 }
 
+WebResponse& WebResponse::operator=(const WebResponse& other)
+{
+	if (this != &other) {
+		m_response_data = other.m_response_data;
+	}
+	
+	return *this;
+}
+
+WebResponse& WebResponse::operator=(WebResponse&& other)
+{
+	if (this != &other) {
+		m_response_data = move(other.m_response_data);
+	}
+	
+	return *this;
+}
+
 shared_ptr<string> WebResponse::GetResponse()
 {
 	return m_response_data;

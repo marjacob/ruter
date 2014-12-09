@@ -1,9 +1,9 @@
-#include "Curl/WebClient.hpp"
 #include <cstddef>
+#include <curl/curl.h>
 #include <memory>
-#include <sstream>
 #include <string>
 #include "Curl/CurlException.hpp"
+#include "Curl/WebClient.hpp"
 #include "Curl/WebRequest.hpp"
 
 using std::size_t;
@@ -26,18 +26,21 @@ static size_t read(void *ptr, size_t size, size_t nmemb, void *userdata)
 
 namespace Curl {
 
-WebClient::WebClient()
+WebClient::WebClient() :
+	m_buffer(),
+	m_curl(nullptr),
+	m_header(nullptr)
 {
 	CURLcode code = CURLE_OK;
 	struct curl_slist *hdr = NULL;
 
 	if (0 != (code = curl_global_init(CURL_GLOBAL_ALL))) {
-		throw CurlException(code);
+		CurlException::OnFailure(code);
 	}
 
 	if (!(m_curl = curl_easy_init())) {
 		curl_global_cleanup();
-		throw CurlException(CURLE_FAILED_INIT);
+		CurlException::OnFailure(CURLE_FAILED_INIT);
 	}
 
 	hdr = curl_slist_append(hdr, "Accept: application/json");
@@ -52,6 +55,13 @@ WebClient::WebClient()
 	SetWriteData(&m_buffer);
 
 	m_header = hdr;
+}
+
+WebClient::~WebClient()
+{
+	curl_easy_cleanup(m_curl);
+	curl_global_cleanup();
+	curl_slist_free_all(m_header);
 }
 
 void WebClient::SetHttpHeaders(struct curl_slist *headers)
@@ -117,9 +127,8 @@ unique_ptr<string> WebClient::Request(const WebRequest& request)
 void WebClient::OnRequest(const WebRequest& request)
 {
 	string url = request.ToString();
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str())
-	);
+	CURLcode code = curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
+	CurlException::OnFailure(code);
 }
 
 void WebClient::OnRequestCompleted(const WebRequest& request)
@@ -157,13 +166,6 @@ void WebClient::SetWriteData(void *userdata)
 	CurlException::OnFailure(
 		curl_easy_setopt(m_curl, option, userdata)
 	);
-}
-
-WebClient::~WebClient()
-{
-	curl_easy_cleanup(m_curl);
-	curl_global_cleanup();
-	curl_slist_free_all(m_header);
 }
 
 } /* namespace Curl */

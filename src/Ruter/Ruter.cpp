@@ -27,7 +27,7 @@ Ruter::~Ruter()
 unique_ptr<Place> Ruter::GetStop(const string& id)
 {
 	Curl::WebRequest request(m_api);
-	request.SetUri("Place/GetStop/" + id);
+	request.SetResourceUri("Place/GetStop/" + id);
 	
 	unique_ptr<string> json = m_client.Request(request);
 	unique_ptr<Place> place(nullptr);
@@ -36,7 +36,7 @@ unique_ptr<Place> Ruter::GetStop(const string& id)
 		return place;
 	}
 	
-	std::cout << *json << "\n";
+	std::cout << *json << std::endl;
 	
 	return place;
 }
@@ -47,7 +47,7 @@ list<shared_ptr<Place>> Ruter::GetPlaces(
 {
 	Curl::WebRequest request(m_api);
 	request.AttachParameter(location);
-	request.SetUri("Place/GetPlaces/" + search);
+	request.SetResourceUri("Place/GetPlaces/" + search);
 	
 	unique_ptr<string> json = m_client.Request(request);
 	list<shared_ptr<Place>> places;
@@ -56,7 +56,7 @@ list<shared_ptr<Place>> Ruter::GetPlaces(
 		return places;
 	}
 	
-	std::cout << *json << "\n";
+	std::cout << *json << std::endl;
 	
 	return places;
 }

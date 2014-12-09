@@ -8,12 +8,15 @@ namespace Curl {
 
 class WebResponse {
 public:
-	explicit WebResponse();
+	WebResponse();
 
 	WebResponse(const WebResponse& other);
 	WebResponse(WebResponse&& other);
 
 	virtual ~WebResponse();
+
+	WebResponse& operator=(const WebResponse& other);
+	WebResponse& operator=(WebResponse&& other);
 
 	std::shared_ptr<std::string> GetResponse();
 private:
