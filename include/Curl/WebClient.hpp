@@ -19,29 +19,30 @@ typedef std::size_t (*CurlWriteCallback)
 class WebClient {
 public:
 	WebClient();
+	virtual ~WebClient();
 	
 	void SetHttpHeaders(struct curl_slist *headers);
-	void SetSslVerifyHost(bool verify);
-	void SetSslVerifyPeer(bool verify);
+	void SetSslVerifyHost(bool do_verify);
+	void SetSslVerifyPeer(bool do_verify);
 	void SetSslVersion(int version);
 	void SetUserAgent(const std::string& useragent);
 	std::unique_ptr<std::string> Request(const WebRequest& request);
-	
-	~WebClient();
 private:
 	CURL *m_curl;
 	std::vector<char> m_buffer;
 	struct curl_slist *m_header;
 	
-	void SetReadCallback(CurlReadCallback read);
-	void SetReadData(void *userdata);
-	void SetWriteCallback(CurlWriteCallback write);
-	void SetWriteData(void *userdata);
-	
 	void OnRead(char *data, std::size_t size);
 	void OnWrite(char *data, std::size_t size);
 	void OnRequest(const WebRequest& request);
 	void OnRequestCompleted(const WebRequest& request);
+	
+	void SetMethod(const std::string& method);
+	void SetReadCallback(CurlReadCallback read);
+	void SetReadData(void *userdata);
+	void SetUrl(const std::string& url);
+	void SetWriteCallback(CurlWriteCallback write);
+	void SetWriteData(void *user_data);
 };
 
 } /* namespace Curl */

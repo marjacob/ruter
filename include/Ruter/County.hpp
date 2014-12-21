@@ -22,8 +22,7 @@ public:
 	void SetName(std::string name);
 	std::string GetName();
 	
-	virtual int
-	CreateParameter(int token, Curl::Parameter& param)
+	virtual int CreateParameter(int token, Curl::Parameter& param)
 		const override;
 private:
 	std::string m_name;

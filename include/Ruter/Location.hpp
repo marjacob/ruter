@@ -18,8 +18,7 @@ public:
 	Location& operator=(const Location& other);
 	Location& operator=(Location&& other);
 	
-	virtual int
-	CreateParameter(int token, Curl::Parameter& param)
+	virtual int CreateParameter(int token, Curl::Parameter& param)
 		const override;
 private:
 	double m_x;

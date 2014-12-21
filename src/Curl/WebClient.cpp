@@ -53,8 +53,6 @@ WebClient::WebClient() :
 	SetUserAgent("PosixRuter++/0.1");
 	SetWriteCallback(write);
 	SetWriteData(&m_buffer);
-
-	m_header = hdr;
 }
 
 WebClient::~WebClient()
@@ -66,45 +64,40 @@ WebClient::~WebClient()
 
 void WebClient::SetHttpHeaders(struct curl_slist *headers)
 {
-	CurlException::OnFailure(
-		curl_easy_setopt(
-			m_curl,
-			CURLOPT_HTTPHEADER,
-			headers
-		)
-	);
+	if (m_header) {
+		curl_slist_free_all(m_header);
+	}
+
+	m_header = headers;
+	const CURLoption option = CURLOPT_HTTPHEADER;
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, m_header));
 }
 
-void WebClient::SetSslVerifyHost(bool verify)
+void WebClient::SetSslVerifyHost(bool do_verify)
 {
 	const CURLoption option = CURLOPT_SSL_VERIFYHOST;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, verify ? 2L : 0L)
-	);
+	const long verify = do_verify ? 2L : 0L;
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, verify));
 }
 
-void WebClient::SetSslVerifyPeer(bool verify)
+void WebClient::SetSslVerifyPeer(bool do_verify)
 {
 	const CURLoption option = CURLOPT_SSL_VERIFYPEER;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, verify ? 1L : 0L)
-	);
+	const long verify = do_verify ? 1L : 0L;
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, verify));
 }
 
 void WebClient::SetSslVersion(int version)
 {
 	const CURLoption option = CURLOPT_SSLVERSION;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, version)
-	);
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, version));
 }
 
-void WebClient::SetUserAgent(const string& useragent)
+void WebClient::SetUserAgent(const string& user_agent)
 {
 	const CURLoption option = CURLOPT_USERAGENT;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, useragent.c_str())
-	);
+	const char *agent = user_agent.c_str();
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, agent));
 }
 
 unique_ptr<string> WebClient::Request(const WebRequest& request)
@@ -115,57 +108,60 @@ unique_ptr<string> WebClient::Request(const WebRequest& request)
 
 	unique_ptr<string> data = unique_ptr<string>(
 		new string(m_buffer.begin(), m_buffer.end()));
-	m_buffer.clear();
 	
 	OnRequestCompleted(request);
 
 	return data;
 }
 
-/***** PRIVATE METHODS ***************************************/
+/***** PRIVATE METHODS ********************************************************/
 
 void WebClient::OnRequest(const WebRequest& request)
 {
-	string url = request.ToString();
-	CURLcode code = curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
-	CurlException::OnFailure(code);
+	SetMethod(request.GetMethod());
+	SetUrl(request.ToString());
 }
 
 void WebClient::OnRequestCompleted(const WebRequest& request)
 {
-	return;
+	m_buffer.clear();
+}
+
+void WebClient::SetMethod(const string& method)
+{
+	const CURLoption option = CURLOPT_CUSTOMREQUEST;
+	CURLcode code = curl_easy_setopt(m_curl, option, method.c_str());
+	CurlException::OnFailure(code);
 }
 
 void WebClient::SetReadCallback(CurlReadCallback read)
 {
 	const CURLoption option = CURLOPT_READFUNCTION;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, read)
-	);
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, read));
 }
 
 void WebClient::SetReadData(void *userdata)
 {
 	const CURLoption option = CURLOPT_READDATA;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, userdata)
-	);
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, userdata));
+}
+
+void WebClient::SetUrl(const string& url)
+{
+	const CURLoption option = CURLOPT_URL;
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, url.c_str()));
 }
 
 void WebClient::SetWriteCallback(CurlWriteCallback write)
 {
 	const CURLoption option = CURLOPT_WRITEFUNCTION;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, write)
-	);
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, write));
 }
 
-void WebClient::SetWriteData(void *userdata)
+void WebClient::SetWriteData(void *user_data)
 {
 	const CURLoption option = CURLOPT_WRITEDATA;
-	CurlException::OnFailure(
-		curl_easy_setopt(m_curl, option, userdata)
-	);
+	CurlException::OnFailure(curl_easy_setopt(m_curl, option, user_data));
 }
 
 } /* namespace Curl */

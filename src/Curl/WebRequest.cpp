@@ -12,6 +12,7 @@ namespace Curl {
 
 WebRequest::WebRequest(const string& url) :
 	m_base_url(new string(url)),
+	m_method(new string("GET")),
 	m_params(),
 	m_resource_uri(nullptr)
 {
@@ -20,6 +21,7 @@ WebRequest::WebRequest(const string& url) :
 
 WebRequest::WebRequest(const WebRequest& other) :
 	m_base_url(other.m_base_url),
+	m_method(other.m_method),
 	m_params(other.m_params),
 	m_resource_uri(other.m_resource_uri)
 {
@@ -28,6 +30,7 @@ WebRequest::WebRequest(const WebRequest& other) :
 
 WebRequest::WebRequest(WebRequest&& other) :
 	m_base_url(move(other.m_base_url)),
+	m_method(move(other.m_method)),
 	m_params(move(other.m_params)),
 	m_resource_uri(move(other.m_resource_uri))
 {
@@ -37,6 +40,7 @@ WebRequest::WebRequest(WebRequest&& other) :
 WebRequest::~WebRequest()
 {
 	delete m_base_url;
+	delete m_method;
 	delete m_resource_uri;
 }
 
@@ -44,6 +48,7 @@ WebRequest& WebRequest::operator=(const WebRequest& other)
 {
 	if (this != &other) {
 		m_base_url = other.m_base_url;
+		m_method = other.m_method;
 		m_params = other.m_params;
 		m_resource_uri = other.m_resource_uri;
 	}
@@ -55,6 +60,7 @@ WebRequest& WebRequest::operator=(WebRequest&& other)
 {
 	if (this != &other) {
 		m_base_url = move(other.m_base_url);
+		m_method = move(other.m_method);
 		m_params = move(other.m_params);
 		m_resource_uri = move(other.m_resource_uri);
 	}
@@ -69,21 +75,26 @@ void WebRequest::AttachParameter(const IParameter *param)
 	}
 }
 
+string WebRequest::GetMethod() const
+{
+	return *m_method;
+}
+
 void WebRequest::SetBaseUrl(const string& url)
 {
-	if (m_base_url) {
-		delete m_base_url;
-	}
-
+	delete m_base_url;
 	m_base_url = new string(url);
+}
+
+void WebRequest::SetMethod(const string& method)
+{
+	delete m_method;
+	m_method = new string(method);
 }
 
 void WebRequest::SetResourceUri(const string& uri)
 {
-	if (m_resource_uri) {
-		delete m_resource_uri;
-	}
-
+	delete m_resource_uri;
 	m_resource_uri = new string(uri);
 }
 

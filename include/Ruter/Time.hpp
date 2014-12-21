@@ -25,8 +25,7 @@ public:
 	Time& operator=(const Time& other);
 	Time& operator=(Time&& other);
 	
-	virtual int
-	CreateParameter(int token, Curl::Parameter& param)
+	virtual int CreateParameter(int token, Curl::Parameter& param)
 		const override;
 protected:
 	std::string Format() const;

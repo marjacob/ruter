@@ -14,18 +14,21 @@ public:
 	WebRequest(const WebRequest& other);
 	WebRequest(WebRequest&& other);
 
-	~WebRequest();
+	virtual ~WebRequest();
 
 	WebRequest& operator=(const WebRequest& other);
 	WebRequest& operator=(WebRequest&& other);
 	
 	std::string ToString() const;
 	void AttachParameter(const IParameter *param);
+	std::string GetMethod() const;
 	void SetBaseUrl(const std::string& url);
+	void SetMethod(const std::string& method);
 	void SetResourceUri(const std::string& uri);
 private:
 	std::string CreateParameters() const;
 	std::string *m_base_url;
+	std::string *m_method;
 	std::string *m_resource_uri;
 	std::vector<const IParameter*> m_params;
 };

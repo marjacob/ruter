@@ -6,7 +6,7 @@
 
 using std::move;
 using std::string;
-using std::stringstream;
+using std::ostringstream;
 
 namespace Ruter {
 
@@ -59,7 +59,7 @@ Location& Location::operator=(Location&& other)
 
 int Location::CreateParameter(int token, Curl::Parameter& param) const
 {
-	stringstream s;
+	ostringstream s;
 	s << "(x=" << m_x << "," << "y=" << m_y << ")";
 	param.SetKey("location", false);
 	param.SetValue(s.str(), false);
