@@ -3,8 +3,8 @@
 #include <memory>
 #include <stdlib.h>
 #include <string>
-#include "Curl.hpp"
-#include "Ruter.hpp"
+#include "Curl.h"
+#include "Ruter.h"
 
 using std::cerr;
 using std::cout;

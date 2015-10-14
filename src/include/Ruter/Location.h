@@ -1,8 +1,8 @@
 #ifndef __H_5A79A1CBAF5948F6E5A8E166271DED9B__
 #define __H_5A79A1CBAF5948F6E5A8E166271DED9B__
 
-#include "Curl/Parameter.hpp"
-#include "Curl/IParameter.hpp"
+#include "Curl/Parameter.h"
+#include "Curl/IParameter.h"
 
 namespace Ruter {
 

@@ -1,8 +1,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "Curl/WebRequest.hpp"
-#include "Curl/IParameter.hpp"
+#include "Curl/WebRequest.h"
+#include "Curl/IParameter.h"
 
 using std::move;
 using std::string;

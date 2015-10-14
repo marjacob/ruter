@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "IParameter.hpp"
+#include "IParameter.h"
 
 namespace Curl {
 

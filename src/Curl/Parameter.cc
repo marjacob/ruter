@@ -1,6 +1,6 @@
 #include <curl/curl.h>
 #include <string>
-#include "Curl/Parameter.hpp"
+#include "Curl/Parameter.h"
 
 using std::string;
 

@@ -2,10 +2,10 @@
 #include <list>
 #include <memory>
 #include <string>
-#include "Curl/WebRequest.hpp"
-#include "Ruter/Location.hpp"
-#include "Ruter/Place.hpp"
-#include "Ruter/Ruter.hpp"
+#include "Curl/WebRequest.h"
+#include "Ruter/Location.h"
+#include "Ruter/Place.h"
+#include "Ruter/Ruter.h"
 
 using std::list;
 using std::shared_ptr;

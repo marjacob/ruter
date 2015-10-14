@@ -1,8 +1,8 @@
 #include <ctime>
 #include <string>
 #include <utility>
-#include "Curl/Parameter.hpp"
-#include "Ruter/Time.hpp"
+#include "Curl/Parameter.h"
+#include "Ruter/Time.h"
 
 using std::move;
 using std::string;

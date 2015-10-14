@@ -2,9 +2,9 @@
 #include <curl/curl.h>
 #include <memory>
 #include <string>
-#include "Curl/CurlException.hpp"
-#include "Curl/WebClient.hpp"
-#include "Curl/WebRequest.hpp"
+#include "Curl/CurlException.h"
+#include "Curl/WebClient.h"
+#include "Curl/WebRequest.h"
 
 using std::size_t;
 using std::string;

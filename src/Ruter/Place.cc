@@ -1,9 +1,9 @@
 #include <cinttypes>
 #include <string>
 #include <utility>
-#include "Curl/Parameter.hpp"
-#include "Ruter/Place.hpp"
-#include "Ruter/PlaceType.hpp"
+#include "Curl/Parameter.h"
+#include "Ruter/Place.h"
+#include "Ruter/PlaceType.h"
 
 using std::move;
 using std::string;

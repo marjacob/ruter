@@ -1,7 +1,7 @@
 #include <string>
 #include <utility>
-#include "Curl/Parameter.hpp"
-#include "Ruter/County.hpp"
+#include "Curl/Parameter.h"
+#include "Ruter/County.h"
 
 using std::move;
 using std::string;

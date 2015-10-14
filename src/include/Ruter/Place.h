@@ -3,9 +3,9 @@
 
 #include <cinttypes>
 #include <string>
-#include "Curl/Parameter.hpp"
-#include "Curl/IParameter.hpp"
-#include "Ruter/PlaceType.hpp"
+#include "Curl/Parameter.h"
+#include "Curl/IParameter.h"
+#include "Ruter/PlaceType.h"
 
 namespace Ruter {
 

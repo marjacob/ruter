@@ -1,8 +1,8 @@
 #include <sstream>
 #include <string>
 #include <utility>
-#include "Curl/Parameter.hpp"
-#include "Ruter/Location.hpp"
+#include "Curl/Parameter.h"
+#include "Ruter/Location.h"
 
 using std::move;
 using std::string;

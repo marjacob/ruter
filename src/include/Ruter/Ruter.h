@@ -4,8 +4,8 @@
 #include <list>
 #include <memory>
 #include <string>
-#include "Curl/WebClient.hpp"
-#include "Ruter/Place.hpp"
+#include "Curl/WebClient.h"
+#include "Ruter/Place.h"
 
 namespace Ruter {
 

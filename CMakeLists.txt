@@ -17,7 +17,7 @@ endif()
 include_directories(src/include)
 
 # Define the source file directory.
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cc")
 
 add_executable(ruter ${SOURCES})
 target_link_libraries(ruter curl)

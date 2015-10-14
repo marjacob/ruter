@@ -1,7 +1,7 @@
 #include <memory>
 #include <string>
 #include <utility>
-#include "Curl/WebResponse.hpp"
+#include "Curl/WebResponse.h"
 
 using std::move;
 using std::shared_ptr;

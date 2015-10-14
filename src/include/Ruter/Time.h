@@ -2,8 +2,8 @@
 #define __H_B279FCF5DC04466AB131A74B87BB1E22__
 
 #include <ctime>
-#include "Curl/Parameter.hpp"
-#include "Curl/IParameter.hpp"
+#include "Curl/Parameter.h"
+#include "Curl/IParameter.h"
 
 namespace Ruter {
 

@@ -5,8 +5,8 @@
 #include <curl/curl.h>
 #include <memory>
 #include <string>
-#include "Parameter.hpp"
-#include "WebRequest.hpp"
+#include "Parameter.h"
+#include "WebRequest.h"
 
 namespace Curl {
 
