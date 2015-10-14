@@ -1,25 +1,45 @@
-# Vim
+# Directories
+build/
+
+# MacOS X
+.DS_Store
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# vim
 *.swp
 
-# Object files
+# WinEdt
+*.bak
+*.sav
+
+# Compiled Object files
+*.slo
+*.lo
 *.o
-*.ko
+*.obj
 
-# Libraries
-*.lib
-*.a
+# Precompiled Headers
+*.gch
+*.pch
 
-# Shared objects (inc. Windows DLLs)
-*.dll
+# Compiled Dynamic libraries
 *.so
-*.so.*
 *.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
 
 # Executables
 *.exe
 *.out
 *.app
-
-# Directories
-bin/
-obj/

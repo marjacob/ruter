@@ -2,7 +2,7 @@
 #define __H_B7033EEFFEE14E57A6B92484FC9F0D3B__
 
 #include <string>
-#include "Curl/Parameter.hpp"
+#include "Parameter.hpp"
 
 namespace Curl {
 

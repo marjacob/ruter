@@ -5,8 +5,8 @@
 #include <curl/curl.h>
 #include <memory>
 #include <string>
-#include "Curl/Parameter.hpp"
-#include "Curl/WebRequest.hpp"
+#include "Parameter.hpp"
+#include "WebRequest.hpp"
 
 namespace Curl {
 
@@ -29,6 +29,7 @@ public:
 	std::unique_ptr<std::string> Request(const WebRequest& request);
 private:
 	CURL *m_curl;
+	char m_error_buffer[CURL_ERROR_SIZE];
 	std::vector<char> m_buffer;
 	struct curl_slist *m_header;
 	

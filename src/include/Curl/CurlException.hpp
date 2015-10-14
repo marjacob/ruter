@@ -3,16 +3,22 @@
 
 #include <curl/curl.h>
 #include <stdexcept>
+#include <string>
 
 namespace Curl {
 
 class CurlException : public std::runtime_error {
-private:
-	CURLcode m_errornum;
 public:
-	CurlException(CURLcode errornum);
+	explicit CurlException(CURLcode errornum);
+
+	CurlException(CURLcode errornum, const std::string& message);
+
+	virtual ~CurlException();
+
 	CURLcode errornum() const;
 	static void OnFailure(CURLcode errornum);
+private:
+	CURLcode m_errornum;
 };
 
 } /* namespace Curl */

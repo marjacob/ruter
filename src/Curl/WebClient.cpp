@@ -35,21 +35,24 @@ WebClient::WebClient() :
 	struct curl_slist *hdr = NULL;
 
 	if (0 != (code = curl_global_init(CURL_GLOBAL_ALL))) {
-		CurlException::OnFailure(code);
+		throw CurlException(code);
 	}
 
 	if (!(m_curl = curl_easy_init())) {
 		curl_global_cleanup();
-		CurlException::OnFailure(CURLE_FAILED_INIT);
+		throw CurlException(CURLE_FAILED_INIT);
 	}
 
 	hdr = curl_slist_append(hdr, "Accept: application/json");
 	hdr = curl_slist_append(hdr, "Accept-Charset: utf-8");
+	
+	CurlException::OnFailure(
+		curl_easy_setopt(m_curl, CURLOPT_ERRORBUFFER, m_error_buffer));
 
 	SetHttpHeaders(hdr);
 	SetSslVerifyHost(true);
 	SetSslVerifyPeer(true);
-	SetSslVersion(CURL_SSLVERSION_SSLv3);
+	//SetSslVersion(CURL_SSLVERSION_SSLv3);
 	SetUserAgent("PosixRuter++/0.1");
 	SetWriteCallback(write);
 	SetWriteData(&m_buffer);
@@ -102,30 +105,29 @@ void WebClient::SetUserAgent(const string& user_agent)
 
 unique_ptr<string> WebClient::Request(const WebRequest& request)
 {
-	OnRequest(request);
-	
-	CurlException::OnFailure(curl_easy_perform(m_curl));
+	SetMethod(request.GetMethod());
+	SetUrl(request.ToString());
+	m_error_buffer[0] = 0;
+	CURLcode rc = curl_easy_perform(m_curl);
 
+	if (CURLE_OK != rc) {
+		if (m_error_buffer[0]) {
+			throw CurlException(rc, m_error_buffer);
+		} else {
+			throw CurlException(rc);
+		}
+	}
+
+	/* Extract the data returned from the server. */
 	unique_ptr<string> data = unique_ptr<string>(
 		new string(m_buffer.begin(), m_buffer.end()));
 	
-	OnRequestCompleted(request);
+	m_buffer.clear();
 
 	return data;
 }
 
 /***** PRIVATE METHODS ********************************************************/
-
-void WebClient::OnRequest(const WebRequest& request)
-{
-	SetMethod(request.GetMethod());
-	SetUrl(request.ToString());
-}
-
-void WebClient::OnRequestCompleted(const WebRequest& request)
-{
-	m_buffer.clear();
-}
 
 void WebClient::SetMethod(const string& method)
 {

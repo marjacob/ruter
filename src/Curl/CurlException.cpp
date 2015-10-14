@@ -1,12 +1,26 @@
 #include <curl/curl.h>
+#include <string>
 #include "Curl/CurlException.hpp"
+
+using std::string;
 
 namespace Curl {
 
 CurlException::CurlException(CURLcode errornum)
-	: runtime_error(curl_easy_strerror(errornum))
+	: CurlException(errornum, curl_easy_strerror(errornum))
+{
+	
+}
+
+CurlException::CurlException(CURLcode errornum, const string& message)
+	: runtime_error(message)
 {
 	m_errornum = errornum;
+}
+
+CurlException::~CurlException()
+{
+	/* default */
 }
 
 CURLcode CurlException::errornum() const
